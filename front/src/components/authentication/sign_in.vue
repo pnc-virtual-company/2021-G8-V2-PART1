@@ -1,22 +1,13 @@
 <template>
   <section>
     <div class="formcontain"></div>
-    <form @submit.prevent="singUp()">
-      <h2>REGISTER HERE</h2>
-      <div class="username">
-        <input type="text" placeholder="First Name" v-model="firstName" />
-        <input type="text" placeholder="Last Name" v-model="lastName" />
-      </div>
+    <form @submit.prevent="singIn()">
+      <h2>SIGN IN HERE</h2>
       <input type="email" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Password" v-model="password" />
-      <input
-        type="password"
-        placeholder="Confirm Password"
-        v-model="confirmPassword"
-      />
-      <router-link to="signin">Have an account?</router-link>
+      <router-link to="/signup">Create an account?</router-link>
       <div class="button-container">
-        <router-link to="#" id="register">Register</router-link>
+        <router-link to="#" id="signin">Sign in</router-link>
       </div>
     </form>
   </section>
@@ -27,11 +18,8 @@ export default {
   data() {
     return {
       userList: [],
-      firstName: "",
-      lastName: "",
       email: "",
       password: "",
-      confirmPassword: "",
     };
   },
   methods: {},
@@ -39,11 +27,6 @@ export default {
 </script>
 
 <style >
-.formcontain {
-  height: 50px;
-  background: #f6ba1f;
-  margin-bottom: 50px;
-}
 form {
   margin: auto;
   width: 300px;
@@ -54,13 +37,6 @@ form {
   box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   margin-bottom: 50px;
-}
-.username {
-  display: flex;
-  justify-content: space-between;
-}
-.username input {
-  width: 45%;
 }
 form input,
 a,
@@ -74,17 +50,9 @@ form .button-container {
   display: flex;
   justify-content: flex-end;
 }
-form button {
-  width: 90px;
-  height: 29px;
-  color: white;
-  border: none;
-  background: #f6ba1f;
-  border-radius: 5px;
-}
-form #register:hover {
+form #signin:hover {
   color: rgb(173, 101, 233);
-  border: 2px solid rgb(197, 175, 248);
+  border: 2px solid rgb(206, 146, 255);
 }
 form input {
   background: #fffdfd;
@@ -101,7 +69,7 @@ form h2 {
 a {
   text-decoration: none;
 }
-#register {
+#signin {
   border: 1px solid #f6ba1f;
   width: 85px;
   padding: 5px;
