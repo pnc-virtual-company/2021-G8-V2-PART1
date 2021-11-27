@@ -1,6 +1,6 @@
 ## ROUTE DOCUMENTATION EXAMPLE
 
-### 1. Sign-in_sign-up Routes
+### 1. Sign-in_sign-up Routes (back)
 
 ---
 
@@ -10,8 +10,12 @@
 | POST         | /signin | The route to login            |
 |              |         |                               |
 
-### 2. Route Updated By:
+### 2. Route Sign in component (front)
 
----
 
-`<i>`@Student Name: `<b>` Rady Y`</b></i>`
+|             |                         |
+| :---------- | :---------------------- |
+| **ROUTES** | **DESCRIPTION**        |
+| /           | The route go to sign in |
+| /signin     | The route go to sign in |
+| /events     | The route go to events  |
