@@ -4,12 +4,11 @@
 
 ---
 
-| HTTP REQUEST | ROUTES  | DESCRIPTION                   |
-| :----------- | :------ | :---------------------------- |
-| POST         | /signup | The route for register a user |
-| POST         | /signin | The route to login            |
-|              |         |                               |
-
+| HTTP REQUEST | ROUTES   | DESCRIPTION                   |
+| :----------- | :------- | :---------------------------- |
+| POST         | /signup  | The route for register a user |
+| POST         | /signin  | The route to login            |
+| POST         | /signout | The route to logout           |
 
 ### 2. Routes Sign in component (front)
 
