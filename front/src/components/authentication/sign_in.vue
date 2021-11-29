@@ -38,7 +38,7 @@ export default {
       axios.post(url, userData)
       .then(res => {
         this.userData = res.data.user;
-        this.$router.push('/main');
+        this.$router.push('/navbar');
         this.errorMessage = '';
         console.log(this.userData);
       })
@@ -56,7 +56,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 form {
   margin: auto;
   width: 300px;

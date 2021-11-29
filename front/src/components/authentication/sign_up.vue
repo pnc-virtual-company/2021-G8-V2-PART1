@@ -66,7 +66,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 .header {
   height: 50px;
   background: #f6ba1f;
