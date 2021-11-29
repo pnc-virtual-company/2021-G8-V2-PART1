@@ -10,13 +10,14 @@ import MyEvent from './components/pages/MyEvent/my_event.vue';
 const router = createRouter({
     history: createWebHistory(),                                                                
     routes: [
-        {path: '/',component: Navbar},
-        {path: '/navbar',component: Navbar},
+        // {path: '/',component: Navbar},
+        // {path: '/navbar',component: Navbar},
         {path: '/category',component: Category},
         {path: '/events',component: Events},
         {path: '/myevent',component: MyEvent},
     ]
 })
 const app = createApp(App);
+app.component("navbar", Navbar);
 app.use(router);
 app.mount('#app');

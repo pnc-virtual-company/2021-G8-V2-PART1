@@ -11,7 +11,6 @@
     </ul>
   </div>
 </template>
-
 <script>
 export default {};
 </script>
@@ -25,36 +24,40 @@ export default {};
   display: flex;
   list-style: none;
   justify-content: space-between;
-  padding: 15px;
+  padding-top: 25px;
+  
 }
 .list-menu {
   display: flex;
 }
 ul li a{
     color: white;
-    padding:0px  10px;
+    padding: 10px;
     text-decoration: none;
 }
 ul li a:hover{
-    color: rgb(164, 62, 248);
+    color: rgb(240, 76, 11);
     text-decoration: underline;
     text-decoration-color:white;
     font-weight:lighter;
 }
-#signout {
-  border: 1px solid #f6ba1f;
-  width: 85px;
-  padding: 10px;
-  background: white;
-  border-radius: 5px;
-  color:#f6ba1f;
-}
-#signout:hover {
-  color: rgb(173, 101, 233);
-  border: 2px solid rgb(197, 175, 248);
-  background: #ffda7d;
-}
+
+
 #username{
     font-size: 20px;
+}
+
+/* responsive media */
+@media screen and (min-width:300px) and (max-width:500px){
+  .menu-container{
+    height: auto;
+  }
+  .menu-container ul{
+    display: flex;
+    flex-direction: column;
+  }
+  ul li a{
+    font-size: 10px;
+  }
 }
 </style>
