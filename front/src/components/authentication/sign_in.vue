@@ -1,28 +1,58 @@
 <template>
   <section>
     <div class="header"></div>
-    <form @submit.prevent="singIn()">
+    <form>
       <h2>SIGN IN HERE</h2>
       <input type="email" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Password" v-model="password" />
       <router-link to="/signup">Create an account?</router-link>
-      <div class="button-container">
-        <router-link to="#" id="signin">Sign in</router-link>
+      <div class="error" v-if="errorMessage">
+        <p v-text="errorMessage"></p>
+      </div>
+       <div class="button-container">
+        <button type="button" @click="signIn">Sign in</button>
       </div>
     </form>
   </section>
 </template>
 
 <script>
+import axios from 'axios';
+const url = "http://127.0.0.1:8000/api/signin";
 export default {
   data() {
     return {
-      userList: [],
+      userData: {},
       email: "",
       password: "",
+      errorMessage: "",
     };
   },
-  methods: {},
+  methods: {
+    signIn() {
+      let userData = {
+        email: this.email,
+        password: this.password,
+      };
+
+      axios.post(url, userData)
+      .then(res => {
+        this.userData = res.data.user;
+        this.$router.push('/main');
+        this.errorMessage = '';
+        console.log(this.userData);
+      })
+      .catch(error => {
+        let statusCode = error.response.status;
+        if(statusCode === 401) {
+          this.errorMessage = 'Invalid data, please try again';
+        }
+      })
+    }
+  },
+  provide() {
+    return {userData: this.userData};
+  }
 };
 </script>
 
@@ -43,6 +73,7 @@ a,
 button {
   margin: 10px;
   font-size: 17px;
+  cursor: pointer;
 }
 form .button-container {
   width: 100%;
@@ -74,5 +105,10 @@ a {
   padding: 5px;
   background: #f6ba1f;
   border-radius: 5px;
+}
+
+.error {
+  text-align: center;
+  color: red;
 }
 </style>
