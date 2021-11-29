@@ -11,7 +11,6 @@
     </ul>
   </div>
 </template>
-
 <script>
 export default {};
 </script>
@@ -37,7 +36,7 @@ ul li a{
     text-decoration: none;
 }
 ul li a:hover{
-    color: rgb(164, 62, 248);
+    color: rgb(240, 76, 11);
     text-decoration: underline;
     text-decoration-color:white;
     font-weight:lighter;
@@ -46,5 +45,19 @@ ul li a:hover{
 
 #username{
     font-size: 20px;
+}
+
+/* responsive media */
+@media screen and (min-width:300px) and (max-width:500px){
+  .menu-container{
+    height: auto;
+  }
+  .menu-container ul{
+    display: flex;
+    flex-direction: column;
+  }
+  ul li a{
+    font-size: 10px;
+  }
 }
 </style>
