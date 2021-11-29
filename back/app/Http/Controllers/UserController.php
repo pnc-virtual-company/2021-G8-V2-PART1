@@ -23,7 +23,7 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'User Create!',
+            'message' => 'User Created!',
             'user' => $user
         ]);
     }

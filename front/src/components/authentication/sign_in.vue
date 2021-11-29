@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="formcontain"></div>
+    <div class="header"></div>
     <form @submit.prevent="singIn()">
       <h2>SIGN IN HERE</h2>
       <input type="email" placeholder="Email" v-model="email" />
@@ -44,7 +44,6 @@ button {
   margin: 10px;
   font-size: 17px;
 }
-/* display:flex; justify-content:flex-end; width:100%; padding:0; */
 form .button-container {
   width: 100%;
   display: flex;

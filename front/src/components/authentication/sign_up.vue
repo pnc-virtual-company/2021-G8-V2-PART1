@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="formcontain"></div>
+    <div class="header"></div>
     <form @submit.prevent="singUp()">
       <h2>REGISTER HERE</h2>
       <div class="username">
@@ -15,31 +15,59 @@
         v-model="confirmPassword"
       />
       <router-link to="signin">Have an account?</router-link>
+      <div class="error" v-if="errorMessage">
+        <p v-text="errorMessage"></p>
+      </div>
       <div class="button-container">
-        <router-link to="#" id="register">Register</router-link>
+        <button type="button" id="register" @click="register">Register</button>
       </div>
     </form>
   </section>
 </template>
 
 <script>
+import axios from 'axios';
+const url = "http://127.0.0.1:8000/api/signup";
 export default {
   data() {
     return {
-      userList: [],
       firstName: "",
       lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
+      errorMessage: ""
     };
   },
-  methods: {},
+  methods: {
+    register() {
+      let newUserData = {
+        firstname: this.firstName,
+        lastname: this.lastName,
+        email: this.email,
+        password: this.password,
+        password_confirmation: this.confirmPassword
+      };
+
+      axios.post(url, newUserData)
+      .then(res => {
+        this.$router.push('/signin');
+        this.errorMessage = '';
+        console.log(res.data);
+      })
+      .catch(error => {
+        let statusCode = error.response.status;
+        if(statusCode === 422) {
+          this.errorMessage = 'Invalid data, please try again';
+        }
+      })
+    }
+  },
 };
 </script>
 
 <style >
-.formcontain {
+.header {
   height: 50px;
   background: #f6ba1f;
   margin-bottom: 50px;
@@ -68,11 +96,11 @@ button {
   margin: 10px;
   font-size: 17px;
 }
-/* display:flex; justify-content:flex-end; width:100%; padding:0; */
 form .button-container {
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  text-align: center;
 }
 form button {
   width: 90px;
@@ -80,7 +108,7 @@ form button {
   color: white;
   border: none;
   background: #f6ba1f;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 form #register:hover {
   color: rgb(173, 101, 233);
@@ -107,5 +135,9 @@ a {
   padding: 5px;
   background: #f6ba1f;
   border-radius: 5px;
+}
+.error {
+  text-align: center;
+  color: red;
 }
 </style>
