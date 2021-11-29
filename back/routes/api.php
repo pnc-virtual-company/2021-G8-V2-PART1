@@ -5,11 +5,5 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 //user
-Route::post('/signUp', [UserController::class, "signUp"]);
-Route::post('/signIn', [UserController::class, "signIn"]);
-
-
-//private 
-Route::group(['middleware' => ['auth:sanctum']], function(){
-    Route::post("/signOut", [UserController::class, "signOut"]);
-});
+Route::post('/signup', [UserController::class, "signup"]);
+Route::post('/signin', [UserController::class, "signin"]);

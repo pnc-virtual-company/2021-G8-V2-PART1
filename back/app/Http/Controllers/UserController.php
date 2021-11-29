@@ -7,7 +7,7 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function signUp(Request $request)
+    public function signup(Request $request)
     {
         $request->validate([
             'firstname' => 'required|max:50|regex:/^[a-zA-Z]/',
@@ -22,36 +22,26 @@ class UserController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
 
-        // Create Token
-        $token = $user->createToken('mytoken')->plainTextToken;
         return response()->json([
-            'user' => $user,
-            'token' => $token
+            'message' => 'User Create!',
+            'user' => $user
         ]);
     }
 
-    public function signIn(Request $request)
+    public function signin(Request $request)
     {
         // Check email
         $user = User::where('email', $request->email)->first();
 
         //Check password
         if(!$user || !Hash::check($request->password, $user->password)){
-            return response()->json(['messang' => "Bad SignIn"], 401);
+            return response()->json(['message' => "Unauthorized"], 401);
         }
-        // Create Token
-        $token = $user->createToken('mytoken')->plainTextToken;
+       
         return response()->json([
-            'user' => $user,
-            'token' => $token
+            'message' => 'Login successfully!',
+            'user' => $user
+           
         ]);
     }
-
-    public function signOut(Request $request)
-    {
-        auth()->user()->tokens()->delete();
-        return response()->json(['message' => "User logged out"]);
-    }
 }
-
-//1|8bDmXlxTDVdqiZC5Dn3ihNGgP28yKynMN3xrMNh0
