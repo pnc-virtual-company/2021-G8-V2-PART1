@@ -18,5 +18,6 @@ const router = createRouter({
     ]
 })
 const app = createApp(App);
+app.component("navbar",Navbar);
 app.use(router);
 app.mount('#app');
