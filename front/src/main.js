@@ -2,11 +2,11 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import {createRouter, createWebHistory} from 'vue-router';
 
-import SignIn from './components/authentication/sign_in.vue';
-import SignUp from './components/authentication/sign_up.vue';
-import Navbar from './components/menu/navbar.vue';
-import Category from './components/pages/Category/category.vue';
-import Events from './components/pages/Event/event.vue';
+import SignIn from './components/authentication/SignIn.vue';
+import SignUp from './components/authentication/SignUp.vue';
+import Navbar from './components/menu/Navbar.vue';
+import Category from './components/pages/category/Category.vue';
+import Events from './components/pages/event/Event.vue';
 
 const router = createRouter({
     history: createWebHistory(),
