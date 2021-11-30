@@ -2,11 +2,15 @@
   <div>
     <!-- <navbar></navbar> -->
     <router-view></router-view>
+    <category-form></category-form>
   </div>
 </template>
 
 <script>
-
+import CategoryForm from './components/category/CategoryForm';
+export default {
+  components: {'category-form': CategoryForm}
+}
 </script>
 
 <style>
