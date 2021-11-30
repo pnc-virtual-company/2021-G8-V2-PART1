@@ -75,7 +75,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $isDeleted = Category::destroy($id);
-        if($isDeleted == 1){
+        if($isDeleted === 1){
             return response()->json(['massage'=>' Category Deleted'], 200);
         }else{
             return response()->json(['massage'=>'ID already exit '], 404);
