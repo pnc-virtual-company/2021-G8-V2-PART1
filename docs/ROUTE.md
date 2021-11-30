@@ -9,11 +9,13 @@
 | POST         | /signup | The route for register a user |
 | POST         | /signin | The route to login            |
 
-### 2. Routes Sign in component (front)
+### 2. Category Routes (back)
 
-|                  |                         |
-| :--------------- | :---------------------- |
-| **ROUTES** | **DESCRIPTION**   |
-| /                | The route go to sign in |
-| /signin          | The route go to sign in |
-| /events          | The route go to events  |
+
+| HTTP REQUEST | ROUTES           | DESCRIPTION                      |
+| :----------- | :--------------- | :------------------------------- |
+| GET          | /categories      | The route for get all categories |
+| POST         | /categories      | The route to create new category |
+| GET          | /categories/{id} | The route to get a category      |
+| PUT          | /categories/{id} | The route to update category     |
+| DELETE       | /categories/{id} | The route to remove category     |
