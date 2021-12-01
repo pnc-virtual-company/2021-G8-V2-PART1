@@ -1,6 +1,5 @@
 <template>
     <section>
-        
         <category-form 
         v-if="isShowAddForm" 
         :isShowForm='isShowAddForm' 
