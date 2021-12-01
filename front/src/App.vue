@@ -1,11 +1,12 @@
 <template>
   <div>
-   <category-view :categories='categories'></category-view>
+   <category-view :categories='categories' @addCategory='addNewCategory'></category-view>
   </div>
 </template>
 
 <script>
 export default {
+  
   data() {
     return {
       categories: [
@@ -13,7 +14,16 @@ export default {
         {id: 2, name: 'dek', created_at: '1/2/2020  2:30pm'},
         {id: 3, name: 'der', created_at: '1/2/2020  2:30pm'},
         {id: 4, name: 'phek', created_at: '1/2/2020  2:30pm'},
-      ]
+      ],
+      messageExist: 'Already Exist!',
+    }
+  },
+  methods: {
+    addNewCategory(categoryName){
+      let newCategory = {
+        name: categoryName
+      }
+      this.categories.unshift(newCategory);
     }
   },
 }
@@ -29,5 +39,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+body{
+  scroll-behavior: smooth;
 }
 </style>

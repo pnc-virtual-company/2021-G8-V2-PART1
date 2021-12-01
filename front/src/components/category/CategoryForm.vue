@@ -1,5 +1,5 @@
 <template>
-  <section  >
+  <section >
     <div class="createForm">
       <div class="title">
         <h2>Add Category</h2>
@@ -7,6 +7,7 @@
       <div>
         <input type="text" placeholder="Name..." v-model="categoryName"/>
       </div>
+      <p>{{messageError}}</p>
       <div class="btn">
         <button class="btnCancel" @click="cancel">CANCEL</button>
         <button class="btnAccept" @click="create" v-if="!isEditing">CREATE</button>
@@ -19,20 +20,21 @@
 <script>
 export default {
   emit: ['create', 'cancel'],
-  props: ['isShowForm', 'isEditing'],
+  props: ['isShowForm', 'isEditing','categories'],
   data() {
     return {
       categoryName: '',
+      messageError:'',
     }
   },
 
   methods: {
     create() {
-      this.$emit('addCategory', this.categoryName);
+      this.$emit('addCategory', this.categoryName);   
     },
     cancel() {
       this.$emit('hideForm')
-    }
+    },
   },
 };
 </script>
@@ -46,6 +48,7 @@ export default {
   text-align: center;
   width: 70%;
   max-width: 30rem;
+  scroll-behavior: smooth;
 
 }
 

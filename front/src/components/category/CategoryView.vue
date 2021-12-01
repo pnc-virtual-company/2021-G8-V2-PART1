@@ -5,6 +5,7 @@
         :isShowForm='isShowAddForm' 
         :isEditing='isEditing'
         @hideForm="hideFormCategory"
+        @addCategory ='addCategory'
         ></category-form>
         <add-search @showForm='showFormCategory'></add-search>
         <section>
@@ -20,6 +21,7 @@ export default {
         return {
             isShowAddForm: 0,
             isEditing: 0,
+            categoryAlreadyExist:'',
         }
     },
     methods: {
@@ -28,8 +30,11 @@ export default {
         },
         hideFormCategory() {
             this.isShowAddForm = 0;
+        },
+        addCategory(categoryName){
+            console.log(categoryName)
+            this.$emit('addCategory',categoryName)
         }
-
     },
 }
 </script>
