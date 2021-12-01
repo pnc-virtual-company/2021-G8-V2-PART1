@@ -1,6 +1,6 @@
 <template>
     <div>
-
+        <h1 style="text-align: center">You are in CATEGORY</h1>
     </div>
 </template>
 

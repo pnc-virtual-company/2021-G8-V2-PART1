@@ -4,9 +4,30 @@
         <p id="username">{{ userData.firstname }}</p>
       </div>
       <ul v-if="isLogin">
-          <li><router-link to="/events">Event</router-link></li>
-          <li><router-link to="">My Event</router-link></li>
-          <li><router-link to='/category'>Category</router-link></li>
+          <li >
+            <router-link 
+            to="" 
+            :class="activePage === 'event' ? 'active' : ''" 
+            @click="changeActivePage('event')"
+            >Event
+            </router-link>
+          </li>
+          <li>
+            <router-link 
+            to=""
+            :class="activePage === 'myEvent' ? 'active' : ''"
+            @click="changeActivePage('myEvent')"
+            >My Event
+            </router-link>
+          </li>
+          <li>
+            <router-link 
+            to=""
+            :class="activePage === 'category' ? 'active' : ''"
+            @click="changeActivePage('category')"
+            >Category
+            </router-link>
+          </li>
       </ul>
       <div v-if="isLogin">
         <button id="logoutBtn" @click="emitSignout">Sign out</button>
@@ -15,8 +36,8 @@
 </template>
 <script>
 export default {
-  emit: ['emitSignout'],
-  props: ['userData', 'isLogin'],
+  emit: ['emitSignout', 'emitActivePage'],
+  props: ['userData', 'isLogin', 'activePage'],
   data() {
     return {
       
@@ -25,6 +46,10 @@ export default {
   methods: {
     emitSignout() {
       this.$emit('requestSignout');
+    },
+    changeActivePage(activePage) {
+      if(this.activePage !== activePage)
+      this.$emit('changeActive', activePage);
     }
   },
   mounted() {
@@ -83,6 +108,11 @@ export default {
 }
 .menu-container a {
   text-decoration: none;
+}
+
+/* active menu style */
+.menu-container ul li .active {
+  color: rgb(255, 102, 0);
 }
 
 

@@ -5,12 +5,18 @@
     @register="registerNewUser"
     @signin="login"
     @requestSignout="logout"
+    @changeActive="setActivePage"
     :userData="userData"
     :isLogin="isLogin"
+    :activePage="activePage"
     :existedEmailError = "existedEmailError"
     :unauthorizedError = "unauthorizedError"
     >
     </router-view>
+    <body v-if="isLogin">
+      <event v-if="activePage === 'event' || activePage === 'myEvent'"></event>
+      <category v-if="activePage === 'category'"></category>
+    </body>
   </div>
 </template>
 
@@ -18,11 +24,14 @@
 import axios from 'axios';
 const url = "http://127.0.0.1:8000/api/";
 
-export default{
+export default {
   data() {
     return {
       isLogin: 0,
+      activePage: 'event',
       userData: {},
+      eventList: [],
+      categoryList: [],
       existedEmailError: '',
       unauthorizedError: '',
     }
@@ -64,7 +73,13 @@ export default{
     },
     logout() {
       this.isLogin = 0;
+      this.activePage = 'event';
+      this.eventList = [];
+      this.categoryList = [];
       this.$router.push('/signin');
+    },
+    setActivePage(currentActivePage) {
+      this.activePage = currentActivePage;
     }
   }
 }
@@ -81,4 +96,5 @@ export default{
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+
 </style>
