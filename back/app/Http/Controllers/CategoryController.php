@@ -26,13 +26,13 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:categories',
         ]);
         $category = new Category();
         $category->name = $request->name;
 
         $category->save();
-        return response()->json(['message'=>'Category Created', 'data'=> $category], 201);
+        return response()->json(['message'=>'Your category have been created', 'data'=> $category], 201);
 
     }
 
@@ -57,13 +57,13 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'=>'required',
+            'name' => 'required|unique:categories',
         ]);
         $category = Category::findOrFail($id);
         $category->name = $request->name;
 
         $category->save();
-        return response()->json(['massage'=>' Category Updated', 'data'=> $category], 200);
+        return response()->json(['massage'=>'Your category have been updated', 'data'=> $category], 200);
     }
 
     /**
@@ -76,9 +76,10 @@ class CategoryController extends Controller
     {
         $isDeleted = Category::destroy($id);
         if($isDeleted === 1){
-            return response()->json(['massage'=>' Category Deleted'], 200);
+            return response()->json(['massage'=>'Your category have been deleted'], 200);
         }else{
-            return response()->json(['massage'=>'ID already exit '], 404);
+            return response()->json(['massage'=>'ID already exit'], 404);
         }
+      
     }
 }
