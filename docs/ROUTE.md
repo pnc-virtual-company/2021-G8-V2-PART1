@@ -11,7 +11,6 @@
 
 ### 2. Category Routes (back)
 
-
 | HTTP REQUEST | ROUTES           | DESCRIPTION                      |
 | :----------- | :--------------- | :------------------------------- |
 | GET          | /categories      | The route for get all categories |
