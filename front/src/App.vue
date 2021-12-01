@@ -1,13 +1,21 @@
 <template>
   <div>
-    <!-- <navbar></navbar> -->
-    <router-view></router-view>
+   <category-view :categories='categories'></category-view>
   </div>
 </template>
 
 <script>
 export default {
-
+  data() {
+    return {
+      categories: [
+        {id: 1, name: 'party', created_at: '1/2/2020  2:30pm'},
+        {id: 2, name: 'dek', created_at: '1/2/2020  2:30pm'},
+        {id: 3, name: 'der', created_at: '1/2/2020  2:30pm'},
+        {id: 4, name: 'phek', created_at: '1/2/2020  2:30pm'},
+      ]
+    }
+  },
 }
 </script>
 
