@@ -1,6 +1,5 @@
 <template>
   <section>
-    <div class="header"></div>
     <form>
       <h2>REGISTER HERE</h2>
       <div>
@@ -97,8 +96,12 @@ export default {
     password: function(value) {
       if(value.length >= 8) {
         this.passwordError = '';
+        if(this.confirmPassword === this.password) {
+          this.cPasswordError = '';
+        }
       } else {
         this.passwordError = "password must be at least 8 characters";
+        this.cPasswordError = "confirm password isn't matched";
       }
     },
     confirmPassword: function(value) {
@@ -136,12 +139,6 @@ export default {
 </script>
 
 <style>
-.header {
-  height: 50px;
-  background: #f6ba1f;
-  border-bottom:2px solid rgb(240, 76, 11);
-  margin-bottom: 50px;
-}
 form input,
 a,
 form button {

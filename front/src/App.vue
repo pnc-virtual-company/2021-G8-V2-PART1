@@ -1,5 +1,6 @@
 <template>
   <div>
+    <navbar v-if="!isLogin"></navbar>
     <router-view
     @register="registerNewUser"
     @signin="login"

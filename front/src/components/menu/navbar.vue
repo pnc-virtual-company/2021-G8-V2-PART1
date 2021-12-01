@@ -1,14 +1,14 @@
 <template >
   <div class="menu-container">
-      <div class="username">
+      <div class="username" v-if="isLogin">
         <p id="username">{{ userData.firstname }}</p>
       </div>
-      <ul>
+      <ul v-if="isLogin">
           <li><router-link to="/events">Event</router-link></li>
           <li><router-link to="">My Event</router-link></li>
           <li><router-link to='/category'>Category</router-link></li>
       </ul>
-      <div>
+      <div v-if="isLogin">
         <button id="logoutBtn" @click="emitSignout">Sign out</button>
       </div>
   </div>

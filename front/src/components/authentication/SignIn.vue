@@ -1,6 +1,5 @@
 <template>
   <section>
-    <div class="header"></div>
     <form>
       <h2>SIGN IN HERE</h2>
       <div>
