@@ -1,20 +1,16 @@
 <template>
-<div>
-  <section>
-    <form action="">
-    <div class="cate-card">
-      <div>
-        <h2>{{ category.name }}</h2>
-      </div>
-      <span>{{ category.created_at }}</span>
-      <div class="btn">
-        <button class="btn-change">EDIT</button>
-        <button class="btn-remove">REMOVE</button>
-      </div>
+  <section class="cate-card">
+    <div class="cate-name">
+      <h2>{{ category.name }}</h2>
     </div>
-    </form>
+    <div  class="cate-date">
+      <p>{{ category.created_at }}</p>
+    </div>
+    <div class="cate-btn">
+      <button type="button" class="btn-change">EDIT</button>
+      <button type="button" class="btn-remove">REMOVE</button>
+    </div>
   </section>
-  </div>
 </template>
 
 <script>
@@ -24,7 +20,7 @@ export default {
 </script>
 
 <style scoped>
-section {
+.cate-card {
   margin: 2rem auto;
   padding: 1rem;
   border: 1px solid #ccc;
@@ -42,7 +38,10 @@ button {
   border: none;
   cursor: pointer;
 }
-
+.btn-change:hover,
+.btn-remove:hover {
+  color: rgb(173, 101, 233);
+}
 .btn-change {
   background-color: #f6ba1f;
   color: white;
@@ -56,13 +55,18 @@ button {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
 }
 
-.btn {
+.cate-btn {
+  width: 30%;
   padding: 6px;
+  text-align: right;
 }
 .cate-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-  
+.cate-name,
+.cate-date {
+  width: 40%;
+}
 </style>

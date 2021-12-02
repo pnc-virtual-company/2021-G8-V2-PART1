@@ -160,7 +160,7 @@ form .buttonActive {
   text-align: right;
   margin: 5px 0;
 }
-form button {
+form #registerOrSignin {
   width: 90px;
   height: 30px;
   color: white;

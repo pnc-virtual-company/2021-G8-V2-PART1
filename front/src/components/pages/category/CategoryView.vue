@@ -1,27 +1,26 @@
 <template>
     <section>
+        <add-search @showForm='showFormCategory'></add-search>
         <category-form 
         v-if="isShowAddForm" 
-        :isShowForm='isShowAddForm' 
-        :isEditing='isEditing'
+        :isShowForm="isShowAddForm"
+        :isEditing="isEditing"
         @hideForm="hideFormCategory"
-        @addCategory ='addCategory'
+        @addCategory ="addCategory"
         ></category-form>
-        <add-search @showForm='showFormCategory'></add-search>
-        <section>
-            <category-card v-for="category of categories" :key="category.id" :category='category'></category-card>
-        </section>
+        <category-card v-for="category of categories" :key="category.id" :category="category"></category-card>
     </section>
 </template>
 
 <script>
+import axios from 'axios';
+const url = "http://127.0.0.1:8000/api/categories";
+
 export default {
-    props: ['categories'],
     data() {
         return {
             isShowAddForm: 0,
-            isEditing: 0,
-            categoryAlreadyExist:'',
+            categories: [],
         }
     },
     methods: {
@@ -32,9 +31,17 @@ export default {
             this.isShowAddForm = 0;
         },
         addCategory(categoryName){
-            console.log(categoryName)
-            this.$emit('addCategory',categoryName)
+            axios.post(url, categoryName).then(res => {
+                console.log(res.data);
+                this.isShowAddForm = 0;
+            })
         }
+    },
+    mounted() {
+        axios.get(url).then(res => {
+            this.categories = res.data.data;
+            console.log(this.categories);
+        })
     },
 }
 </script>

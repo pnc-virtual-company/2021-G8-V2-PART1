@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection(Category::get()->take(7));
+        return CategoryResource::collection(Category::get());
     }
 
     /**

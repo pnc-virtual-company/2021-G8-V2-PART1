@@ -103,7 +103,7 @@ export default {
   color: white;
   font-weight: bold;
 }
-#logoutBtn a:hover {
+#logoutBtn:hover {
   color: rgb(173, 101, 233);
 }
 .menu-container a {

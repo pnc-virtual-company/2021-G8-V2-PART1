@@ -1,24 +1,20 @@
 <template>
   <section>
-    <form action="#">
-      <div class="add-and-search">
-        <div class="wrap">
-          <div class="search">
-            <input
-              type="text"
-              class="searchTerm"
-              placeholder="What are you looking for?"
-            />
-            <button type="submit" class="searchButton">
-              <i class="fa fa-search"></i>
-            </button>
-          </div>
-        </div>
-        <div class="add">
-          <button class="btn-add" @click="showFormCategory">Add+</button>
-        </div>
+    <div class="add-and-search">
+      <div class="cate-search">
+        <input
+          type="text"
+          class="searchKey"
+          placeholder="What are you looking for?"
+        />
+        <button type="button" class="searchButton">
+          <i class="fa fa-search"></i>
+        </button>
       </div>
-    </form>
+      <div class="cate-add-btn">
+        <button type="button" class="btn-add" @click="showFormCategory">Add+</button>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -38,56 +34,49 @@ export default {
 
 <style scoped>
 .add-and-search {
-  width: 63%;
+  width: 70%;
   margin: auto;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .btn-add {
-  background-color: #f6ba1f;
+  margin: 0;
+  background: #f6ba1f;
   border: none;
-  padding: 15px 35px;
+  padding: 15px 20px;
   border-radius: 50px;
   color: white;
-  margin-top: 7px;
   font-weight: bold;
   cursor: pointer;
 }
+.btn-add:hover,
+.searchButton i:hover {
+  color: rgb(173, 101, 233);
+}
 
-.search {
+.cate-search {
+  width: 60%;
   display: flex;
 }
 
-.searchTerm {
-  width: 100%;
-  border: 3px solid #f6ba1f;
+.searchKey {
+  width: 65%;
+  border: 2px solid #f6ba1f;
   border-right: none;
-  padding: 11px;
-  height: 10px;
-  border-radius: 5px 0 0 5px;
+  padding: 15px;
+  border-radius: 15px 0 0 15px;
   outline: none;
-  color: #9dbfaf;
-}
-
-.searchTerm:focus {
-  color: #f6ba1f;
 }
 
 .searchButton {
+  margin: 0;
   width: 45px;
-  height: 38px;
   border: 1px solid #f6ba1f;
   background: #f6ba1f;
-  text-align: center;
   color: #fff;
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 15px 15px 0;
   cursor: pointer;
-  font-size: 20px;
-}
-
-.wrap {
-  width: 50%;
-  margin-top: 10px;
 }
 </style>
