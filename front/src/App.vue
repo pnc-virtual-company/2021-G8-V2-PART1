@@ -1,5 +1,6 @@
 <template>
   <div>
+<<<<<<< HEAD
     <navbar v-if="!isLogin"></navbar>
     <router-view
     @register="registerNewUser"
@@ -17,6 +18,9 @@
       <event v-if="activePage === 'event' || activePage === 'myEvent'"></event>
       <category-view v-if="activePage === 'category'"></category-view>
     </body>
+=======
+   <category-view :categories='categories' @addCategory='addNewCategory'></category-view>
+>>>>>>> f9068204bc8e6ce7ec5e1a8a51f2f2db683139e3
   </div>
 </template>
 
@@ -25,13 +29,32 @@ import axios from 'axios';
 const url = "http://127.0.0.1:8000/api/";
 
 export default {
+  
   data() {
     return {
+<<<<<<< HEAD
       isLogin: 0,
       activePage: 'event',
       userData: {},
       existedEmailError: '',
       unauthorizedError: '',
+=======
+      categories: [
+        {id: 1, name: 'party', created_at: '1/2/2020  2:30pm'},
+        {id: 2, name: 'dek', created_at: '1/2/2020  2:30pm'},
+        {id: 3, name: 'der', created_at: '1/2/2020  2:30pm'},
+        {id: 4, name: 'phek', created_at: '1/2/2020  2:30pm'},
+      ],
+      messageExist: 'Already Exist!',
+    }
+  },
+  methods: {
+    addNewCategory(categoryName){
+      let newCategory = {
+        name: categoryName
+      }
+      this.categories.unshift(newCategory);
+>>>>>>> f9068204bc8e6ce7ec5e1a8a51f2f2db683139e3
     }
   },
   methods: {
@@ -94,5 +117,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+<<<<<<< HEAD
 
 </style>
+=======
+body{
+  scroll-behavior: smooth;
+}
+</style>
+>>>>>>> f9068204bc8e6ce7ec5e1a8a51f2f2db683139e3
