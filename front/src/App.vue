@@ -1,41 +1,43 @@
 <template>
   <div>
-    <navbar v-if="!isLogin"></navbar>
+    <navbar :userData="userData" @requestSignout="logout"></navbar>
     <router-view
-    @register="registerNewUser"
-    @signin="login"
-    @requestSignout="logout"
-    @changeActive="setActivePage"
-    :userData="userData"
-    :isLogin="isLogin"
-    :activePage="activePage"
-    :existedEmailError = "existedEmailError"
-    :unauthorizedError = "unauthorizedError"
+      @register="registerNewUser"
+      @signin="login"
+      :userData="userData"
+      :existedEmailError="existedEmailError"
+      :unauthorizedError="unauthorizedError"
     >
     </router-view>
-    <body v-if="isLogin">
-      <event v-if="activePage === 'event' || activePage === 'myEvent'"></event>
-      <category v-if="activePage === 'category'"></category>
-    </body>
   </div>
 </template>
 
 <script>
+
+
+import Navbar from './components/menu/Navbar.vue';
 import axios from 'axios';
 const url = "http://127.0.0.1:8000/api/";
 
 export default {
+  components: {
+    'navbar': Navbar,
+  },
   data() {
     return {
-      isLogin: 0,
-      activePage: 'event',
-      userData: {},
-      eventList: [],
-      categoryList: [],
+      userData: null,
+
       existedEmailError: '',
       unauthorizedError: '',
     }
   },
+
+  computed: {
+    isLogin() {
+      return this.userData !== null;
+    }
+  },
+
   methods: {
     registerNewUser(newUserData) {
       axios.post(url+'signup', newUserData)
@@ -56,12 +58,10 @@ export default {
     login(userData) {
       axios.post(url+'signin', userData)
       .then(res => {
-        this.isLogin = 1;
-        this.unauthorizedError = '';
-        this.$router.push('/navbar');
         this.userData = res.data.user;
+        this.unauthorizedError = '';
         this.errorMessage = '';
-        console.log(this.userData);
+        this.$router.push('/event');
       })
       .catch(error => {
         let serverCode = error.response.status;
@@ -72,22 +72,16 @@ export default {
       })
     },
     logout() {
-      this.isLogin = 0;
-      this.activePage = 'event';
-      this.eventList = [];
-      this.categoryList = [];
+      this.userData = null;
       this.$router.push('/signin');
     },
-    setActivePage(currentActivePage) {
-      this.activePage = currentActivePage;
-    }
   }
 }
 </script>
 
 <style>
-*{
-  padding:0;
+* {
+  padding: 0;
   margin: 0;
 }
 #app {
@@ -96,5 +90,4 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
-
 </style>

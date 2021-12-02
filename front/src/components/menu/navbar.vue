@@ -1,98 +1,80 @@
-<template >
-  <div class="menu-container">
-      <div class="username" v-if="isLogin">
+<template>
+  <div class="container">
+    <div v-if="userData !== null" class="navbar">
+      <div class="username">
         <p id="username">{{ userData.firstname }}</p>
       </div>
-      <ul v-if="isLogin">
-          <li >
-            <router-link 
-            to="" 
-            :class="activePage === 'event' ? 'active' : ''" 
-            @click="changeActivePage('event')"
-            >Event
-            </router-link>
-          </li>
-          <li>
-            <router-link 
-            to=""
-            :class="activePage === 'myEvent' ? 'active' : ''"
-            @click="changeActivePage('myEvent')"
-            >My Event
-            </router-link>
-          </li>
-          <li>
-            <router-link 
-            to=""
-            :class="activePage === 'category' ? 'active' : ''"
-            @click="changeActivePage('category')"
-            >Category
-            </router-link>
-          </li>
+      <ul>
+        <li>
+          <router-link to="/MyEvent" tag="li">My Events </router-link>
+        </li>
+        <li>
+          <router-link to="/event" tag="li">Find Events </router-link>
+        </li>
+        <li>
+          <router-link to="/category" tag="li">Categories </router-link>
+        </li>
       </ul>
-      <div v-if="isLogin">
+      <div  class="btn">
         <button id="logoutBtn" @click="emitSignout">Sign out</button>
       </div>
+    </div>
   </div>
 </template>
+
 <script>
 export default {
-  emit: ['emitSignout', 'emitActivePage'],
-  props: ['userData', 'isLogin', 'activePage'],
-  data() {
-    return {
-      
-    }
-  },
+  emit: ["requestSignout"],
+  props: ["userData"],
+
   methods: {
+   
     emitSignout() {
-      this.$emit('requestSignout');
+      this.$emit("requestSignout");
     },
-    changeActivePage(activePage) {
-      if(this.activePage !== activePage)
-      this.$emit('changeActive', activePage);
-    }
-  },
-  mounted() {
-    if(!this.isLogin) {
-      this.$router.push('/signin');
-    }
   },
 };
 </script>
 
-<style>
-.menu-container {
+<style scoped>
+.container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background: #f6ba1f;
-  border-bottom:2px solid rgb(240, 76, 11);
   height: 50px;
   padding: 5px 50px;
   margin-bottom: 50px;
+  color: white;
+  font-weight: bold;
 }
-.menu-container ul {
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+ul {
   display: flex;
   list-style: none;
-  justify-content: space-between;
-  align-items: center;
 }
-.menu-container ul li{
+ul li {
   margin: 0 10px;
   padding: 10px;
 }
-.menu-container ul li a{
-    color: white;
-    font-weight:bold;
-}
-.menu-container ul li a:hover{
-    color: rgb(240, 76, 11);
-}
-.menu-container div {
-  font-size: 28px;
-  display: flex;
-  align-items: center;
+.navbar ul li a {
   color: white;
   font-weight: bold;
+}
+.navbar ul li a:hover {
+  color: rgb(240, 76, 11);
+}
+.navbar div {
+  width: 25%;
+  font-size: 28px;
+  align-items: center;
+}
+.btn {
+  text-align: right;
 }
 #logoutBtn {
   width: 100px;
@@ -106,27 +88,11 @@ export default {
 #logoutBtn a:hover {
   color: rgb(173, 101, 233);
 }
-.menu-container a {
+a {
   text-decoration: none;
 }
 
-/* active menu style */
-.menu-container ul li .active {
+li:active {
   color: rgb(255, 102, 0);
-}
-
-
-/* responsive media */
-@media screen and (min-width:300px) and (max-width:500px){
-  .menu-container{
-    height: auto;
-  }
-  .menu-container ul{
-    display: flex;
-    flex-direction: column;
-  }
-  .menu-container ul li a{
-    font-size: 10px;
-  }
 }
 </style>
