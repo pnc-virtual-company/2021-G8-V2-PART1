@@ -7,15 +7,24 @@
       <p>{{ category.created_at }}</p>
     </div>
     <div class="cate-btn">
-      <button type="button" class="btn-change">EDIT</button>
-      <button type="button" class="btn-remove">REMOVE</button>
+      <button type="button" class="btn-change" @click="edit(category.id, category.name)">EDIT</button>
+      <button type="button" class="btn-remove" @click="remove(category.id)">REMOVE</button>
     </div>
   </section>
 </template>
 
 <script>
 export default {
+  emits: ['requestToRemove', 'requestToEdit'],
   props: ['category'],
+  methods: {
+    remove(id) {
+      this.$emit('requestToRemove', id);
+    },
+    edit(id, name) {
+      this.$emit('requestToEdit', id, name);
+    }
+  },
 };
 </script>
 

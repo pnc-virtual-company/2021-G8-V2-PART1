@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection(Category::get());
+        return CategoryResource::collection(Category::latest()->get());
     }
 
     /**
@@ -32,7 +32,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
 
         $category->save();
-        return response()->json(['message'=>'Your category have been created', 'data'=> $category], 201);
+        return response()->json(['message'=>'Your category have been created', 'data'=> new CategoryResource($category)], 201);
 
     }
 
@@ -63,7 +63,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
 
         $category->save();
-        return response()->json(['massage'=>'Your category have been updated', 'data'=> $category], 200);
+        return response()->json(['massage'=>'Your category have been updated', 'data'=> new CategoryResource($category)], 200);
     }
 
     /**
@@ -74,12 +74,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $isDeleted = Category::destroy($id);
-        if($isDeleted === 1){
-            return response()->json(['massage'=>'Your category have been deleted'], 200);
-        }else{
-            return response()->json(['massage'=>'ID already exit'], 404);
-        }
+        return  Category::destroy($id);
       
     }
 }

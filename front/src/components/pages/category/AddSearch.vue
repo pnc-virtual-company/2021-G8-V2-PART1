@@ -8,7 +8,7 @@
           placeholder="What are you looking for?"
         />
         <button type="button" class="searchButton">
-          <i class="fa fa-search"></i>
+          x
         </button>
       </div>
       <div class="cate-add-btn">
@@ -52,7 +52,7 @@ export default {
   cursor: pointer;
 }
 .btn-add:hover,
-.searchButton i:hover {
+.searchButton:hover {
   color: rgb(173, 101, 233);
 }
 
@@ -78,5 +78,6 @@ export default {
   color: #fff;
   border-radius: 0 15px 15px 0;
   cursor: pointer;
+  font-size: 24px;
 }
 </style>

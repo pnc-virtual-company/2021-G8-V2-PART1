@@ -17,7 +17,6 @@ const router = createRouter({
         {path: '/categoryView',component: CategoryView},
         {path: '/event',component: Event},
         {path: '/myEvent',component: MyEvent},
-     
     ]
 })
 const app = createApp(App);

@@ -1,25 +1,25 @@
 <template>
-  <div class="container">
+  <nav class="container">
     <div v-if="userData !== null" class="navbar">
       <div class="username">
         <p id="username">{{ userData.firstname }}</p>
       </div>
       <ul>
         <li>
-          <router-link to="/event" tag="li">Find Events </router-link>
+          <router-link to="/event">Find Events </router-link>
         </li>
         <li>
-          <router-link to="/MyEvent" tag="li">My Events </router-link>
+          <router-link to="/MyEvent">My Events </router-link>
         </li>
         <li>
-          <router-link to="/categoryView" tag="li">Categories </router-link>
+          <router-link to="/categoryView">Categories </router-link>
         </li>
       </ul>
       <div  class="btn">
         <button id="logoutBtn" @click="emitSignout">Sign out</button>
       </div>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script>
@@ -93,5 +93,8 @@ ul li {
 }
 a {
   text-decoration: none;
+}
+.navbar ul li .router-link-active{
+  color: red;
 }
 </style>

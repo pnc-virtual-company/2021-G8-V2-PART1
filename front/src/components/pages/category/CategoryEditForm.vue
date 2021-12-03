@@ -2,18 +2,20 @@
   <section >
     <form class="createForm">
       <div class="title">
-        <h2>Add Category</h2>
+        <h2>Edit Category</h2>
       </div>
       <div>
         <input type="text" placeholder="Name..." v-model="categoryName"/>
         <div class="error" v-if="cateNameError">
           <p v-text="cateNameError"></p>
         </div>
+        <div class="error" v-if="editError">
+          <p v-text="editError"></p>
+        </div>
       </div>
       <div class="btn">
         <button type="button" class="btnCancel" @click="cancel">CANCEL</button>
-        <button type="button"  class="btnCreate" @click="emitNewCategory" v-if="!isEditing">CREATE</button>
-        <button type="button"  class="btnUpdate" @click="updateCate" v-if="isEditing">UPDATE</button>
+        <button type="button"  class="btnUpdate" @click="emitUpdateCategory">UPDATE</button>
       </div>
     </form>
   </section>
@@ -21,19 +23,19 @@
 
 <script>
 export default {
-  emit: ['emitNewCategory', 'cancel'],
-  props: ['isShowForm', 'isEditing','categories'],
+  emit: ['updateCategory', 'cancel'],
+  props: ['categoryToEdit', 'editError'],
   data() {
     return {
-      categoryName: '',
-      cateNameError:'invalid category name',
+      categoryName: this.categoryToEdit.name,
+      cateNameError:'',
     }
   },
   watch: {
     categoryName: function(value) {
       if(value !== '') {
         this.cateNameError = '';
-      } else {
+      } else if(this.editError === '') {
         this.cateNameError = 'invalid category name';
       }
     }
@@ -42,8 +44,10 @@ export default {
     cancel() {
       this.$emit('hideForm')
     },
-    emitNewCategory() {
-      this.$emit('addCategory', this.categoryName);
+    emitUpdateCategory() {
+      if(this.cateNameError === '') {
+        this.$emit('updateCategory', this.categoryName, this.categoryToEdit.id);
+      }
     },
   },
 };
