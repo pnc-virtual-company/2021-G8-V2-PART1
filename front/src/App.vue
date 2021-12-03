@@ -62,6 +62,7 @@ export default {
     },
     logout() {
       this.userData = null;
+      localStorage.removeItem('userID');
       this.$router.push('/signin');
     },
   },
