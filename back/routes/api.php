@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 
 //user
+Route::get('/getAUser/{id}', [UserController::class, "getAUser"]);
 Route::post('/signup', [UserController::class, "signup"]);
 Route::post('/signin', [UserController::class, "signin"]);
 

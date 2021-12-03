@@ -13,10 +13,19 @@
 </template>
 
 <script>
+import AddSearch from './AddSearch.vue';
+import CategoryForm from './CategoryForm.vue';
+import CategoryCard from './CategoryCard.vue';
+
 import axios from 'axios';
 const url = "http://127.0.0.1:8000/api/categories";
 
 export default {
+    components: {
+        'add-search': AddSearch,
+        'category-form': CategoryForm,
+        'category-card': CategoryCard,
+    },
     data() {
         return {
             isShowAddForm: 0,
@@ -30,12 +39,12 @@ export default {
         hideFormCategory() {
             this.isShowAddForm = 0;
         },
-        addCategory(categoryName){
-            axios.post(url, categoryName).then(res => {
-                console.log(res.data);
-                this.isShowAddForm = 0;
-            })
-        }
+        // addCategory(categoryName){
+        //     axios.post(url, categoryName).then(res => {
+        //         console.log(res.data);
+        //         this.isShowAddForm = 0;
+        //     })
+        // }
     },
     mounted() {
         axios.get(url).then(res => {

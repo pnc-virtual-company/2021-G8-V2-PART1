@@ -1,36 +1,30 @@
 <template>
   <div>
-    <navbar v-if="!isLogin"></navbar>
+    <navbar :userData="userData" @requestSignout="logout"></navbar>
     <router-view
-    @register="registerNewUser"
-    @signin="login"
-    @requestSignout="logout"
-    @changeActive="setActivePage"
-    :userData="userData"
-    :isLogin="isLogin"
-    :activePage="activePage"
-    :existedEmailError = "existedEmailError"
-    :unauthorizedError = "unauthorizedError"
+      @register="registerNewUser"
+      @signin="login"
+      :existedEmailError="existedEmailError"
+      :unauthorizedError="unauthorizedError"
     >
     </router-view>
-    <body v-if="isLogin">
-      <event v-if="activePage === 'event' || activePage === 'myEvent'"></event>
-      <category-view v-if="activePage === 'category'"></category-view>
-    </body>
   </div>
 </template>
 
 <script>
+
+
+import Navbar from './components/menu/Navbar.vue';
 import axios from 'axios';
 const url = "http://127.0.0.1:8000/api/";
 
 export default {
-  
+  components: {
+    'navbar': Navbar,
+  },
   data() {
     return {
-      isLogin: 0,
-      activePage: 'event',
-      userData: {},
+      userData: null,
       existedEmailError: '',
       unauthorizedError: '',
     }
@@ -38,55 +32,53 @@ export default {
   methods: {
     registerNewUser(newUserData) {
       axios.post(url+'signup', newUserData)
-      .then(res => {
+      .then(() => {
         this.existedEmailError = '';
-        this.$router.push('/signin');
         this.errorMessage = '';
-        console.log(res.data);
+        this.$router.push('/signin');
       })
       .catch(error => {
         let serverCode = error.response.status;
         if(serverCode === 500) {
           this.existedEmailError = 'Email existed, use another email!'
-          this.$router.push('/signup');
         }
       })
     },
     login(userData) {
       axios.post(url+'signin', userData)
       .then(res => {
-        this.isLogin = 1;
-        this.unauthorizedError = '';
-        this.$router.push('/navbar');
+        localStorage.setItem('userID', res.data.user.id);
         this.userData = res.data.user;
+        this.unauthorizedError = '';
         this.errorMessage = '';
-        console.log(this.userData);
+        this.$router.push('/event');
       })
       .catch(error => {
         let serverCode = error.response.status;
         if(serverCode === 401) {
           this.unauthorizedError = 'Unauthorized! incorrect email or password';
-          this.$router.push('/signin');
         }
       })
     },
     logout() {
-      this.isLogin = 0;
-      this.activePage = 'event';
-      this.eventList = [];
-      this.categoryList = [];
+      this.userData = null;
       this.$router.push('/signin');
     },
-    setActivePage(currentActivePage) {
-      this.activePage = currentActivePage;
+  },
+  mounted() {
+    if(localStorage.userID) {
+      axios.get(url + 'getAUser/' + localStorage.userID)
+      .then(res => {
+        this.userData = res.data;
+      })
     }
-  }
+  },
 }
 </script>
 
 <style>
-*{
-  padding:0;
+* {
+  padding: 0;
   margin: 0;
 }
 #app {

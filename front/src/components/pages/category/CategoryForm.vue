@@ -109,6 +109,9 @@ button {
 .btnUpdate {
   background-color: #1f95f6;
 }
+.error {
+  color: red;
+}
 
 input[type="text"] {
   padding: 10px;
@@ -117,7 +120,7 @@ input[type="text"] {
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
-  border: 3px solid #ccc;
+  border: 2px solid #ccc;
   outline: none;
 }
 
