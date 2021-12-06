@@ -4,19 +4,17 @@
       <div class="header">
         <h3>Add Event</h3>
       </div>
-      <div class="category">
-        <label for>Category:</label>
-        <select name id>
-          <option value>Party</option>
-          <option value>Party</option>
-          <option value>Party</option>
-        </select>
-      </div>
       <div class="title">
         <input type="text" placeholder="Title" v-model="title" />
       </div>
       <div class="description">
         <textarea name id placeholder="Description" v-model="description"></textarea>
+      </div>
+      <div class="category">
+        <label for>Category:</label>
+        <button>
+          <i class="fas fa-search-plus"></i>
+        </button>
       </div>
       <div class="city">
         <label for>City:</label>
@@ -186,4 +184,5 @@ export default {
 .category {
   margin: 10px 0;
 }
+
 </style>
