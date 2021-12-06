@@ -75,6 +75,21 @@ export default {
       }
     }
   },
+  mounted() {
+    window.onpopstate = () => {
+      if (
+        localStorage.getItem("userID") === null &&
+        (this.$route.path === "/event" ||
+        this.$route.path === "/myEvent" ||
+        this.$route.path === "/categoryView")
+      ) {
+        this.$router.push("/signin");
+      }
+    }
+    if(localStorage.userID) {
+      this.$router.push('/event');
+    }
+  },
 };
 </script>
 <style scoped>
@@ -107,7 +122,7 @@ form button {
   border-radius: 15px;
 }
 form .buttonActive button {
-  background: #f6ba1f;
+  background: var(--main-color);
 }
 form .buttonInactive button {
   background: grey;
@@ -128,7 +143,7 @@ form input {
   outline: none;
 }
 form input:focus {
-  border: 1px solid #f6ba1f;
+  border: 1px solid var(--main-color);
 }
 form h2 {
   text-align: center;

@@ -4,27 +4,11 @@
       <div class="header">
         <h3>Add Event</h3>
       </div>
-      <div class="category">
-        <label for>Category:</label>
-        <select name id>
-          <option value>Party</option>
-          <option value>Party</option>
-          <option value>Party</option>
-        </select>
-      </div>
       <div class="title">
         <input type="text" placeholder="Title" v-model="title" />
       </div>
       <div class="description">
         <textarea name id placeholder="Description" v-model="description"></textarea>
-      </div>
-      <div class="city">
-        <label for>City:</label>
-        <select name id>
-          <option value>PhnomPenh</option>
-          <option value>PhnomPenh</option>
-          <option value>PhnomPenh</option>
-        </select>
       </div>
       <div class="date">
         <div class="startDate">
@@ -40,7 +24,6 @@
           <input type="time" />
         </div>
       </div>
-
       <div class="btnAction">
         <button id="cancel">CANCEL</button>
         <button id="create" @click="createEvent">CREATE</button>
@@ -81,11 +64,9 @@ export default {
 </script>
 
 <style scoped>
-/* section {
-  background-color: aqua;
-} */
 .eventForm {
-  width: 300px;
+  width: 35%;
+  height: 75vh;
   background-color: rgb(255, 255, 255);
   margin: auto;
   padding: 20px;
@@ -106,6 +87,7 @@ export default {
   border: none;
 }
 .city {
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -119,8 +101,8 @@ export default {
 .date {
   display: flex;
   justify-content: center;
-  padding: 0;
-  margin: 0;
+  padding: 0x;
+  margin: 10px;
 }
 .startDate {
   margin-right: 10px;
@@ -132,6 +114,8 @@ export default {
   padding-left: 10px;
 }
 .category {
+  padding: 0;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -186,4 +170,5 @@ export default {
 .category {
   margin: 10px 0;
 }
+
 </style>
