@@ -39,6 +39,7 @@ class MyeventController extends Controller
         
         // insert to database
         $myevent = new Myevent();
+        $myevent->category_id = $request->category_id;
         $myevent->title = $request->title;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
@@ -92,7 +93,14 @@ class MyeventController extends Controller
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
         $myevent->description = $request->description;
-        $myevent->image =$request->file('image')->hashName();
+        if($request->image !== null){
+            $myevent->image =$request->file('image')->hashName();
+            // move image to storage folder
+            $request -> file('image')->store('public/images');
+        }else{
+            $img = 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg';
+            $myevent->image = $img;
+        }
         $myevent->save();
         return response()->json(['message'=>"My event Updated!", 'My event'=>$myevent],200);
     }

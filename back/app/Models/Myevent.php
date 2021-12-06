@@ -9,4 +9,8 @@ class Myevent extends Model
 {
     use HasFactory;
     protected $fillable = ['title','start_date','end_date','description','image'];
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
