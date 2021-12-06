@@ -6,13 +6,14 @@
           type="text"
           class="searchKey"
           placeholder="What are you looking for?"
+          v-model="keyWord"
         />
-        <button type="button" class="searchButton">
+        <button type="button" class="searchButton" @click="clearSearch">
           x
         </button>
       </div>
       <div class="cate-add-btn">
-        <button type="button" class="btn-add" @click="showFormCategory">Add+</button>
+        <button type="button" class="btn-add" @click="$emit('showForm')">Add+</button>
       </div>
     </div>
   </section>
@@ -20,14 +21,21 @@
 
 <script>
 export default {
-  emit: ["showFormCategory"],
+  emit: ['search'],
   data() {
-    return {};
+    return {
+      keyWord: ''
+    };
+  },
+  watch: {
+    keyWord: function(newValue) {
+      this.$emit('search', newValue);
+    }
   },
   methods: {
-    showFormCategory() {
-      this.$emit("showForm");
-    },
+    clearSearch() {
+      this.keyWord = '';
+    }
   },
 };
 </script>
@@ -63,7 +71,7 @@ export default {
 
 .searchKey {
   width: 65%;
-  border: 2px solid #f6ba1f;
+  border: 2px solid var(--main-color);
   border-right: none;
   padding: 15px;
   border-radius: 15px 0 0 15px;
@@ -73,8 +81,8 @@ export default {
 .searchButton {
   margin: 0;
   width: 45px;
-  border: 1px solid #f6ba1f;
-  background: #f6ba1f;
+  border: 1px solid var(--main-color);
+  background: var(--main-color);
   color: #fff;
   border-radius: 0 15px 15px 0;
   cursor: pointer;

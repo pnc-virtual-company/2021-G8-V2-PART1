@@ -52,7 +52,7 @@ button {
   color: rgb(173, 101, 233);
 }
 .btn-change {
-  background-color: #f6ba1f;
+  background-color: var(--main-color);
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   margin-right: 8px;

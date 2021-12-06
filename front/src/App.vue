@@ -35,6 +35,7 @@ export default {
       .then(() => {
         this.existedEmailError = '';
         this.errorMessage = '';
+        this.unauthorizedError = '';
         this.$router.push('/signin');
       })
       .catch(error => {
@@ -51,6 +52,7 @@ export default {
         this.userData = res.data.user;
         this.unauthorizedError = '';
         this.errorMessage = '';
+        this.existedEmailError = '';
         this.$router.push('/event');
       })
       .catch(error => {
@@ -67,13 +69,23 @@ export default {
     },
   },
   mounted() {
+    window.onpopstate = () => {
+      if (
+        localStorage.getItem("userID") !== null &&
+        (this.$route.path === "/signin" || this.$route.path === "/")
+      ) {
+        this.$router.push("/event");
+      }
+    };
     if(localStorage.userID) {
       axios.get(url + 'getAUser/' + localStorage.userID)
       .then(res => {
         this.userData = res.data;
       })
+    } else {
+      this.$router.push('/signin');
     }
-  },
+  }
 }
 </script>
 
@@ -87,5 +99,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+:root {
+  --main-color: #f6ba1f;
 }
 </style>

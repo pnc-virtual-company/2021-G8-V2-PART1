@@ -9,7 +9,7 @@
           <router-link to="/event">Find Events </router-link>
         </li>
         <li>
-          <router-link to="/MyEvent">My Events </router-link>
+          <router-link to="/myEvent">My Events </router-link>
         </li>
         <li>
           <router-link to="/categoryView">Categories </router-link>
@@ -40,7 +40,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f6ba1f;
+  background: var(--main-color);
   height: 50px;
   padding: 5px 50px;
   margin-bottom: 50px;

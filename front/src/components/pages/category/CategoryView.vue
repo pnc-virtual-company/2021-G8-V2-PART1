@@ -1,26 +1,33 @@
 <template>
     <section>
-        <add-search @showForm='showFormCategory'></add-search>
-       
-        <category-add-form 
-            v-if="isShowAddForm"
-            :createError="createError"
-            @hideForm="hideFormCategory"
-            @addCategory ="addNewCategory"
-        ></category-add-form>
-        <category-edit-form 
-            v-if="isEditing"
-            :editError="editError"
-            :categoryToEdit="categoryToEdit"
-            @hideForm="hideFormCategory"
-            @updateCategory ="updateCategory"
-        ></category-edit-form>
+        <add-search @showForm='showAddForm' @search='search'></add-search>
+        <base-dialog
+            v-if="dialogDisplayed"
+            :title="dialogTitle"
+            :mode="dialogMode"
+            @close="closeDialog"
+        >
+            <input type="text" placeholder="Name..." v-model="categoryName"/>
+            <div
+                v-if="cateNameError" 
+                :class="getErrorClass">
+                <p v-text="cateNameError"></p>
+            </div>
+
+            <template #actions>
+                <base-button 
+                    @click="onConfirm" 
+                    :class="isValidated ? 'buttonActive' : 'buttonInactive'"
+                    >{{ dialogButtton }}
+                </base-button>
+            </template>
+        </base-dialog>
         <category-card 
             v-for="category of categories" 
             :key="category.id" 
             :category="category"
             @requestToRemove="removeCategory"
-            @requestToEdit="showFormEdit"
+            @requestToEdit="showEditForm"
             @updateCategory="updateCategory"
         ></category-card>
     </section>
@@ -28,37 +35,70 @@
 
 <script>
 import AddSearch from './AddSearch.vue';
-import CategoryAddForm from './CategoryAddForm.vue';
-import CategoryEditForm from './CategoryEditForm.vue';
 import CategoryCard from './CategoryCard.vue';
 
 import axios from 'axios';
-const url = "http://127.0.0.1:8000/api/categories";
+const url = "http://127.0.0.1:8000/api/categories/";
 
 export default {
     components: {
         'add-search': AddSearch,
-        'category-add-form': CategoryAddForm,
-        'category-edit-form': CategoryEditForm,
         'category-card': CategoryCard,
     },
     data() {
         return {
-            isShowAddForm: false,
-            isEditing: false,
+            dialogMode: 'create',
+            dialogDisplayed: false,
+            categoryName: '',
+            categoryKeySearch: '',
             categoryToEdit: null,
             categories: [],
-            createError: '',
-            editError: '',
+            cateNameError:'🤠 Please enter category name',
+        }
+    },
+    watch: {
+        categoryName: function(newValue) {
+            if(newValue === '') {
+                this.cateNameError = '🤠 Please enter category name';
+            } else {
+                this.cateNameError = '😎 Available category name';
+                for(let cate of this.categories) {
+                    if(cate.name.toLowerCase() === newValue.toLowerCase()) {
+                        this.cateNameError = '🤠 Category name already existed';
+                    }
+                }
+            }
+        }
+    },
+    computed: {
+        dialogTitle() {
+            return this.dialogMode === 'edit' ? 'EDIT CATEGORY' : 'CREATE CATEGORY';
+        },
+        dialogButtton() {
+            return this.dialogMode === 'edit' ? 'EDIT' : 'CREATE';
+        },
+        isValidated() {
+            return (
+                this.cateNameError === '😎 Available category name'
+            );
+        },
+        getErrorClass() {
+            if(this.cateNameError === '😎 Available category name' ||
+                this.cateNameError === '🤠 Please enter category name') 
+            {
+                return 'frontOk'
+            }
+            return 'frontError'
         }
     },
     methods: {
-        showFormCategory() {
-            this.isShowAddForm = !this.isEditing;
+        showAddForm() {
+            this.dialogMode = 'create';
+            this.dialogDisplayed = true;
         },
-        hideFormCategory() {
-            this.isShowAddForm = false;
-            this.isEditing = false;
+        closeDialog() {
+            this.dialogDisplayed = false;
+            this.categoryName = '';
         },
         addNewCategory(categoryName){
             let data = {
@@ -70,42 +110,55 @@ export default {
                 this.isShowAddForm = false,
                 this.createError = '';
             })
-            .catch(error => {
-                let serverCode = error.response.status;
-                if(serverCode === 422) {
-                    this.createError = 'Category is existed!'
-                }
-            })
         },
         removeCategory(id) {
-            axios.delete(url + '/' + id)
+            axios.delete(url + id)
             .then(() => {
                 this.categories = this.categories.filter(cate => cate.id !== id);
             })
         },
-        showFormEdit(id, name) {
-            this.isEditing = !this.isShowAddForm;
+        showEditForm(id, name) {
+            this.dialogMode = 'edit';
+            this.dialogDisplayed = true;
             this.categoryToEdit = {
                 id: id,
                 name: name
             }
+            this.categoryName = this.categoryToEdit.name;
+            this.cateNameError = '🤠 Please enter new category name';
         },
         updateCategory(newCateName, id) {
             let data = {
                 name: newCateName
             }
-            axios.put(url + '/' + id, data)
+            axios.put(url + id, data)
             .then(res => {
                 this.categories = this.categories.filter(cate => cate.id !== id);
                 this.categories.unshift(res.data.data);
                 this.isEditing = false;
+                this.editError = '';
             })
-            .catch(error => {
-                let serverCode = error.response.status;
-                if(serverCode === 422) {
-                    this.editError = 'Category name is not available!'
+        },
+        onConfirm() {
+            if(this.isValidated) {
+                if (this.dialogMode === 'create') {
+                    this.addNewCategory(this.categoryName);
+                } else if (this.dialogMode === 'edit') {
+                    this.updateCategory(this.categoryName, this.categoryToEdit.id);
                 }
-            })
+                this.closeDialog();
+            }
+        },
+        search(key) {
+            if(key === '') {
+                axios.get(url).then(res => {
+                    this.categories = res.data.data;
+                });
+            } else {
+                axios.get(url + 'search/' + key).then(res => {
+                    this.categories = res.data;
+                })
+            }
         }
     },
     mounted() {
@@ -117,5 +170,26 @@ export default {
 </script>
 
 <style scoped>
-
+input {
+  padding: 15px;
+}
+input[type="text"] {
+  padding: 10px;
+  border: 0;
+  width: 80%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  outline: none;
+}
+input[type="text"]:focus {
+  border: 2px solid var(--main-color);
+}
+.frontOk {
+    color: rgb(56, 56, 255);
+}
+.frontError {
+    color: gray;
+}
 </style>
