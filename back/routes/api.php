@@ -16,3 +16,5 @@ Route::post('/myevents', [MyeventController::class, 'store']);
 Route::delete('/myevents/{id}', [MyeventController::class, 'destroy']);
 Route::put('/myevents/{id}', [MyeventController::class, 'update']);
 Route::get('/myevents/search/{title}', [MyeventController::class, 'search']);
+
+Route::get('/countries',[MyeventController::class, 'getCountries']);
