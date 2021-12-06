@@ -2,7 +2,7 @@
   <div>
     <div class="card-container">
       <div class="image">
-        <img src="https://cdn.pixabay.com/photo/2015/06/22/08/40/child-817373__480.jpg" alt />
+        <img src="https://static.bangkokpost.com/media/content/20191004/c1_1764659_191004103525.jpg" alt />
       </div>
       <div class="infor">
         <div class="text">

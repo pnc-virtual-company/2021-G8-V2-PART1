@@ -40,7 +40,6 @@
           <input type="time" />
         </div>
       </div>
-
       <div class="btnAction">
         <button id="cancel">CANCEL</button>
         <button id="create" @click="createEvent">CREATE</button>
@@ -81,11 +80,9 @@ export default {
 </script>
 
 <style scoped>
-/* section {
-  background-color: aqua;
-} */
 .eventForm {
-  width: 300px;
+  width: 35%;
+  height: 75vh;
   background-color: rgb(255, 255, 255);
   margin: auto;
   padding: 20px;
@@ -106,6 +103,7 @@ export default {
   border: none;
 }
 .city {
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -119,8 +117,8 @@ export default {
 .date {
   display: flex;
   justify-content: center;
-  padding: 0;
-  margin: 0;
+  padding: 0x;
+  margin: 10px;
 }
 .startDate {
   margin-right: 10px;
@@ -132,6 +130,8 @@ export default {
   padding-left: 10px;
 }
 .category {
+  padding: 0;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;

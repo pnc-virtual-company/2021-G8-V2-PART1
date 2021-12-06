@@ -37,6 +37,7 @@ export default {
   methods: {
       createMyNewEvent(newEvent){
           this.myEventData.unshift(newEvent);
+          console.log(this.myEventData)
       }
   },
 }
