@@ -1,25 +1,25 @@
 <template>
-  <div class="container">
+  <nav class="container">
     <div v-if="userData !== null" class="navbar">
       <div class="username">
         <p id="username">{{ userData.firstname }}</p>
       </div>
       <ul>
         <li>
-          <router-link to="/MyEvent" tag="li">My Events </router-link>
+          <router-link to="/event">Find Events </router-link>
         </li>
         <li>
-          <router-link to="/event" tag="li">Find Events </router-link>
+          <router-link to="/myEvent">My Events </router-link>
         </li>
         <li>
-          <router-link to="/category" tag="li">Categories </router-link>
+          <router-link to="/categoryView">Categories </router-link>
         </li>
       </ul>
       <div  class="btn">
         <button id="logoutBtn" @click="emitSignout">Sign out</button>
       </div>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script>
@@ -28,7 +28,6 @@ export default {
   props: ["userData"],
 
   methods: {
-   
     emitSignout() {
       this.$emit("requestSignout");
     },
@@ -41,7 +40,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f6ba1f;
+  background: var(--main-color);
   height: 50px;
   padding: 5px 50px;
   margin-bottom: 50px;
@@ -84,15 +83,18 @@ ul li {
   padding: 10px;
   color: white;
   font-weight: bold;
+  cursor: pointer;
 }
-#logoutBtn a:hover {
+#logoutBtn:hover {
   color: rgb(173, 101, 233);
+}
+#username {
+  cursor: pointer;
 }
 a {
   text-decoration: none;
 }
-
-li:active {
-  color: rgb(255, 102, 0);
+.navbar ul li .router-link-active{
+  color: red;
 }
 </style>

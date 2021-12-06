@@ -10,20 +10,6 @@
       <div class="description">
         <textarea name id placeholder="Description" v-model="description"></textarea>
       </div>
-      <div class="category">
-        <label for>Category:</label>
-        <button>
-          <i class="fas fa-search-plus"></i>
-        </button>
-      </div>
-      <div class="city">
-        <label for>City:</label>
-        <select name id>
-          <option value>PhnomPenh</option>
-          <option value>PhnomPenh</option>
-          <option value>PhnomPenh</option>
-        </select>
-      </div>
       <div class="date">
         <div class="startDate">
           <label for>Start Date</label>

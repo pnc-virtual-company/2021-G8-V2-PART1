@@ -4,7 +4,6 @@
     <router-view
       @register="registerNewUser"
       @signin="login"
-      :userData="userData"
       :existedEmailError="existedEmailError"
       :unauthorizedError="unauthorizedError"
     >
@@ -24,55 +23,66 @@ export default {
   data() {
     return {
       userData: null,
-
       existedEmailError: '',
       unauthorizedError: '',
     }
   },
-
-  computed: {
-    isLogin() {
-      return this.userData !== null;
-    }
-  },
-
   methods: {
     registerNewUser(newUserData) {
       axios.post(url+'signup', newUserData)
-      .then(res => {
+      .then(() => {
         this.existedEmailError = '';
-        this.$router.push('/signin');
         this.errorMessage = '';
-        console.log(res.data);
+        this.unauthorizedError = '';
+        this.$router.push('/signin');
       })
       .catch(error => {
         let serverCode = error.response.status;
         if(serverCode === 500) {
           this.existedEmailError = 'Email existed, use another email!'
-          this.$router.push('/signup');
         }
       })
     },
     login(userData) {
       axios.post(url+'signin', userData)
       .then(res => {
+        localStorage.setItem('userID', res.data.user.id);
         this.userData = res.data.user;
         this.unauthorizedError = '';
         this.errorMessage = '';
+        this.existedEmailError = '';
         this.$router.push('/event');
       })
       .catch(error => {
         let serverCode = error.response.status;
         if(serverCode === 401) {
           this.unauthorizedError = 'Unauthorized! incorrect email or password';
-          this.$router.push('/signin');
         }
       })
     },
     logout() {
       this.userData = null;
+      localStorage.removeItem('userID');
       this.$router.push('/signin');
     },
+  },
+  mounted() {
+    window.onpopstate = () => {
+      if (
+        localStorage.getItem("userID") !== null &&
+        (this.$route.path === "/signin" || this.$route.path === "/")
+      ) {
+        this.$router.push("/event");
+      }
+    };
+    if(localStorage.userID) {
+      axios.get(url + 'getAUser/' + localStorage.userID)
+      .then(res => {
+        this.userData = res.data;
+      })
+    } else {
+      this.$router.push('/signin');
+    }
   }
 }
 </script>
@@ -87,5 +97,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+:root {
+  --main-color: #f6ba1f;
 }
 </style>

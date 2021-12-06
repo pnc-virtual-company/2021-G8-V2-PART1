@@ -63,8 +63,8 @@ export default {
       confirmPassword: "",
       isActivateButton: 0,
 
-      firstnameError: "invalid firstname",
-      lastnameError: "invalid lastname",
+      firstnameError: "require firstname",
+      lastnameError: "require lastname",
       emailError: "invalid email",
       passwordError: "password must be at least 8 characters",
       cPasswordError: "confirm password isn't matched",
@@ -75,14 +75,14 @@ export default {
       if (value !== "") {
         this.firstnameError = "";
       } else {
-        this.firstnameError = "invalid firstname";
+        this.firstnameError = "require firstname";
       }
     },
     lastName: function (value) {
       if (value !== "") {
         this.lastnameError = "";
       } else {
-        this.lastnameError = "invalid lastname";
+        this.lastnameError = "require lastname";
       }
     },
     email: function (value) {
@@ -139,6 +139,11 @@ export default {
       }
     },
   },
+  mounted() {
+    if(localStorage.userID) {
+      this.$router.push('/event');
+    }
+  },
 };
 </script>
 
@@ -164,7 +169,7 @@ form .buttonActive {
   text-align: right;
   margin: 5px 0;
 }
-form button {
+form #register {
   width: 90px;
   height: 30px;
   color: white;
@@ -172,7 +177,7 @@ form button {
   border-radius: 15px;
 }
 form .buttonActive button {
-  background: #f6ba1f;
+  background: var(--main-color);
 }
 form .buttonInactive button {
   background: grey;
@@ -193,7 +198,7 @@ form input {
   outline: none;
 }
 form input:focus {
-  border: 1px solid #f6ba1f;
+  border: 1px solid var(--main-color);
 }
 form h2 {
   text-align: center;

@@ -44,4 +44,9 @@ class UserController extends Controller
            
         ]);
     }
+
+    public function getAUser($id)
+    {
+        return User::find($id);
+    }
 }
