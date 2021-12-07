@@ -9,7 +9,7 @@
           v-model="keyWord"
         />
         <button type="button" class="searchButton" @click="clearSearch">
-          x
+          X
         </button>
       </div>
       <div class="cate-add-btn">
@@ -42,7 +42,7 @@ export default {
 
 <style scoped>
 .add-and-search {
-  width: 70%;
+  width: 82%;
   margin: auto;
   display: flex;
   justify-content: space-between;
@@ -51,7 +51,8 @@ export default {
 
 .btn-add {
   margin: 0;
-  background: #f6ba1f;
+  width: 150px;
+  background: var(--main-color);
   border: none;
   padding: 15px 20px;
   border-radius: 50px;

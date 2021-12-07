@@ -9,6 +9,7 @@ import EventView from './components/pages/event/exploreEvent/EventView.vue';
 import MyEventView from './components/pages/event/myevent/MyEventView.vue';
 import BaseDialog from './components/UI/BaseDialog.vue';
 import BaseButton from './components/UI/BaseButton.vue';
+import CategoryCityDialog from './components/UI/CategoryCityDialog.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -24,5 +25,6 @@ const router = createRouter({
 const app = createApp(App);
 app.component('base-dialog', BaseDialog);
 app.component('base-button', BaseButton);
+app.component('category-city-dialog', CategoryCityDialog)
 app.use(router);
 app.mount('#app');
