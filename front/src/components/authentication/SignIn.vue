@@ -34,10 +34,9 @@ export default {
     return {
       email: "",
       password: "",
-      isActivateButton: 0,
 
-      emailError: "invalid email",
-      passwordError: "password must be at least 8 characters",
+      emailError: "",
+      passwordError: "",
     };
   },
   watch: {
@@ -61,7 +60,7 @@ export default {
   },
   computed: {
     isValidated() {
-      return this.emailError === '' && this.passwordError === '';
+      return this.emailError === '' && this.passwordError === '' && this.email !== '' && this.password !== '';
     }
   },
   methods: {
@@ -125,7 +124,9 @@ form .buttonActive button {
   background: var(--main-color);
 }
 form .buttonInactive button {
-  background: grey;
+  background: rgba(128, 128, 128, 0.219);
+  color: rgba(128, 128, 128, 0.445);
+
 }
 form .buttonActive #signIn:hover {
   color: rgb(173, 101, 233);
