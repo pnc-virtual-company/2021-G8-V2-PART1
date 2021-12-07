@@ -8,8 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Myevent extends Model
 {
     use HasFactory;
-    protected $fillable = ['title','start_date','end_date','description'];
-    // public function getStartDateAttribute($value){
-    //     return Carbon::parse($value)->format('D, j M Y h:i A');
-    // }
+    protected $fillable = ['category_id','user_id','title','start_date','end_date','description','image'];
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

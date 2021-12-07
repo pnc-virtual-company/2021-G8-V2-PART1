@@ -7,9 +7,11 @@ use App\Http\Controllers\MyeventController;
 use App\Http\Controllers\CategoryController;
 
 //user
+Route::get('/users',[UserController::class,'getUsers']);
 Route::get('/getAUser/{id}', [UserController::class, "getAUser"]);
 Route::post('/signup', [UserController::class, "signup"]);
 Route::post('/signin', [UserController::class, "signin"]);
+
 
 // myEvent
 Route::get('/myevents', [MyeventController::class, 'index']);
@@ -18,6 +20,10 @@ Route::post('/myevents', [MyeventController::class, 'store']);
 Route::delete('/myevents/{id}', [MyeventController::class, 'destroy']);
 Route::put('/myevents/{id}', [MyeventController::class, 'update']);
 Route::get('/myevents/search/{title}', [MyeventController::class, 'search']);
+
+// countries
+Route::get('/countries', [MyeventController::class, 'getCountries']);
+
 // category
 
 Route::get('/categories', [CategoryController::class ,'index']);

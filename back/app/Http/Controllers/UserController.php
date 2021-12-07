@@ -49,4 +49,7 @@ class UserController extends Controller
     {
         return User::find($id);
     }
+    public function getUsers(){
+        return User::latest()->get();
+    }
 }
