@@ -16,7 +16,8 @@ class MyeventController extends Controller
     public function index()
     {
         //
-        return MyeventResource::collection(Myevent::orderBy('id','desc')->get());
+        return MyeventResource::collection(Myevent::with('id','desc')->get());
+
 
     }
 
