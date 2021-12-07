@@ -1,27 +1,33 @@
 <template>
-  <div>
+  <section>
     <div class="card-container">
-      <div class="image">
-        <img src="https://static.bangkokpost.com/media/content/20191004/c1_1764659_191004103525.jpg" alt />
+      <div class="left-side">
+        <img src="https://static.bangkokpost.com/media/content/20191004/c1_1764659_191004103525.jpg"/>
       </div>
-      <div class="infor">
-        <div class="text">
-          <h1>{{myEvent.title}}</h1>
-          <p>{{myEvent.description}}</p>
-        </div>
-        <div class="date">
-          <h3>{{myEvent.startDateTime}}</h3>
-          <h3>{{myEvent.endDateTime}}</h3>
-          <div class="btn-action">
-            <div class="btn-eventme">
-              <button class="edit">Edit</button>
-              <button class="delete">Delete</button>
+      <div class="right-side">
+          <div class="right-top">
+            <h1>{{myEvent.title}}</h1>
+            <div class="date">
+              <p>Date: {{myEvent.startDateTime}}</p>
+              <p>- {{myEvent.endDateTime}}</p>
+            </div>
+            <p>{{myEvent.description}}</p>
+          </div>
+          <div class="right-bottom">
+            <div class="bottom-info">
+              <div class="bottom-left">
+                <p>{{myEvent.category}} at {{myEvent.city}}</p>
+                <p>{{myEvent.members}} people joined</p>
+              </div>
+              <div class="bottom-right">
+                <button class="edit">Edit</button>
+                <button class="delete">Remove</button>
+              </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -42,65 +48,70 @@ export default {
 <style scoped>
 .card-container {
   display: flex;
-  width: 100%;
-  padding: 10px 0px;
-  margin-top: 4%;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  width: 80%;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
-.image {
-  width: 180px;
+.left-side {
+  width: 25%;
   height: 180px;
-  position: relative;
-  top: 11px;
-  left: 140px;
 }
-.image img {
-  width: 100%;
+.right-side {
+  width: 75%;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+img {
+  width: 90%;
   height: 100%;
   border-radius: 10px;
 }
-.infor {
-  background: rgb(238, 235, 90);
-  height: 160px;
-  width: 70%;
-  display: flex;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  border-radius: 10px;
-  border: 2px solid rgb(255, 230, 0);
-  padding: 20px;
-}
-.text {
-  margin-left: 300px;
-}
-.btn-action {
-  display: flex;
-}
-
 .date {
-  padding-left: 200px;
+  display: flex;
+  margin-bottom: 10px;
+}
+.bottom-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.bottom-left,
+.date {
+  font-size: 14px;
+}
+.date p {
+  margin-right: 10px;
 }
 
-.btn-eventme {
-  display: flex;
-  margin-top: 35%;
+button {
+  text-decoration: none;
+  padding: 5px 12px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+}
+.edit:hover,
+.delete:hover {
+  color: rgb(173, 101, 233);
 }
 .edit {
-  background: rgb(0, 60, 255);
-  border-radius: 10px;
-  border: none;
-  font-size: 24px;
-  margin: 0px 10px 0px 10px;
-  margin-top: 15px;
-  padding: 5px 15px;
+  background-color: rgb(34, 152, 207);
   color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  margin-right: 8px;
 }
+
 .delete {
-  background: rgb(252, 4, 4);
-  border-radius: 10px;
-  border: none;
-  font-size: 24px;
-  margin-top: 15px;
-  padding: 5px 15px;
+  background-color: rgb(255, 50, 50);
   color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
 }
 </style>
