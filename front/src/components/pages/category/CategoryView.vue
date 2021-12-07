@@ -164,6 +164,7 @@ export default {
     mounted() {
         axios.get(url).then(res => {
             this.categories = res.data.data;
+            console.log(this.categories.data.data)
         })
     },
 }
