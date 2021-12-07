@@ -133,8 +133,11 @@ export default {
             }
             axios.put(url + id, data)
             .then(res => {
-                this.categories = this.categories.filter(cate => cate.id !== id);
-                this.categories.unshift(res.data.data);
+                this.categories.forEach((cate, index) => {
+                    if(cate.id == id) {
+                        this.categories.splice(index, 1, res.data.data);
+                    }
+                });
                 this.isEditing = false;
                 this.editError = '';
             })
