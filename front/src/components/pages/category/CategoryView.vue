@@ -53,18 +53,18 @@ export default {
             categoryKeySearch: '',
             categoryToEdit: null,
             categories: [],
-            cateNameError:'🤠 Please enter category name',
+            cateNameError:'',
         }
     },
     watch: {
         categoryName: function(newValue) {
             if(newValue === '') {
-                this.cateNameError = '🤠 Please enter category name';
+                this.cateNameError = 'Please enter category name';
             } else {
-                this.cateNameError = '😎 Available category name';
+                this.cateNameError = '';
                 for(let cate of this.categories) {
                     if(cate.name.toLowerCase() === newValue.toLowerCase()) {
-                        this.cateNameError = '🤠 Category name already existed';
+                        this.cateNameError = 'Category name already existed';
                     }
                 }
             }
@@ -79,26 +79,26 @@ export default {
         },
         isValidated() {
             return (
-                this.cateNameError === '😎 Available category name'
+                this.cateNameError === '' && this.categoryName !== ''
             );
         },
         getErrorClass() {
-            if(this.cateNameError === '😎 Available category name' ||
-                this.cateNameError === '🤠 Please enter category name') 
-            {
-                return 'frontOk'
+            if(this.cateNameError === '') {
+                return 'frontOk';
             }
-            return 'frontError'
+            return 'frontError';
         }
     },
     methods: {
         showAddForm() {
             this.dialogMode = 'create';
             this.dialogDisplayed = true;
+            this.cateNameError = '';
         },
         closeDialog() {
             this.dialogDisplayed = false;
             this.categoryName = '';
+            this.cateNameError = '';
         },
         addNewCategory(categoryName){
             let data = {
@@ -125,7 +125,7 @@ export default {
                 name: name
             }
             this.categoryName = this.categoryToEdit.name;
-            this.cateNameError = '🤠 Please enter new category name';
+            this.cateNameError = '';
         },
         updateCategory(newCateName, id) {
             let data = {
@@ -140,6 +140,7 @@ export default {
                 });
                 this.isEditing = false;
                 this.editError = '';
+                this.cateNameError = '';
             })
         },
         onConfirm() {
@@ -193,6 +194,6 @@ input[type="text"]:focus {
     color: rgb(56, 56, 255);
 }
 .frontError {
-    color: gray;
+    color: rgba(255, 0, 0, 0.575);
 }
 </style>
