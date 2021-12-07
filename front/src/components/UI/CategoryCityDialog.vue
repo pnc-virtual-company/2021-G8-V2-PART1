@@ -10,7 +10,6 @@
 
 <script>
 export default {
-  component: {},
   data() {
     return {
       categories: [],

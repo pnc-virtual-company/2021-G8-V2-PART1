@@ -8,15 +8,15 @@
           <div class="right-top">
             <h1>{{myEvent.title}}</h1>
             <div class="date">
-              <p>Date: {{myEvent.startDateTime}}</p>
-              <p>- {{myEvent.endDateTime}}</p>
+              <p>Date: {{myEvent.start_date}}</p>
+              <p>- {{myEvent.end_date}}</p>
             </div>
             <p>{{myEvent.description}}</p>
           </div>
           <div class="right-bottom">
             <div class="bottom-info">
               <div class="bottom-left">
-                <p>{{myEvent.category}} at {{myEvent.city}}</p>
+                <p>{{myEvent.category.name}} at {{myEvent.city}}</p>
                 <p>{{myEvent.members}} people joined</p>
               </div>
               <div class="bottom-right">
