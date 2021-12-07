@@ -7,9 +7,11 @@ use App\Http\Controllers\MyeventController;
 use App\Http\Controllers\CategoryController;
 
 //user
+Route::get('/users',[UserController::class,'getUsers']);
 Route::get('/getAUser/{id}', [UserController::class, "getAUser"]);
 Route::post('/signup', [UserController::class, "signup"]);
 Route::post('/signin', [UserController::class, "signin"]);
+
 
 // myEvent
 Route::get('/myevents', [MyeventController::class, 'index']);

@@ -30,16 +30,19 @@ class MyeventController extends Controller
     {
         //
         $request->validate([
+            'category_id'=>'required',
+            'user_id'=>'required',
             'title'=>'required',
             'start_date'=>'required',
             'end_date'=>'required',
-            'description'=>'required|min:50',
+            'description'=>'nullable',
             'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:1999'
         ]);
         
         // insert to database
         $myevent = new Myevent();
         $myevent->category_id = $request->category_id;
+        $myevent->user_id = $request->user_id;
         $myevent->title = $request->title;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
