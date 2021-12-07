@@ -19,6 +19,7 @@ class MyeventResource extends JsonResource
             "title"=>$this->title,
             "start_date"=>$this->start_date,
             "end_date"=>$this->end_date,
+            "city"=>$this->city,
             "description"=>$this->description,
             "image"=>$this->image,
             "user_id"=>$this->user_id,

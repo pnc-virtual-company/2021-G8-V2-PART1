@@ -35,6 +35,7 @@ class MyeventController extends Controller
             'title'=>'required',
             'start_date'=>'required',
             'end_date'=>'required|after:start_date',
+            'city'=>'required',
             'description'=>'nullable',
             'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:1999'
         ]);
@@ -46,6 +47,7 @@ class MyeventController extends Controller
         $myevent->title = $request->title;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
+        $myevent->city = $request->city;
         $myevent->description = $request->description;
         if($request->image !== null){
             $myevent->image =$request->file('image')->hashName();
@@ -89,6 +91,7 @@ class MyeventController extends Controller
             'title'=>'required',
             'start_date'=>'required',
             'end_date'=>'required|after:start_date',
+            'city'=>'required',
             'description'=>'nullable',
             'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:1999'
         ]);
@@ -98,6 +101,7 @@ class MyeventController extends Controller
         $myevent->title = $request->title;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
+        $myevent->city = $request->city;
         $myevent->description = $request->description;
         if($request->image !== null){
             $myevent->image =$request->file('image')->hashName();
