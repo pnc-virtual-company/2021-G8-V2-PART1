@@ -30,6 +30,7 @@ button {
   background: var(--main-color);
 }
 .buttonInactive {
-  background: grey;
+    background: rgba(128, 128, 128, 0.219);
+    color: rgba(128, 128, 128, 0.445);
 }
 </style>

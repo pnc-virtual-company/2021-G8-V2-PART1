@@ -61,13 +61,12 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
-      isActivateButton: 0,
 
-      firstnameError: "require firstname",
-      lastnameError: "require lastname",
-      emailError: "invalid email",
-      passwordError: "password must be at least 8 characters",
-      cPasswordError: "confirm password isn't matched",
+      firstnameError: "",
+      lastnameError: "",
+      emailError: "",
+      passwordError: "",
+      cPasswordError: "",
     };
   },
   watch: {
@@ -121,7 +120,12 @@ export default {
         this.lastnameError === "" &&
         this.emailError === "" &&
         this.passwordError === "" &&
-        this.cPasswordError === ""
+        this.cPasswordError === "" &&
+        this.firstname !== "" &&
+        this.lastname !== "" &&
+        this.email !== "" &&
+        this.password !== "" &&
+        this.cPassword !== ""
       );
     },
   },
@@ -180,7 +184,8 @@ form .buttonActive button {
   background: var(--main-color);
 }
 form .buttonInactive button {
-  background: grey;
+  background: rgba(128, 128, 128, 0.219);
+  color: rgba(128, 128, 128, 0.445);
 }
 form .buttonActive #register:hover {
   color: rgb(173, 101, 233);
