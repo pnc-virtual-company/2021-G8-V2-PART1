@@ -14,42 +14,30 @@
             <div class="error" v-if="titleError">
               <p v-text="titleError"></p>
             </div>
-          </div>
-          <div class="description">
-            <textarea
-              placeholder="Description"
-              v-model="description"
-            ></textarea>
-            <div class="error" v-if="descError">
-              <p v-text="descError"></p>
-            </div>
-          </div>
-        </div>
-        <div class="middle">
           <div class="date">
             <label for>Start Date</label>
             <input
-              type="date"
-              placeholder="start date"
+              type="datetime-local"
               v-model="startDateTime"
             />
           </div>
           <div class="time">
-            <label for>Start Time</label>
-            <input type="time" />
-          </div>
-          <div class="date">
             <label for>End Date</label>
-            <input type="date" v-model="endDateTime" />
+            <input type="datetime-local" v-model="endDate"/>
           </div>
-          <div class="time">
-            <label for>End Time</label>
-            <input type="time" />
+
+          </div>
+        <div class="more">
+          <p @click="showMoreChoice">See more..</p>
+        </div>
+        </div>
+        <div class="showMoreInfo" v-if="isShowMore">
+        <div class="middle">
           </div>
           <div class="city-cate">
             <div class="category">
               <button type="button" @click="showCategoryList">
-                Choose Category
+                Category
               </button>
               <p>selected</p>
 
@@ -74,7 +62,7 @@
               </category-city-dialog>
             </div>
             <div class="city">
-              <button type="button"  @click="showCityList">Choose City</button>
+              <button type="button"  @click="showCityList">City</button>
               <p>selected</p>
 
               <category-city-dialog
@@ -98,13 +86,21 @@
               </category-city-dialog>
             </div>
           </div>
-        </div>
+          <div class="description">
+            <textarea
+              placeholder="Description"
+              v-model="description"
+            ></textarea>
+            <div class="error" v-if="descError">
+              <p v-text="descError"></p>
+            </div>
+          </div>
         <div class="right-side">
           <input type="file" />
           <img src="../../../../assets/empty.jpg" alt="EMPTY PICTURE" />
         </div>
       </div>
-
+  </div>
       <template #actions>
         <base-button
           :class="isValidated ? 'buttonActive' : 'buttonInactive'"
@@ -130,6 +126,7 @@ export default {
   components: { MyEventCard, AddSearch  },
   data() {
     return {
+        isShowMore: false,
         dialogDisplayed: false,
         categoryListDisplayed: false,
         cityListDisplayed: false,
@@ -165,7 +162,7 @@ export default {
             {
                 id: 3,
                 title: "JS",
-                description: "JAlien is a 1979 science fiction horror film directed by Ridley Scott and written by Dan O'Bannon.",
+                description: "Alien is a 1979 science fiction horror film directed by Ridley Scott and written by Dan O'Bannon.",
                 category: "Party",
                 city: "Phnom Penh, Cambodia",
                 members: "6",
@@ -223,6 +220,9 @@ export default {
         this.categoryListDisplayed = false;
         this.cityListDisplayed = false;
     },
+    showMoreChoice() {
+      this.isShowMore = !this.isShowMore
+    }
   },
   mounted() {
       axios.get("http://127.0.0.1:8000/api/categories")
@@ -247,22 +247,13 @@ export default {
 .categoryContainer ul li {
   margin: 5px;
 }
-
 .eventForm {
-  width: 1000px;
-  display: flex;
-  justify-content: space-between;
+  width: 350px;
+  height: 220px;
   padding: 20px;
+  overflow-y: scroll;
 }
-.left-side,
-.right-side {
-  width: 33%;
-  text-align: left;
-}
-.middle {
-  width: 30%;
-  text-align: left;
-}
+
 .title input,
 .description textarea {
   width: 100%;
@@ -371,6 +362,7 @@ textarea:focus {
   color: rgb(255, 97, 97);
   margin: 5px 0;
   font-size: 12px;
+  text-align: left;
 }
 
 /* categorylist style */
@@ -412,4 +404,11 @@ textarea:focus {
     text-align: left;
     cursor: pointer;
 }
+.more {
+  text-align: left;
+  color: blue;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
 </style>
