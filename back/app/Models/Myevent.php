@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Myevent extends Model
 {
     use HasFactory;
-    protected $fillable = ['category_id','user_id','title','start_date','end_date','description','image'];
+    protected $fillable = ['category_id','user_id','title','start_date','end_date','description','city','image'];
     public function category()
     {
         return $this->belongsTo(Category::class);

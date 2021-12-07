@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection(Category::with('myevent')->get());
+        return Category::with(['myevent'])->latest()->get();
     }
 
     /**
