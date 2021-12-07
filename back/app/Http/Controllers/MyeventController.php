@@ -34,7 +34,7 @@ class MyeventController extends Controller
             'user_id'=>'required',
             'title'=>'required',
             'start_date'=>'required',
-            'end_date'=>'required',
+            'end_date'=>'required|after:start_date',
             'description'=>'nullable',
             'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:1999'
         ]);
@@ -47,7 +47,6 @@ class MyeventController extends Controller
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
         $myevent->description = $request->description;
-        
         if($request->image !== null){
             $myevent->image =$request->file('image')->hashName();
             // move image to storage folder
@@ -85,13 +84,17 @@ class MyeventController extends Controller
     {
         //
         $request->validate([
+            'category_id'=>'required',
+            'user_id'=>'required',
             'title'=>'required',
             'start_date'=>'required',
-            'end_date'=>'required',
-            'description'=>'required|min:50',
-            'image'=>'image|mimes:jpg,jpeg,png,gif|max:1999'
+            'end_date'=>'required|after:start_date',
+            'description'=>'nullable',
+            'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:1999'
         ]);
         $myevent = Myevent::findOrFail($id);
+        $myevent->category_id = $request->category_id;
+        $myevent->user_id = $request->user_id;
         $myevent->title = $request->title;
         $myevent->start_date = $request->start_date;
         $myevent->end_date = $request->end_date;
