@@ -131,9 +131,5 @@ class MyeventController extends Controller
         //
         return Myevent::where("title", "like", "%".$title."%")->get();
     }
-    public function getCountries(){
-        $countriesPath = storage_path('/countries/countries.json');
-        $countries = json_decode(file_get_contents($countriesPath), true);
-        return $countries;
-    }
+
 }

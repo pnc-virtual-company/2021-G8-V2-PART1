@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MyeventController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CountryCityController;
 
 //user
 Route::get('/users',[UserController::class,'getUsers']);
@@ -22,7 +23,7 @@ Route::put('/myevents/{id}', [MyeventController::class, 'update']);
 Route::get('/myevents/search/{title}', [MyeventController::class, 'search']);
 
 // countries
-Route::get('/countries', [MyeventController::class, 'getCountries']);
+Route::get('/countries', [CountryCityController::class, 'getCountries']);
 
 // category
 
