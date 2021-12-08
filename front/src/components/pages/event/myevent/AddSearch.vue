@@ -8,7 +8,7 @@
           placeholder="What are you looking for?"
           v-model="keyWord"
         />
-        <button type="button" class="searchButton">
+        <button type="button" class="searchButton" @click="clearSearch">
           X
         </button>
       </div>
@@ -26,11 +26,11 @@ export default {
       keyWord: ''
     };
   },
-  // watch: {
-  //   keyWord: function(newValue) {
-  //     this.$emit('search', newValue);
-  //   }
-  // },
+  watch: {
+    keyWord: function(newValue) {
+      this.$emit('search', newValue);
+    }
+  },
   methods: {
     clearSearch() {
       this.keyWord = '';

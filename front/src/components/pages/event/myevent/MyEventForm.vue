@@ -27,7 +27,7 @@
       <div class="btnAction">
         <button id="cancel">CANCEL</button>
         <button id="create" @click="createEvent">CREATE</button>
-        <button id="update">UPDATE</button>
+        <button id="update" >UPDATE</button>
       </div>
     </div>
   </section>
@@ -57,6 +57,7 @@ export default {
       };
        this.$emit('addNewMyEvent',newEvent);
     }
+    
      
     },
   },
