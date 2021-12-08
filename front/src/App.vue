@@ -6,6 +6,7 @@
       @signin="login"
       :existedEmailError="existedEmailError"
       :unauthorizedError="unauthorizedError"
+      :userDataAppToEvent="userData"
     >
     </router-view>
   </div>

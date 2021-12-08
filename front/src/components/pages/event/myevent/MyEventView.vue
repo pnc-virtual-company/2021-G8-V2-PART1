@@ -1,6 +1,6 @@
 <template>
   <section>
-    <add-search @showForm="showAddForm" @search="search"></add-search>
+    <add-search @showForm="showAddForm"></add-search>
     <base-dialog
       v-if="dialogDisplayed"
       :title="dialogTitle"
@@ -10,36 +10,28 @@
       <div class="eventForm">
         <div class="left-side">
           <div class="title">
-            <input type="text" placeholder="Title" v-model="title" />
-            <div class="error" v-if="titleError">
-              <p v-text="titleError"></p>
+            <input type="text" placeholder="Title" v-model="myEventTitle" />
+            <div class="error" v-if="myEventTitleError">
+              <p v-text="myEventTitleError"></p>
             </div>
-          <div class="date">
-            <label for>Start Date</label>
-            <input
-              type="datetime-local"
-              v-model="startDateTime"
-            />
-          </div>
-          <div class="time">
-            <label for>End Date</label>
-            <input type="datetime-local" v-model="endDate"/>
-          </div>
-
-          </div>
-        <div class="more">
-          <p @click="showMoreChoice">See more..</p>
-        </div>
-        </div>
-        <div class="showMoreInfo" v-if="isShowMore">
-        <div class="middle">
+            <div class="date">
+              <label for>Start Date</label>
+              <input
+                type="datetime-local"
+                v-model="startDateTime"
+              />
+            </div>
+            <div class="time">
+              <label for>End Date</label>
+              <input type="datetime-local" v-model="endDate"/>
+            </div>
           </div>
           <div class="city-cate">
             <div class="category">
               <button type="button" @click="showCategoryList">
                 Category
               </button>
-              <p>selected</p>
+              <p v-if="category" v-text="category.name"></p>
 
               <category-city-dialog
                 v-if="categoryListDisplayed"
@@ -50,20 +42,24 @@
                         type="text"
                         class="searchKey"
                         placeholder="search category"
-                        v-model="CateKeyWord"
+                        v-model="cateKeySearch"
                     />
-                    <button type="button" class="clearButton" @click="clearSearch">X</button>
+                    <button type="button" class="clearButton" @click="clearCateSearch">X</button>
                 </div>
                 <div class="categoryContainer">
                     <ul>
-                        <li v-for="cate of categories" :key="cate.id">{{ cate.name }}</li>
+                        <li v-for="cate of categories" 
+                          :key="cate.id"
+                          @click="setCate(cate.id, cate.name)"
+                        >{{ cate.name }}
+                        </li>
                     </ul>
                 </div>
               </category-city-dialog>
             </div>
             <div class="city">
               <button type="button"  @click="showCityList">City</button>
-              <p>selected</p>
+              <p v-if="city" v-text="city"></p>
 
               <category-city-dialog
                 v-if="cityListDisplayed"
@@ -74,25 +70,35 @@
                         type="text"
                         class="searchKey"
                         placeholder="search city"
-                        v-model="cityKeyWord"
+                        v-model="cityKeySearch"
                     />
-                    <button type="button" class="clearButton" @click="clearSearch">X</button>
+                    <button type="button" class="clearButton" @click="clearCitySearch">X</button>
                 </div>
                 <div class="categoryContainer">
                     <ul>
-                        <li v-for="cate of categories" :key="cate.id">{{ cate.name }}</li>
+                        <li v-for="(countryCity, index) of countriesCities" 
+                            :key="index"
+                            @click="setCity(countryCity.city, countryCity.country)"
+                        >{{ countryCity.city }}
+                        </li>
                     </ul>
                 </div>
               </category-city-dialog>
             </div>
           </div>
+        <div class="more">
+          <p @click="showMoreChoice" v-if="!isShowMore">See more..</p>
+          <p @click="showLessChoice" v-if="isShowMore">See less..</p>
+        </div>
+        </div>
+        <div class="showMoreInfo" v-if="isShowMore">
           <div class="description">
             <textarea
               placeholder="Description"
               v-model="description"
             ></textarea>
-            <div class="error" v-if="descError">
-              <p v-text="descError"></p>
+            <div class="des">
+              <p>Description (optional)</p>
             </div>
           </div>
         <div class="right-side">
@@ -101,31 +107,51 @@
         </div>
       </div>
   </div>
+    <!---------------------- myevent card and from -->
       <template #actions>
         <base-button
           :class="isValidated ? 'buttonActive' : 'buttonInactive'"
+          v-if="dialogMode ='edit'" @click="addNewEvent"
           >{{ dialogButtton }}
         </base-button>
       </template>
     </base-dialog>
     <my-event-card
-      v-for="myEvent of myEvents"
+      v-for="myEvent of this.myEvents"
       :key="myEvent.id"
       :myEvent="myEvent"
+      @deleteMyEvent='deleteMyEventCard'
+      @updateMyEvent='EditMyEventCard'
     ></my-event-card>
+    <!------------------------- myevent card and from -->
   </section>
 </template>
 
 <script>
 import MyEventCard from "./MyEventCard.vue";
 import AddSearch from "./AddSearch.vue";
-// import CategoryCityDialog from "../../../UI/CategoryCityDialog.vue";
 
 import axios from 'axios';
+let url = 'http://127.0.0.1:8000/api/myevents';
 export default {
-  components: { MyEventCard, AddSearch  },
+  components: {MyEventCard, AddSearch},
+  props: ['userDataAppToEvent'],
   data() {
     return {
+        myEventTitle:'',
+        startDateTime:'',
+        endDate:'',
+        description:'',
+        category: '',
+        city: '',
+        
+        myEventTitleError:'',
+        startDateTimeError:'',
+        endDateError:'',
+        categoryError: '',
+        cityError: '',
+
+
         isShowMore: false,
         dialogDisplayed: false,
         categoryListDisplayed: false,
@@ -135,56 +161,53 @@ export default {
         cateKeySearch: "",
         cityKeySearch: "",
         eventToEdit: null,
-        titleError: "title is required",
-        descError: "Description is required",
+        
+        countriesCitiesInitial: [],
+        countriesCities: [],
         categories: [],
-        myEvents: [
-            {
-                id: 1,
-                title: "CSS",
-                description: "Alien is a 1979 science fiction horror film directed by Ridley Scott and written by Dan O'Bannon.",
-                category: "Party",
-                city: "Phnom Penh, Cambodia",
-                members: "6",
-                startDateTime: "10/20/2021 10:00AM",
-                endDateTime: "10/20/2021 10:00AM",
-            },
-            {
-                id: 2,
-                title: "HTML",
-                description: "Alien is a 1979 science fiction horror film directed by Ridley Scott and written by Dan O'Bannon.",
-                category: "Party",
-                city: "Phnom Penh, Cambodia",
-                members: "6",
-                startDateTime: "10/20/2021 10:00AM",
-                endDateTime: "10/20/2021 10:00AM",
-            },
-            {
-                id: 3,
-                title: "JS",
-                description: "Alien is a 1979 science fiction horror film directed by Ridley Scott and written by Dan O'Bannon.",
-                category: "Party",
-                city: "Phnom Penh, Cambodia",
-                members: "6",
-                startDateTime: "10/20/2021 10:00AM",
-                endDateTime: "10/20/2021 10:00AM",
-            },
-        ],
+        myEvents: [],
     };
   },
   watch: {
       cateKeySearch: function(key) {
-          console.log(key);
-            if(key === '') {
-                axios.get('http://127.0.0.1:8000/api/categories').then(res => {
-                    this.categories = res.data.data;
-                });
-            } else {
-                axios.get('http://127.0.0.1:8000/api/categories' + '/search/' + key).then(res => {
-                    this.categories = res.data;
-                })
-            }
+        if(key === '') {
+            axios.get('http://127.0.0.1:8000/api/categories').then(res => {
+                this.categories = res.data;
+            });
+        } else {
+            axios.get('http://127.0.0.1:8000/api/categories' + '/search/' + key).then(res => {
+                this.categories = res.data;
+            })
         }
+      },
+      cityKeySearch: function(key) {
+        if(key === '') {
+          this.countriesCities = this.countriesCitiesInitial;
+        } else {
+          this.countriesCities = [];
+          for(let countryCity of this.countriesCitiesInitial) {
+            if(countryCity.city.toLowerCase().includes(key.toLowerCase()) ||
+              countryCity.country.toLowerCase().includes(key.toLowerCase()))
+            {
+              this.countriesCities.push(countryCity);
+            }
+          }
+          console.log(this.countriesCities)
+        }
+      },
+      endDate: function(newValue){
+        console.log(newValue)
+     
+      },
+      startDateTime: function(newValue){
+        console.log(newValue)
+       
+      },
+      myEventTitle: function(newValue){
+        console.log(newValue)
+        
+      },
+
   },
   computed: {
     dialogTitle() {
@@ -193,8 +216,23 @@ export default {
     dialogButtton() {
       return this.dialogMode === "edit" ? "EDIT" : "CREATE";
     },
+    isValidated(){
+      return (
+        this.myEventTitleError === '' &&
+        this.startDateTimeError === '' &&
+        this.endDateError === '' &&
+        this.categoryError === '' &&
+        this.cityError === '' &&
+        this.myEventTitle !== '' &&
+        this.startDateTime !== '' &&
+        this.endDate !== '' &&
+        this.category !== '' &&
+        this.city !== ''
+      )
+    }
   },
   methods: {
+    
     getCategoryData(data) {
       this.categoryData = data;
     },
@@ -209,6 +247,11 @@ export default {
     closeDialog() {
       this.dialogDisplayed = false;
       this.categoryName = "";
+      this.myEventTitle = ''
+      this.startDateTime = ''
+      this.endDate = ''
+      this.description = ''
+      this.isShowMore = false
     },
     showCategoryList() {
       this.categoryListDisplayed = true;
@@ -221,14 +264,123 @@ export default {
         this.cityListDisplayed = false;
     },
     showMoreChoice() {
-      this.isShowMore = !this.isShowMore
+      this.isShowMore = true;
+    },
+    showLessChoice() {
+      this.isShowMore = false;
+    },
+    clearCateSearch() {
+      this.cateKeySearch = '';
+      axios.get('http://127.0.0.1:8000/api/categories').then(res => {
+          this.categories = res.data;
+      });
+    },
+    clearCitySearch() {
+      this.cityKeySearch = '';
+      this.countriesCities = this.countriesCitiesInitial;
+    },
+    setCity(city, country) {
+      this.city = city + ', ' + country;
+      this.closeCategoryList();
+    },
+    setCate(id, name) {
+      this.category = {
+        id: id,
+        name: name
+      };
+      this.closeCategoryList();
+    },
+
+  /// =======================crud=====================
+
+    addNewEvent(){
+      this.dialogDisplayed = false;
+      let myNewEvent = {
+        category_id: this.category.id,
+        user_id: this.userDataAppToEvent.id,
+        title: this.myEventTitle,
+        start_date: this.startDateTime,
+        end_date: this.endDate,
+        city: this.city,
+        description: this.description,
+        image: null,
+        
+      };
+      axios.post(url, myNewEvent)
+      .then(res => {
+        console.log(res.data)
+        this.myEvents.unshift(res.data.myEvent);
+        this.getMyEventData();
+        
+      })
+    },
+    deleteMyEventCard(id){
+      axios.delete(url+'/'+id)
+      .then(res=>{
+        console.log(res.data);
+        this.getMyEventData()
+      })
+    },
+    EditMyEventCard(myEvent){
+      this.dialogMode = 'edit'
+       this.dialogDisplayed = true;
+       this.myEventTitle = myEvent.title
+       this.startDateTime = myEvent.start_date
+       this.endDate = myEvent.end_date
+       this.description = myEvent.description
+       
+      //  let myEventUpdate = {
+      //    category_id: myEvent.category_id,
+      //    user_id: myEvent.user_id,
+      //    title: this.myEventTitle,
+      //    start_date: this.startDateTime,
+      //    end_date: this.endDate,
+      //    city: this.city,
+      //    description: this.description,
+      //    image: null,
+      //  }
+      //  axios.put(url, myEventUpdate)
+      //  .then(res=>{
+      //    console.log(res.data)
+      //  })
+
+    },
+    getMyEventData(){
+      axios.get("http://127.0.0.1:8000/api/myevents")
+    .then( res => {
+      this.myEvents = res.data
+    })
     }
+     /// =======================crud=====================
+
+
+
   },
   mounted() {
-      axios.get("http://127.0.0.1:8000/api/categories")
-      .then((res) => {
-        this.categories = res.data.data;
-      })
+    // GET MYEVENT DATA FROM BACKEND
+    this.getMyEventData()
+
+    // GET CATEGORY DATA FROM BACKEND
+    axios.get("http://127.0.0.1:8000/api/categories")
+    .then((res) => {
+      this.categories = res.data;
+    })
+    
+    // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
+    let countriesWithItsCities = [];
+    axios.get('http://localhost:8000/api/countries')
+    .then(res => {
+      countriesWithItsCities = res.data;
+      for(let country in countriesWithItsCities) {
+        for(let city of countriesWithItsCities[country]) {
+          this.countriesCities.push({
+            'country': country,
+            'city': city
+          })
+        }
+      }
+      this.countriesCitiesInitial = this.countriesCities;
+    });
   },
 };
 </script>
@@ -266,6 +418,7 @@ export default {
   border-radius: 5px;
   border: 1px solid white;
   outline: none;
+  color: gray;
 }
 textarea {
   height: 200px;
@@ -304,6 +457,9 @@ textarea::-webkit-scrollbar {
 .city-cate p {
   width: 100%;
   text-align: center;
+}
+.city-cate button {
+  background: rgb(34, 152, 207);
 }
 .date,
 .time {
@@ -347,7 +503,8 @@ img {
   background: var(--main-color);
 }
 .buttonInactive button {
-  background: grey;
+  background: rgba(128, 128, 128, 0.219);
+  color: rgba(128, 128, 128, 0.445);
 }
 .buttonActive:hover {
   color: rgb(173, 101, 233);
@@ -359,7 +516,13 @@ textarea:focus {
 }
 
 .error {
-  color: rgb(255, 97, 97);
+  color: rgb(233, 81, 81);
+  margin: 5px 0;
+  font-size: 12px;
+  text-align: left;
+}
+.des p{
+ 
   margin: 5px 0;
   font-size: 12px;
   text-align: left;

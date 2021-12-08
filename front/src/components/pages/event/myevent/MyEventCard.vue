@@ -2,31 +2,35 @@
   <section>
     <div class="card-container">
       <div class="left-side">
-        <img src="https://static.bangkokpost.com/media/content/20191004/c1_1764659_191004103525.jpg"/>
+        <img :src="myEvent.image"/>
       </div>
       <div class="right-side">
           <div class="right-top">
             <h1>{{myEvent.title}}</h1>
             <div class="date">
-              <p>Date: {{myEvent.startDateTime}}</p>
-              <p>- {{myEvent.endDateTime}}</p>
+              <p>Date: {{myEvent.start_date}}</p>
+              <p>- {{myEvent.end_date}}</p>
             </div>
-            <p>{{myEvent.description}}</p>
+            <p v-if="myEvent.description" v-text="myEvent.description"></p>
           </div>
           <div class="right-bottom">
             <div class="bottom-info">
               <div class="bottom-left">
-                <p>{{myEvent.category}} at {{myEvent.city}}</p>
+                <p>{{myEvent.category.name}} at {{myEvent.city}}</p>
                 <p>{{myEvent.members}} people joined</p>
               </div>
               <div class="bottom-right">
-                <button class="edit">Edit</button>
-                <button class="delete">Remove</button>
+                <button class="edit" @click="$emit('updateMyEvent',myEvent)">Edit</button>
+                <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
+              </div>
+              <div class="quitJoin" v-if="showJoinQuit">
+                <button class="quit">Quit</button>
+                <button class="join">Join</button>
               </div>
             </div>
           </div>
+        </div>
       </div>
-    </div>
   </section>
 </template>
 
@@ -36,6 +40,7 @@ export default {
   data() {
     return {
       isJoin: false,
+      showEditJoin: false,
     };
   },
   methods: {
@@ -43,6 +48,8 @@ export default {
       this.isJoin = !this.isJoin;
     },
   },
+ 
+
 };
 </script>
 <style scoped>
@@ -113,5 +120,22 @@ button {
   background-color: rgb(255, 50, 50);
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+}
+.bottom-right {
+  display: flex;
+}
+
+.quit {
+   background-color: rgb(255, 50, 50);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  margin-right: 8px;
+}
+
+.join {
+  background-color: rgb(34, 152, 207);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  margin-right: 8px;
 }
 </style>
