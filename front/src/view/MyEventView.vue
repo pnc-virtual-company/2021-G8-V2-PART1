@@ -290,11 +290,11 @@ export default {
   search(key) {
             if(key === '') {
                 axios.get('api/myevents').then(res => {
-                    this.myEvents = res.data.data;
+                    this.myEvents = res.data;
                 });
             } else {
                 axios.get('api/myevents/search/' + key).then(res => {
-                    this.myEvents = res.data.data;
+                    this.myEvents = res.data;
                 })
             }
         },

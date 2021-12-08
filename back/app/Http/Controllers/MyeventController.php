@@ -136,7 +136,8 @@ class MyeventController extends Controller
     public function search($title) 
     {
         //
-        return Myevent::where("title", "like", "%".$title."%")->get();
+        return Myevent::where("title", "like", "%".$title."%",'and','with','category')->with(['category'])->get();
+        
     }
 
 }
