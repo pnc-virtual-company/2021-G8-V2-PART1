@@ -15,8 +15,9 @@ class MyeventController extends Controller
      */
     public function index()
     {
-        //
+        
         return Myevent::with(['category'])->latest()->get();
+
 
 
     }
@@ -59,7 +60,8 @@ class MyeventController extends Controller
             $myevent->image = $img;
         }
         $myevent->save();
-        return response()->json(["message"=>"My event Created!","myEvent"=>$myevent],201);
+        // return response()->json(["message"=>"My event Created!","myEvent"=> Myevent::with(['category'])->get($myevent)],201);
+        return response()->json(["message"=>"My event Created!","myEvent"=> Myevent::with(['category'])->latest()->first()],201);
         
         
     }
@@ -113,7 +115,7 @@ class MyeventController extends Controller
             $myevent->image = $img;
         }
         $myevent->save();
-        return response()->json(['message'=>"My event Updated!", 'My event'=>$myevent],200);
+        return response()->json(['message'=>"My event Updated!","myEvent"=> Myevent::with(['category'])->latest()->first()],200);
     }
 
     /**

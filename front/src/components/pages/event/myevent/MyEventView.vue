@@ -116,9 +116,10 @@
       </template>
     </base-dialog>
     <my-event-card
-      v-for="myEvent of myEvents"
+      v-for="myEvent of this.myEvents"
       :key="myEvent.id"
       :myEvent="myEvent"
+      @deleteMyEvent='deleteMyEventCard'
     ></my-event-card>
   </section>
 </template>
@@ -229,19 +230,24 @@ export default {
   },
   methods: {
     addNewEvent(){
-      let newEventData = {
+      this.dialogDisplayed = false;
+      let myNewEvent = {
+        category_id: this.category.id,
+        user_id: this.userDataAppToEvent.id,
         title: this.myEventTitle,
         start_date: this.startDateTime,
         end_date: this.endDate,
         city: this.city,
-        description: null,
+        description: this.description,
         image: null,
-        category_id: this.category.id,
-        user_id: this.userDataAppToEvent.id
+        
       };
-      axios.post(url, newEventData)
+      axios.post(url, myNewEvent)
       .then(res => {
+        console.log(res.data)
         this.myEvents.unshift(res.data.myEvent);
+        this.getMyEventData();
+        
       })
     },
     getCategoryData(data) {
@@ -300,15 +306,32 @@ export default {
         name: name
       };
       this.closeCategoryList();
+    },
+
+
+
+
+    deleteMyEventCard(id){
+      axios.delete(url+'/'+id)
+      .then(res=>{
+        console.log(res.data);
+        this.getMyEventData()
+      })
+    },
+    getMyEventData(){
+      axios.get("http://127.0.0.1:8000/api/myevents")
+    .then( res => {
+      this.myEvents = res.data
+    })
     }
+
+
+
+
   },
   mounted() {
     // GET MYEVENT DATA FROM BACKEND
-    axios.get("http://127.0.0.1:8000/api/myevents")
-    .then((res) => {
-      this.myEvents = res.data
-
-    })
+    this.getMyEventData()
 
     // GET CATEGORY DATA FROM BACKEND
     axios.get("http://127.0.0.1:8000/api/categories")
