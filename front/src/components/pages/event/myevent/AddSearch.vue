@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="add-and-search">
-      <div class="cate-search">
+      <div class="even-search">
         <input
           type="text"
           class="searchKey"
@@ -44,7 +44,6 @@ export default {
 .add-and-search {
   width: 82%;
   margin: auto;
-  padding: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,7 +52,7 @@ export default {
 .btn-add {
   margin: 0;
   width: 150px;
-  background: #f6ba1f;
+  background: var(--main-color);
   border: none;
   padding: 15px 20px;
   border-radius: 50px;
@@ -66,7 +65,7 @@ export default {
   color: rgb(173, 101, 233);
 }
 
-.cate-search {
+.even-search {
   width: 60%;
   display: flex;
 }

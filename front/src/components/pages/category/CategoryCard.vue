@@ -7,8 +7,8 @@
       <p>{{ category.created_at }}</p>
     </div>
     <div class="cate-btn">
-      <button type="button" class="btn-change" @click="edit(category.id, category.name)">EDIT</button>
-      <button type="button" class="btn-remove" @click="remove(category.id)">REMOVE</button>
+      <button type="button" class="btn-change" @click="edit(category.id, category.name)">Edit</button>
+      <button type="button" class="btn-remove" @click="remove(category.id)">Remove</button>
     </div>
   </section>
 </template>
@@ -30,14 +30,16 @@ export default {
 
 <style scoped>
 .cate-card {
-  margin: 2rem auto;
-  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px auto;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 12px;
-  max-width: 45rem;
+  width: 80%;
   border: 1px solid #ccc;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-   margin-top: 30px;
 }
 
 button {
@@ -52,7 +54,7 @@ button {
   color: rgb(173, 101, 233);
 }
 .btn-change {
-  background-color: var(--main-color);
+  background-color: rgb(34, 152, 207);
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   margin-right: 8px;
@@ -68,11 +70,6 @@ button {
   width: 30%;
   padding: 6px;
   text-align: right;
-}
-.cate-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 .cate-name,
 .cate-date {

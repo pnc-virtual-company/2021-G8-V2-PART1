@@ -168,6 +168,7 @@ export default {
     mounted() {
         axios.get(url).then(res => {
             this.categories = res.data.data;
+            console.log(this.categories.data.data)
         })
     },
 }
@@ -189,6 +190,11 @@ input[type="text"] {
 }
 input[type="text"]:focus {
   border: 2px solid var(--main-color);
+}
+.frontOk,
+.frontError {
+    width: 400px;
+    text-align: center;
 }
 .frontOk {
     color: rgb(56, 56, 255);
