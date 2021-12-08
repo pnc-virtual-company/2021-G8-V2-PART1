@@ -7,10 +7,10 @@
             :mode="dialogMode"
             @close="closeDialog"
         >
-            <input type="text" placeholder="Name..." v-model="categoryName"/>
+            <input type="text" id="formInput" placeholder="Name..." v-model="categoryName"/>
             <div
                 v-if="cateNameError" 
-                :class="getErrorClass">
+                class="error">
                 <p v-text="cateNameError"></p>
             </div>
 
@@ -79,12 +79,6 @@ export default {
             return (
                 this.cateNameError === '' && this.categoryName !== ''
             );
-        },
-        getErrorClass() {
-            if(this.cateNameError === '') {
-                return 'frontOk';
-            }
-            return 'frontError';
         }
     },
     methods: {
@@ -188,15 +182,11 @@ input[type="text"] {
 input[type="text"]:focus {
   border: 2px solid var(--main-color);
 }
-.frontOk,
-.frontError {
-    width: 400px;
+#formInput {
+    width: 350px;
+}
+.error {
     text-align: center;
-}
-.frontOk {
-    color: rgb(56, 56, 255);
-}
-.frontError {
     color: rgba(255, 0, 0, 0.575);
 }
 </style>
