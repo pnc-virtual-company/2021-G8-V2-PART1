@@ -45,4 +45,7 @@ class User extends Authenticatable
     public function myevent(){
         return $this->hasMany(Myevent::class);
     }
+    public function userjoinevent() {
+        return $this->hasMany(UserJoinEvent::class);
+    }
 }

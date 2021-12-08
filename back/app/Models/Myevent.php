@@ -16,4 +16,8 @@ class Myevent extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function userjoinevent() {
+        return $this->hasMany(UserJoinEvent::class);
+    }
 }
