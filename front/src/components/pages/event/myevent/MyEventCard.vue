@@ -23,10 +23,14 @@
                 <button class="edit" @click="$emit('updateMyEvent',myEvent)">Edit</button>
                 <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
               </div>
+              <div class="quitJoin" v-if="showJoinQuit">
+                <button class="quit">Quit</button>
+                <button class="join">Join</button>
+              </div>
             </div>
           </div>
+        </div>
       </div>
-    </div>
   </section>
 </template>
 
@@ -36,6 +40,7 @@ export default {
   data() {
     return {
       isJoin: false,
+      showEditJoin: false,
     };
   },
   methods: {
@@ -115,5 +120,22 @@ button {
   background-color: rgb(255, 50, 50);
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+}
+.bottom-right {
+  display: flex;
+}
+
+.quit {
+   background-color: rgb(255, 50, 50);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  margin-right: 8px;
+}
+
+.join {
+  background-color: rgb(34, 152, 207);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  margin-right: 8px;
 }
 </style>
