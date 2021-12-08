@@ -103,7 +103,7 @@
           </div>
         <div class="right-side">
           <input type="file" />
-          <img src="../../../../assets/empty.jpg" alt="EMPTY PICTURE" />
+          <img src="../assets/empty.jpg" alt="EMPTY PICTURE" />
         </div>
       </div>
   </div>
@@ -128,11 +128,10 @@
 </template>
 
 <script>
-import MyEventCard from "./MyEventCard.vue";
-import AddSearch from "./AddSearch.vue";
+import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
+import AddSearch from "../components/pages/event/myevent/AddSearch.vue";
 
-import axios from 'axios';
-let url = 'http://127.0.0.1:8000/api/myevents';
+import axios from "../axios-http.js";
 export default {
   components: {MyEventCard, AddSearch},
   props: ['userDataAppToEvent'],
@@ -171,11 +170,11 @@ export default {
   watch: {
       cateKeySearch: function(key) {
         if(key === '') {
-            axios.get('http://127.0.0.1:8000/api/categories').then(res => {
+            axios.get('/categories').then(res => {
                 this.categories = res.data;
             });
         } else {
-            axios.get('http://127.0.0.1:8000/api/categories' + '/search/' + key).then(res => {
+            axios.get('/categories' + '/search/' + key).then(res => {
                 this.categories = res.data;
             })
         }
@@ -271,7 +270,7 @@ export default {
     },
     clearCateSearch() {
       this.cateKeySearch = '';
-      axios.get('http://127.0.0.1:8000/api/categories').then(res => {
+      axios.get('/categories').then(res => {
           this.categories = res.data;
       });
     },
@@ -306,7 +305,7 @@ export default {
         image: null,
         
       };
-      axios.post(url, myNewEvent)
+      axios.post('/myevents', myNewEvent)
       .then(res => {
         console.log(res.data)
         this.myEvents.unshift(res.data.myEvent);
@@ -315,7 +314,7 @@ export default {
       })
     },
     deleteMyEventCard(id){
-      axios.delete(url+'/'+id)
+      axios.delete('/myevents/'+id)
       .then(res=>{
         console.log(res.data);
         this.getMyEventData()
@@ -328,25 +327,9 @@ export default {
        this.startDateTime = myEvent.start_date
        this.endDate = myEvent.end_date
        this.description = myEvent.description
-       
-      //  let myEventUpdate = {
-      //    category_id: myEvent.category_id,
-      //    user_id: myEvent.user_id,
-      //    title: this.myEventTitle,
-      //    start_date: this.startDateTime,
-      //    end_date: this.endDate,
-      //    city: this.city,
-      //    description: this.description,
-      //    image: null,
-      //  }
-      //  axios.put(url, myEventUpdate)
-      //  .then(res=>{
-      //    console.log(res.data)
-      //  })
-
     },
     getMyEventData(){
-      axios.get("http://127.0.0.1:8000/api/myevents")
+      axios.get("/myevents")
     .then( res => {
       this.myEvents = res.data
     })
@@ -361,14 +344,14 @@ export default {
     this.getMyEventData()
 
     // GET CATEGORY DATA FROM BACKEND
-    axios.get("http://127.0.0.1:8000/api/categories")
+    axios.get("/categories")
     .then((res) => {
       this.categories = res.data;
     })
     
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
     let countriesWithItsCities = [];
-    axios.get('http://localhost:8000/api/countries')
+    axios.get('/countries')
     .then(res => {
       countriesWithItsCities = res.data;
       for(let country in countriesWithItsCities) {

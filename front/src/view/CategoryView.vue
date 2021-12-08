@@ -7,10 +7,10 @@
             :mode="dialogMode"
             @close="closeDialog"
         >
-            <input type="text" placeholder="Name..." v-model="categoryName"/>
+            <input type="text" id="formInput" placeholder="Name..." v-model="categoryName"/>
             <div
                 v-if="cateNameError" 
-                :class="getErrorClass">
+                class="error">
                 <p v-text="cateNameError"></p>
             </div>
 
@@ -34,12 +34,10 @@
 </template>
 
 <script>
-import AddSearch from './AddSearch.vue';
-import CategoryCard from './CategoryCard.vue';
+import AddSearch from '../components/pages/category/AddSearch.vue';
+import CategoryCard from '../components/pages/category/CategoryCard.vue';
 
-import axios from 'axios';
-const url = "http://127.0.0.1:8000/api/categories/";
-
+import axios from "../axios-http.js";
 export default {
     components: {
         'add-search': AddSearch,
@@ -81,12 +79,6 @@ export default {
             return (
                 this.cateNameError === '' && this.categoryName !== ''
             );
-        },
-        getErrorClass() {
-            if(this.cateNameError === '') {
-                return 'frontOk';
-            }
-            return 'frontError';
         }
     },
     methods: {
@@ -104,7 +96,7 @@ export default {
             let data = {
                 name: categoryName
             }
-            axios.post(url, data)
+            axios.post('/categories', data)
             .then(res => {
                 this.categories.unshift(res.data.data);
                 this.isShowAddForm = false,
@@ -112,7 +104,7 @@ export default {
             })
         },
         removeCategory(id) {
-            axios.delete(url + id)
+            axios.delete('/categories/' + id)
             .then(() => {
                 this.categories = this.categories.filter(cate => cate.id !== id);
             })
@@ -131,7 +123,7 @@ export default {
             let data = {
                 name: newCateName
             }
-            axios.put(url + id, data)
+            axios.put('/categories/' + id, data)
             .then(res => {
                 this.categories.forEach((cate, index) => {
                     if(cate.id == id) {
@@ -155,18 +147,18 @@ export default {
         },
         search(key) {
             if(key === '') {
-                axios.get(url).then(res => {
+                axios.get('/').then(res => {
                     this.categories = res.data.data;
                 });
             } else {
-                axios.get(url + 'search/' + key).then(res => {
+                axios.get('/search/' + key).then(res => {
                     this.categories = res.data;
                 })
             }
         }
     },
     mounted() {
-        axios.get(url).then(res => {
+        axios.get('/categories').then(res => {
             this.categories = res.data;
         })
     },
@@ -190,15 +182,11 @@ input[type="text"] {
 input[type="text"]:focus {
   border: 2px solid var(--main-color);
 }
-.frontOk,
-.frontError {
-    width: 400px;
+#formInput {
+    width: 350px;
+}
+.error {
     text-align: center;
-}
-.frontOk {
-    color: rgb(56, 56, 255);
-}
-.frontError {
     color: rgba(255, 0, 0, 0.575);
 }
 </style>
