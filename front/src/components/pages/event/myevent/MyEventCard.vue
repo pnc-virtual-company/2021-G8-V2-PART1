@@ -13,7 +13,7 @@
               <p>Date: {{myEvent.start_date}}</p>
               <p>- {{myEvent.end_date}}</p>
             </div>
-            <p>{{myEvent.description}}</p>
+            <p v-if="myEvent.description" v-text="myEvent.description"></p>
           </div>
           <div class="right-bottom">
             <div class="bottom-info">
@@ -23,7 +23,7 @@
               </div>
               <div class="bottom-right">
                 <button class="edit">Edit</button>
-                <button class="delete">Remove</button>
+                <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
               </div>
               <div class="quitJoin" v-if="showJoinQuit">
                 <button class="quit">Quit</button>
@@ -50,6 +50,8 @@ export default {
       this.isJoin = !this.isJoin;
     },
   },
+ 
+
 };
 </script>
 <style scoped>

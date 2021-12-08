@@ -22,7 +22,7 @@ class CreateMyeventsTable extends Migration
             $table->dateTime('end_date');
             $table->string('city');
             $table->text('description');
-            $table->string('image')->nullable();
+            $table->string('image');
             $table->timestamps();
         });
     }
