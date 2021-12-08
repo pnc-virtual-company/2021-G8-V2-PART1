@@ -61,7 +61,8 @@ export default {
             } else {
                 this.cateNameError = '';
                 for(let cate of this.categories) {
-                    if(cate.name.toLowerCase() === newValue.toLowerCase()) {
+                    if((cate.name.toLowerCase() === newValue.toLowerCase()) && 
+                        (this.dialogMode === 'create' || newValue !== this.categoryToEdit.name)) {
                         this.cateNameError = 'Category name already existed';
                     }
                 }
