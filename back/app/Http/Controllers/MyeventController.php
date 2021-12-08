@@ -111,7 +111,7 @@ class MyeventController extends Controller
             // move image to storage folder
             $request -> file('image')->store('public/images');
         }else{
-            $img = 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg';
+            $img = 'empty.jpg';
             $myevent->image = $img;
         }
         $myevent->save();

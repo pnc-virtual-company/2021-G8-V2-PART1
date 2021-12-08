@@ -48,7 +48,7 @@
                 </div>
                 <div class="categoryContainer">
                     <ul>
-                        <li v-for="cate of categories" 
+                        <li v-for="cate of this.categories" 
                           :key="cate.id"
                           @click="setCate(cate.id, cate.name)"
                         >{{ cate.name }}
@@ -178,11 +178,11 @@ export default {
   watch: {
       cateKeySearch: function(key) {
         if(key === '') {
-            axios.get('/categories').then(res => {
-                this.categories = res.data;
+            axios.get('api/categories').then(res => {
+                this.categories = res.data.data;
             });
         } else {
-            axios.get('/categories' + '/search/' + key).then(res => {
+            axios.get('api/categories' + '/search/' + key).then(res => {
                 this.categories = res.data;
             })
         }
@@ -244,6 +244,9 @@ export default {
     },
     showCategoryList() {
       this.categoryListDisplayed = true;
+      axios.get('api/categories').then(res => {
+          this.categories = res.data.data;
+      });
     },
     showCityList() {
       this.cityListDisplayed = true;
@@ -260,9 +263,7 @@ export default {
     },
     clearCateSearch() {
       this.cateKeySearch = '';
-      axios.get('/categories').then(res => {
-          this.categories = res.data;
-      });
+      this.showCategoryList()
     },
     clearCitySearch() {
       this.cityKeySearch = '';
@@ -288,12 +289,12 @@ export default {
   //===========================search myevent
   search(key) {
             if(key === '') {
-                axios.get('/').then(res => {
-                    this.myEvents = res.data;
+                axios.get('api/myevents').then(res => {
+                    this.myEvents = res.data.data;
                 });
             } else {
-                axios.get('/search/' + key).then(res => {
-                    this.myEvents = res.data;
+                axios.get('api/myevents/search/' + key).then(res => {
+                    this.myEvents = res.data.data;
                 })
             }
         },
@@ -323,7 +324,7 @@ export default {
         myNewEvent.append('image', this.file);
       }
 
-      axios.post('/', myNewEvent)
+      axios.post('api/myevents', myNewEvent)
       .then(res => {
         this.myEvents.unshift(res.data.myEvent);
         this.getMyEventData();
@@ -331,7 +332,7 @@ export default {
       })
     },
     deleteMyEventCard(id){
-      axios.delete('/'+id)
+      axios.delete('api/myevents/'+id)
       .then(()=>{
         this.getMyEventData()
       })
@@ -357,16 +358,17 @@ export default {
          description: this.description,
          image: this.file,
        }
-       axios.put('/'+myEvent.id, myEventUpdate)
+       axios.put('api/myevents/'+myEvent.id, myEventUpdate)
        .then(()=>{
          this.getMyEventData()
        })
 
     },
     getMyEventData(){
-      axios.get("/myevents")
+      axios.get("api/myevents")
     .then( res => {
       this.myEvents = res.data
+
     })
     }
      /// =======================crud=====================
@@ -379,14 +381,14 @@ export default {
     this.getMyEventData()
 
     // GET CATEGORY DATA FROM BACKEND
-    axios.get("/categories")
+    axios.get("api/categories")
     .then((res) => {
       this.categories = res.data.data;
     })
     
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
     let countriesWithItsCities = [];
-    axios.get('/countries')
+    axios.get('api/countries')
     .then(res => {
       countriesWithItsCities = res.data;
       for(let country in countriesWithItsCities) {
