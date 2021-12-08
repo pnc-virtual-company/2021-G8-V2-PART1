@@ -2,7 +2,7 @@
   <section>
     <div class="card-container">
       <div class="left-side">
-        <img :src="myEvent.image"/>
+        <img :src="url + myEvent.image" alt="asdfasd"/>
       </div>
       <div class="right-side">
           <div class="right-top">
@@ -19,11 +19,11 @@
                 <p>{{myEvent.category.name}} at {{myEvent.city}}</p>
                 <p>{{myEvent.members}} people joined</p>
               </div>
-              <div class="bottom-right">
+              <div class="bottom-right" v-if="buttonMode === 'myEvent'">
                 <button class="edit" @click="$emit('updateMyEvent',myEvent)">Edit</button>
                 <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
               </div>
-              <div class="quitJoin" v-if="showJoinQuit">
+              <div class="quitJoin" v-if="buttonMode === 'event'">
                 <button class="quit">Quit</button>
                 <button class="join">Join</button>
               </div>
@@ -36,17 +36,11 @@
 
 <script>
 export default {
-  props: ["myEvent"],
+  props: ["myEvent", "buttonMode"],
   data() {
     return {
-      isJoin: false,
-      showEditJoin: false,
+      url : 'http://127.0.0.1:8000/storage/images/',
     };
-  },
-  methods: {
-    joined() {
-      this.isJoin = !this.isJoin;
-    },
   },
  
 

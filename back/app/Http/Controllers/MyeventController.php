@@ -39,7 +39,7 @@ class MyeventController extends Controller
             'end_date'=>'required|after:start_date',
             'city'=>'required',
             'description'=>'nullable',
-            'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:1999'
+            'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:19999'
         ]);
         
         // insert to database
@@ -54,13 +54,13 @@ class MyeventController extends Controller
         if($request->image !== null){
             $myevent->image =$request->file('image')->hashName();
             // move image to storage folder
-            $request -> file('image')->store('public/images');
+            $request->file('image')->store('images', 'public');
+            echo $request->file('image')->hashName();
         }else{
-            $img = 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg';
+            $img = 'empty.jpg';
             $myevent->image = $img;
         }
         $myevent->save();
-        // return response()->json(["message"=>"My event Created!","myEvent"=> Myevent::with(['category'])->get($myevent)],201);
         return response()->json(["message"=>"My event Created!","myEvent"=> Myevent::with(['category'])->latest()->first()],201);
         
         
@@ -107,7 +107,7 @@ class MyeventController extends Controller
         $myevent->city = $request->city;
         $myevent->description = $request->description;
         if($request->image !== null){
-            $myevent->image =$request->file('image')->hashName();
+            // $myevent->image =$request->file('image')->hashName();
             // move image to storage folder
             $request -> file('image')->store('public/images');
         }else{

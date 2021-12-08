@@ -1,6 +1,6 @@
 <template>
   <section>
-    <add-search @showForm="showAddForm"></add-search>
+    <add-search @showForm="showAddForm" @search='search'></add-search>
     <base-dialog
       v-if="dialogDisplayed"
       :title="dialogTitle"
@@ -102,16 +102,17 @@
             </div>
           </div>
         <div class="right-side">
-          <input type="file" />
-          <img src="../assets/empty.jpg" alt="EMPTY PICTURE" />
+          <input type="file" @change="getImage"/>
+          <img :src="imageTitle" alt="EMPTY PICTURE" />
         </div>
       </div>
   </div>
     <!---------------------- myevent card and from -->
       <template #actions>
         <base-button
+          
           :class="isValidated ? 'buttonActive' : 'buttonInactive'"
-          v-if="dialogMode ='edit'" @click="addNewEvent"
+          @click="onConfirm"
           >{{ dialogButtton }}
         </base-button>
       </template>
@@ -120,6 +121,7 @@
       v-for="myEvent of this.myEvents"
       :key="myEvent.id"
       :myEvent="myEvent"
+      :buttonMode="onMyEventMode"
       @deleteMyEvent='deleteMyEventCard'
       @updateMyEvent='EditMyEventCard'
     ></my-event-card>
@@ -130,19 +132,24 @@
 <script>
 import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
 import AddSearch from "../components/pages/event/myevent/AddSearch.vue";
+import BaseButton from "../components/UI/BaseButton.vue";
 
 import axios from "../axios-http.js";
 export default {
-  components: {MyEventCard, AddSearch},
+  components: {MyEventCard, AddSearch, BaseButton},
   props: ['userDataAppToEvent'],
   data() {
     return {
+        myEvent:'',
         myEventTitle:'',
         startDateTime:'',
         endDate:'',
         description:'',
         category: '',
         city: '',
+        imageTitle:'',
+        file: null,
+  
         
         myEventTitleError:'',
         startDateTimeError:'',
@@ -151,6 +158,7 @@ export default {
         cityError: '',
 
 
+        onMyEventMode: 'myEvent',
         isShowMore: false,
         dialogDisplayed: false,
         categoryListDisplayed: false,
@@ -191,22 +199,8 @@ export default {
               this.countriesCities.push(countryCity);
             }
           }
-          console.log(this.countriesCities)
         }
       },
-      endDate: function(newValue){
-        console.log(newValue)
-     
-      },
-      startDateTime: function(newValue){
-        console.log(newValue)
-       
-      },
-      myEventTitle: function(newValue){
-        console.log(newValue)
-        
-      },
-
   },
   computed: {
     dialogTitle() {
@@ -234,10 +228,6 @@ export default {
     
     getCategoryData(data) {
       this.categoryData = data;
-    },
-    createMyNewEvent(newEvent) {
-      this.myEventData.unshift(newEvent);
-      console.log(this.myEventData);
     },
     showAddForm() {
       this.dialogMode = "create";
@@ -289,44 +279,89 @@ export default {
       };
       this.closeCategoryList();
     },
-
+     //===========================get image
+     getImage(e){
+       this.file = e.target.files[0];
+       let img = e.target.files[0];
+       this.imageTitle = URL.createObjectURL(img);
+     },
+  //===========================search myevent
+  search(key) {
+            if(key === '') {
+                axios.get(url).then(res => {
+                    this.myEvents = res.data;
+                });
+            } else {
+                axios.get(url + '/search/' + key).then(res => {
+                    this.myEvents = res.data;
+                })
+            }
+        },
   /// =======================crud=====================
-
+    onConfirm() {
+            if(this.isValidated) {
+                if (this.dialogMode === 'create') {
+                    this.addNewEvent();
+                } else if (this.dialogMode === 'edit') {
+                    this.updateMyEventCard(this.myEvent);
+                }
+                this.closeDialog();
+            }
+        },
     addNewEvent(){
       this.dialogDisplayed = false;
-      let myNewEvent = {
-        category_id: this.category.id,
-        user_id: this.userDataAppToEvent.id,
-        title: this.myEventTitle,
-        start_date: this.startDateTime,
-        end_date: this.endDate,
-        city: this.city,
-        description: this.description,
-        image: null,
-        
-      };
-      axios.post('/myevents', myNewEvent)
+      
+      let myNewEvent = new FormData();
+      myNewEvent.append('category_id', this.category.id);
+      myNewEvent.append('user_id', this.userDataAppToEvent.id);
+      myNewEvent.append('title', this.myEventTitle);
+      myNewEvent.append('start_date', this.startDateTime);
+      myNewEvent.append('end_date', this.endDate);
+      myNewEvent.append('city', this.city);
+      myNewEvent.append('description', this.description);
+      if(this.file !== null) {
+        myNewEvent.append('image', this.file);
+      }
+
+      axios.post(url, myNewEvent)
       .then(res => {
-        console.log(res.data)
         this.myEvents.unshift(res.data.myEvent);
         this.getMyEventData();
         
       })
     },
     deleteMyEventCard(id){
-      axios.delete('/myevents/'+id)
-      .then(res=>{
-        console.log(res.data);
+      axios.delete(url+'/'+id)
+      .then(()=>{
         this.getMyEventData()
       })
     },
     EditMyEventCard(myEvent){
+      this.myEvent = myEvent;
       this.dialogMode = 'edit'
        this.dialogDisplayed = true;
        this.myEventTitle = myEvent.title
        this.startDateTime = myEvent.start_date
        this.endDate = myEvent.end_date
        this.description = myEvent.description
+       
+    },
+    updateMyEventCard(myEvent){
+        let myEventUpdate = {
+         category_id: myEvent.category_id,
+         user_id: myEvent.user_id,
+         title: this.myEventTitle,
+         start_date: this.startDateTime,
+         end_date: this.endDate,
+         city: this.city,
+         description: this.description,
+         image: this.file,
+       }
+       axios.put(url+'/'+myEvent.id, myEventUpdate)
+       .then(()=>{
+         this.getMyEventData()
+       })
+
     },
     getMyEventData(){
       axios.get("/myevents")
