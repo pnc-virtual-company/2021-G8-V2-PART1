@@ -107,10 +107,11 @@
         </div>
       </div>
   </div>
+    <!---------------------- myevent card and from -->
       <template #actions>
         <base-button
           :class="isValidated ? 'buttonActive' : 'buttonInactive'"
-          @click="addNewEvent"
+          v-if="dialogMode ='edit'" @click="addNewEvent"
           >{{ dialogButtton }}
         </base-button>
       </template>
@@ -120,7 +121,9 @@
       :key="myEvent.id"
       :myEvent="myEvent"
       @deleteMyEvent='deleteMyEventCard'
+      @updateMyEvent='EditMyEventCard'
     ></my-event-card>
+    <!------------------------- myevent card and from -->
   </section>
 </template>
 
@@ -229,27 +232,7 @@ export default {
     }
   },
   methods: {
-    addNewEvent(){
-      this.dialogDisplayed = false;
-      let myNewEvent = {
-        category_id: this.category.id,
-        user_id: this.userDataAppToEvent.id,
-        title: this.myEventTitle,
-        start_date: this.startDateTime,
-        end_date: this.endDate,
-        city: this.city,
-        description: this.description,
-        image: null,
-        
-      };
-      axios.post(url, myNewEvent)
-      .then(res => {
-        console.log(res.data)
-        this.myEvents.unshift(res.data.myEvent);
-        this.getMyEventData();
-        
-      })
-    },
+    
     getCategoryData(data) {
       this.categoryData = data;
     },
@@ -308,9 +291,29 @@ export default {
       this.closeCategoryList();
     },
 
+  /// =======================crud=====================
 
-
-
+    addNewEvent(){
+      this.dialogDisplayed = false;
+      let myNewEvent = {
+        category_id: this.category.id,
+        user_id: this.userDataAppToEvent.id,
+        title: this.myEventTitle,
+        start_date: this.startDateTime,
+        end_date: this.endDate,
+        city: this.city,
+        description: this.description,
+        image: null,
+        
+      };
+      axios.post(url, myNewEvent)
+      .then(res => {
+        console.log(res.data)
+        this.myEvents.unshift(res.data.myEvent);
+        this.getMyEventData();
+        
+      })
+    },
     deleteMyEventCard(id){
       axios.delete(url+'/'+id)
       .then(res=>{
@@ -318,13 +321,37 @@ export default {
         this.getMyEventData()
       })
     },
+    EditMyEventCard(myEvent){
+      this.dialogMode = 'edit'
+       this.dialogDisplayed = true;
+       this.myEventTitle = myEvent.title
+       this.startDateTime = myEvent.start_date
+       this.endDate = myEvent.end_date
+       this.description = myEvent.description
+       
+      //  let myEventUpdate = {
+      //    category_id: myEvent.category_id,
+      //    user_id: myEvent.user_id,
+      //    title: this.myEventTitle,
+      //    start_date: this.startDateTime,
+      //    end_date: this.endDate,
+      //    city: this.city,
+      //    description: this.description,
+      //    image: null,
+      //  }
+      //  axios.put(url, myEventUpdate)
+      //  .then(res=>{
+      //    console.log(res.data)
+      //  })
+
+    },
     getMyEventData(){
       axios.get("http://127.0.0.1:8000/api/myevents")
     .then( res => {
       this.myEvents = res.data
     })
     }
-
+     /// =======================crud=====================
 
 
 

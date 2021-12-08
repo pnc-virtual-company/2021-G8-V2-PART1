@@ -2,7 +2,7 @@
   <section>
     <div class="card-container">
       <div class="left-side">
-        <img src="https://static.bangkokpost.com/media/content/20191004/c1_1764659_191004103525.jpg"/>
+        <img :src="myEvent.image"/>
       </div>
       <div class="right-side">
           <div class="right-top">
@@ -20,7 +20,7 @@
                 <p>{{myEvent.members}} people joined</p>
               </div>
               <div class="bottom-right">
-                <button class="edit">Edit</button>
+                <button class="edit" @click="$emit('updateMyEvent',myEvent)">Edit</button>
                 <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
               </div>
             </div>
