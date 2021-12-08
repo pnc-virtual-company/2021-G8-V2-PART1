@@ -13,9 +13,8 @@
 </template>
 
 <script>
-import Navbar from './components/menu/Narbar.vue'
-import axios from 'axios';
-const url = "http://127.0.0.1:8000/api/";
+import axios from "./axios-http.js";
+import Navbar from './components/menu/Narbar.vue';
 
 export default {
   components: {
@@ -30,7 +29,7 @@ export default {
   },
   methods: {
     registerNewUser(newUserData) {
-      axios.post(url+'signup', newUserData)
+      axios.post('/signup', newUserData)
       .then(() => {
         this.existedEmailError = '';
         this.errorMessage = '';
@@ -45,7 +44,7 @@ export default {
       })
     },
     login(userData) {
-      axios.post(url+'signin', userData)
+      axios.post('/signin', userData)
       .then(res => {
         localStorage.setItem('userID', res.data.user.id);
         this.userData = res.data.user;
@@ -77,7 +76,7 @@ export default {
       }
     };
     if(localStorage.userID) {
-      axios.get(url + 'getAUser/' + localStorage.userID)
+      axios.get('/getAUser/' + localStorage.userID)
       .then(res => {
         this.userData = res.data;
       })
