@@ -48,7 +48,7 @@
                 </div>
                 <div class="categoryContainer">
                     <ul>
-                        <li v-for="cate of categories" 
+                        <li v-for="cate of this.categories" 
                           :key="cate.id"
                           @click="setCate(cate.id, cate.name)"
                         >{{ cate.name }}
@@ -130,12 +130,11 @@
 </template>
 
 <script>
-import MyEventCard from "./MyEventCard.vue";
-import AddSearch from "./AddSearch.vue";
+import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
+import AddSearch from "../components/pages/event/myevent/AddSearch.vue";
+import BaseButton from "../components/UI/BaseButton.vue";
 
-import axios from 'axios';
-import BaseButton from '../../../UI/BaseButton.vue';
-let url = 'http://127.0.0.1:8000/api/myevents';
+import axios from "../axios-http.js";
 export default {
   components: {MyEventCard, AddSearch, BaseButton},
   props: ['userDataAppToEvent'],
@@ -179,11 +178,11 @@ export default {
   watch: {
       cateKeySearch: function(key) {
         if(key === '') {
-            axios.get('http://127.0.0.1:8000/api/categories').then(res => {
-                this.categories = res.data;
+            axios.get('api/categories').then(res => {
+                this.categories = res.data.data;
             });
         } else {
-            axios.get('http://127.0.0.1:8000/api/categories' + '/search/' + key).then(res => {
+            axios.get('api/categories' + '/search/' + key).then(res => {
                 this.categories = res.data;
             })
         }
@@ -245,6 +244,9 @@ export default {
     },
     showCategoryList() {
       this.categoryListDisplayed = true;
+      axios.get('api/categories').then(res => {
+          this.categories = res.data.data;
+      });
     },
     showCityList() {
       this.cityListDisplayed = true;
@@ -261,9 +263,7 @@ export default {
     },
     clearCateSearch() {
       this.cateKeySearch = '';
-      axios.get('http://127.0.0.1:8000/api/categories').then(res => {
-          this.categories = res.data;
-      });
+      this.showCategoryList()
     },
     clearCitySearch() {
       this.cityKeySearch = '';
@@ -289,12 +289,12 @@ export default {
   //===========================search myevent
   search(key) {
             if(key === '') {
-                axios.get(url).then(res => {
-                    this.myEvents = res.data;
+                axios.get('api/myevents').then(res => {
+                    this.myEvents = res.data.data;
                 });
             } else {
-                axios.get(url + '/search/' + key).then(res => {
-                    this.myEvents = res.data;
+                axios.get('api/myevents/search/' + key).then(res => {
+                    this.myEvents = res.data.data;
                 })
             }
         },
@@ -324,7 +324,7 @@ export default {
         myNewEvent.append('image', this.file);
       }
 
-      axios.post(url, myNewEvent)
+      axios.post('api/myevents', myNewEvent)
       .then(res => {
         this.myEvents.unshift(res.data.myEvent);
         this.getMyEventData();
@@ -332,7 +332,7 @@ export default {
       })
     },
     deleteMyEventCard(id){
-      axios.delete(url+'/'+id)
+      axios.delete('api/myevents/'+id)
       .then(()=>{
         this.getMyEventData()
       })
@@ -358,16 +358,17 @@ export default {
          description: this.description,
          image: this.file,
        }
-       axios.put(url+'/'+myEvent.id, myEventUpdate)
+       axios.put('api/myevents/'+myEvent.id, myEventUpdate)
        .then(()=>{
          this.getMyEventData()
        })
 
     },
     getMyEventData(){
-      axios.get("http://127.0.0.1:8000/api/myevents")
+      axios.get("api/myevents")
     .then( res => {
       this.myEvents = res.data
+
     })
     }
      /// =======================crud=====================
@@ -380,14 +381,14 @@ export default {
     this.getMyEventData()
 
     // GET CATEGORY DATA FROM BACKEND
-    axios.get("http://127.0.0.1:8000/api/categories")
+    axios.get("api/categories")
     .then((res) => {
       this.categories = res.data;
     })
     
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
     let countriesWithItsCities = [];
-    axios.get('http://localhost:8000/api/countries')
+    axios.get('api/countries')
     .then(res => {
       countriesWithItsCities = res.data;
       for(let country in countriesWithItsCities) {
