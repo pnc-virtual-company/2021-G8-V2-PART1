@@ -7,22 +7,21 @@
         />
       </div>
       <div class="right-side">
-        <div class="right-top">
-          <h1>{{myEvent.title}}</h1>
-          <div class="date">
-            <p>Date: {{myEvent.startDateTime}}</p>
-            <p>- {{myEvent.endDateTime}}</p>
-          </div>
-          <p>{{myEvent.description}}</p>
-        </div>
-        <div class="right-bottom">
-          <div class="bottom-info">
-            <div class="bottom-left">
-              <p>{{myEvent.category}} at {{myEvent.city}}</p>
-              <p>{{myEvent.members}} people joined</p>
+          <div class="right-top">
+            <h1>{{myEvent.title}}</h1>
+            <div class="date">
+              <p>Date: {{myEvent.start_date}}</p>
+              <p>- {{myEvent.end_date}}</p>
             </div>
-            <div class="bottom-right">
-              <div class="editDelete">
+            <p>{{myEvent.description}}</p>
+          </div>
+          <div class="right-bottom">
+            <div class="bottom-info">
+              <div class="bottom-left">
+                <p>{{myEvent.category.name}} at {{myEvent.city}}</p>
+                <p>{{myEvent.members}} people joined</p>
+              </div>
+              <div class="bottom-right">
                 <button class="edit">Edit</button>
                 <button class="delete">Remove</button>
               </div>
@@ -34,7 +33,6 @@
           </div>
         </div>
       </div>
-    </div>
   </section>
 </template>
 

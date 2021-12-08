@@ -16,7 +16,7 @@ class MyeventController extends Controller
     public function index()
     {
         //
-        return MyeventResource::collection(Myevent::with('id','desc')->get());
+        return Myevent::with(['category'])->latest()->get();
 
 
     }
@@ -59,7 +59,7 @@ class MyeventController extends Controller
             $myevent->image = $img;
         }
         $myevent->save();
-        return response()->json(["message"=>"My event Created!","My event"=>$myevent],201);
+        return response()->json(["message"=>"My event Created!","myEvent"=>$myevent],201);
         
         
     }
