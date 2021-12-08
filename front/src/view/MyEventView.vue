@@ -288,11 +288,11 @@ export default {
   //===========================search myevent
   search(key) {
             if(key === '') {
-                axios.get(url).then(res => {
+                axios.get('/').then(res => {
                     this.myEvents = res.data;
                 });
             } else {
-                axios.get(url + '/search/' + key).then(res => {
+                axios.get('/search/' + key).then(res => {
                     this.myEvents = res.data;
                 })
             }
@@ -323,7 +323,7 @@ export default {
         myNewEvent.append('image', this.file);
       }
 
-      axios.post(url, myNewEvent)
+      axios.post('/', myNewEvent)
       .then(res => {
         this.myEvents.unshift(res.data.myEvent);
         this.getMyEventData();
@@ -331,7 +331,7 @@ export default {
       })
     },
     deleteMyEventCard(id){
-      axios.delete(url+'/'+id)
+      axios.delete('/'+id)
       .then(()=>{
         this.getMyEventData()
       })
@@ -357,7 +357,7 @@ export default {
          description: this.description,
          image: this.file,
        }
-       axios.put(url+'/'+myEvent.id, myEventUpdate)
+       axios.put('/'+myEvent.id, myEventUpdate)
        .then(()=>{
          this.getMyEventData()
        })
@@ -381,7 +381,7 @@ export default {
     // GET CATEGORY DATA FROM BACKEND
     axios.get("/categories")
     .then((res) => {
-      this.categories = res.data;
+      this.categories = res.data.data;
     })
     
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
