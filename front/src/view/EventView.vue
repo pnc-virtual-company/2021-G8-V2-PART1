@@ -2,9 +2,9 @@
   <section>
     <search-filter></search-filter>
     <my-event-card
-      v-for="myEvent of this.myEvents"
-      :key="myEvent.id"
-      :myEvent="myEvent"
+      v-for="event of this.events"
+      :key="event.id"
+      :myEvent="event"
       :buttonMode="onEventMode"
     ></my-event-card>
   </section>
@@ -18,17 +18,17 @@ export default {
   components: { SearchFilter, MyEventCard },
   data() {
     return {
-      myEvents: [],
+      events: [],
       onEventMode: 'event',
     };
   },
   methods: {
-      getMyEventData(){
+    getMyEventData(){
       axios.get("api/myevents")
-    .then( res => {
-      this.myEvents = res.data
-
-    })
+      .then( res => {
+        this.events = res.data;
+        this.events = this.events.filter(event => event.user_id != localStorage.getItem("userID"))
+      })
     }
   },
   mounted() {

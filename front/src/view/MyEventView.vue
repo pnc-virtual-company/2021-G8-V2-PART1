@@ -368,7 +368,7 @@ export default {
       axios.get("api/myevents")
     .then( res => {
       this.myEvents = res.data
-
+      this.myEvents = this.myEvents.filter(event => event.user_id == localStorage.getItem("userID"))
     })
     }
      /// =======================crud=====================
