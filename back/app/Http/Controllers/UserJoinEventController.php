@@ -15,6 +15,12 @@ class UserJoinEventController extends Controller
     {
         return UserJoinEvent::with(['user', 'myevent'])->latest()->get();
     }
+    
+    public function getAllUserIdList($id)
+    {
+        return UserJoinEvent::select('user_id')->where('myevent_id', $id)->get();
+        // return 1;
+    }
 
     /**
      * Store a newly created resource in storage.
