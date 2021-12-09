@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     registerNewUser(newUserData) {
-      axios.post('/signup', newUserData)
+      axios.post('api/signup', newUserData)
       .then(() => {
         this.existedEmailError = '';
         this.errorMessage = '';
@@ -44,7 +44,7 @@ export default {
       })
     },
     login(userData) {
-      axios.post('/signin', userData)
+      axios.post('api/signin', userData)
       .then(res => {
         localStorage.setItem('userID', res.data.user.id);
         this.userData = res.data.user;
@@ -76,7 +76,7 @@ export default {
       }
     };
     if(localStorage.userID) {
-      axios.get('/getAUser/' + localStorage.userID)
+      axios.get('api/getAUser/' + localStorage.userID)
       .then(res => {
         this.userData = res.data;
       })

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <add-search @showForm="showAddForm"></add-search>
+    <add-search @showForm="showAddForm" @search='search'></add-search>
     <base-dialog
       v-if="dialogDisplayed"
       :title="dialogTitle"
@@ -48,7 +48,7 @@
                 </div>
                 <div class="categoryContainer">
                     <ul>
-                        <li v-for="cate of categories" 
+                        <li v-for="cate of this.categories" 
                           :key="cate.id"
                           @click="setCate(cate.id, cate.name)"
                         >{{ cate.name }}
@@ -102,16 +102,17 @@
             </div>
           </div>
         <div class="right-side">
-          <input type="file" />
-          <img src="../assets/empty.jpg" alt="EMPTY PICTURE" />
+          <input type="file" @change="getImage"/>
+          <img :src="imageTitle" alt="EMPTY PICTURE" />
         </div>
       </div>
   </div>
     <!---------------------- myevent card and from -->
       <template #actions>
         <base-button
+          
           :class="isValidated ? 'buttonActive' : 'buttonInactive'"
-          v-if="dialogMode ='edit'" @click="addNewEvent"
+          @click="onConfirm"
           >{{ dialogButtton }}
         </base-button>
       </template>
@@ -120,6 +121,7 @@
       v-for="myEvent of this.myEvents"
       :key="myEvent.id"
       :myEvent="myEvent"
+      :buttonMode="onMyEventMode"
       @deleteMyEvent='deleteMyEventCard'
       @updateMyEvent='EditMyEventCard'
     ></my-event-card>
@@ -130,19 +132,24 @@
 <script>
 import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
 import AddSearch from "../components/pages/event/myevent/AddSearch.vue";
+import BaseButton from "../components/UI/BaseButton.vue";
 
 import axios from "../axios-http.js";
 export default {
-  components: {MyEventCard, AddSearch},
+  components: {MyEventCard, AddSearch, BaseButton},
   props: ['userDataAppToEvent'],
   data() {
     return {
+        myEvent:'',
         myEventTitle:'',
         startDateTime:'',
         endDate:'',
         description:'',
         category: '',
         city: '',
+        imageTitle:'',
+        file: null,
+  
         
         myEventTitleError:'',
         startDateTimeError:'',
@@ -151,6 +158,7 @@ export default {
         cityError: '',
 
 
+        onMyEventMode: 'myEvent',
         isShowMore: false,
         dialogDisplayed: false,
         categoryListDisplayed: false,
@@ -170,11 +178,11 @@ export default {
   watch: {
       cateKeySearch: function(key) {
         if(key === '') {
-            axios.get('/categories').then(res => {
-                this.categories = res.data;
+            axios.get('api/categories').then(res => {
+                this.categories = res.data.data;
             });
         } else {
-            axios.get('/categories' + '/search/' + key).then(res => {
+            axios.get('api/categories' + '/search/' + key).then(res => {
                 this.categories = res.data;
             })
         }
@@ -191,22 +199,8 @@ export default {
               this.countriesCities.push(countryCity);
             }
           }
-          console.log(this.countriesCities)
         }
       },
-      endDate: function(newValue){
-        console.log(newValue)
-     
-      },
-      startDateTime: function(newValue){
-        console.log(newValue)
-       
-      },
-      myEventTitle: function(newValue){
-        console.log(newValue)
-        
-      },
-
   },
   computed: {
     dialogTitle() {
@@ -235,10 +229,6 @@ export default {
     getCategoryData(data) {
       this.categoryData = data;
     },
-    createMyNewEvent(newEvent) {
-      this.myEventData.unshift(newEvent);
-      console.log(this.myEventData);
-    },
     showAddForm() {
       this.dialogMode = "create";
       this.dialogDisplayed = true;
@@ -254,6 +244,9 @@ export default {
     },
     showCategoryList() {
       this.categoryListDisplayed = true;
+      axios.get('api/categories').then(res => {
+          this.categories = res.data.data;
+      });
     },
     showCityList() {
       this.cityListDisplayed = true;
@@ -270,9 +263,7 @@ export default {
     },
     clearCateSearch() {
       this.cateKeySearch = '';
-      axios.get('/categories').then(res => {
-          this.categories = res.data;
-      });
+      this.showCategoryList()
     },
     clearCitySearch() {
       this.cityKeySearch = '';
@@ -289,49 +280,95 @@ export default {
       };
       this.closeCategoryList();
     },
-
+     //===========================get image
+     getImage(e){
+       this.file = e.target.files[0];
+       let img = e.target.files[0];
+       this.imageTitle = URL.createObjectURL(img);
+     },
+  //===========================search myevent
+  search(key) {
+            if(key === '') {
+                axios.get('api/myevents').then(res => {
+                    this.myEvents = res.data.data;
+                });
+            } else {
+                axios.get('api/myevents/search/' + key).then(res => {
+                    this.myEvents = res.data.data;
+                })
+            }
+        },
   /// =======================crud=====================
-
+    onConfirm() {
+            if(this.isValidated) {
+                if (this.dialogMode === 'create') {
+                    this.addNewEvent();
+                } else if (this.dialogMode === 'edit') {
+                    this.updateMyEventCard(this.myEvent);
+                }
+                this.closeDialog();
+            }
+        },
     addNewEvent(){
       this.dialogDisplayed = false;
-      let myNewEvent = {
-        category_id: this.category.id,
-        user_id: this.userDataAppToEvent.id,
-        title: this.myEventTitle,
-        start_date: this.startDateTime,
-        end_date: this.endDate,
-        city: this.city,
-        description: this.description,
-        image: null,
-        
-      };
-      axios.post('/myevents', myNewEvent)
+      
+      let myNewEvent = new FormData();
+      myNewEvent.append('category_id', this.category.id);
+      myNewEvent.append('user_id', this.userDataAppToEvent.id);
+      myNewEvent.append('title', this.myEventTitle);
+      myNewEvent.append('start_date', this.startDateTime);
+      myNewEvent.append('end_date', this.endDate);
+      myNewEvent.append('city', this.city);
+      myNewEvent.append('description', this.description);
+      if(this.file !== null) {
+        myNewEvent.append('image', this.file);
+      }
+
+      axios.post('api/myevents', myNewEvent)
       .then(res => {
-        console.log(res.data)
         this.myEvents.unshift(res.data.myEvent);
         this.getMyEventData();
         
       })
     },
     deleteMyEventCard(id){
-      axios.delete('/myevents/'+id)
-      .then(res=>{
-        console.log(res.data);
+      axios.delete('api/myevents/'+id)
+      .then(()=>{
         this.getMyEventData()
       })
     },
     EditMyEventCard(myEvent){
+      this.myEvent = myEvent;
       this.dialogMode = 'edit'
        this.dialogDisplayed = true;
        this.myEventTitle = myEvent.title
        this.startDateTime = myEvent.start_date
        this.endDate = myEvent.end_date
        this.description = myEvent.description
+       
+    },
+    updateMyEventCard(myEvent){
+        let myEventUpdate = {
+         category_id: myEvent.category_id,
+         user_id: myEvent.user_id,
+         title: this.myEventTitle,
+         start_date: this.startDateTime,
+         end_date: this.endDate,
+         city: this.city,
+         description: this.description,
+         image: this.file,
+       }
+       axios.put('api/myevents/'+myEvent.id, myEventUpdate)
+       .then(()=>{
+         this.getMyEventData()
+       })
+
     },
     getMyEventData(){
-      axios.get("/myevents")
+      axios.get("api/myevents")
     .then( res => {
       this.myEvents = res.data
+
     })
     }
      /// =======================crud=====================
@@ -344,14 +381,14 @@ export default {
     this.getMyEventData()
 
     // GET CATEGORY DATA FROM BACKEND
-    axios.get("/categories")
+    axios.get("api/categories")
     .then((res) => {
-      this.categories = res.data;
+      this.categories = res.data.data;
     })
     
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
     let countriesWithItsCities = [];
-    axios.get('/countries')
+    axios.get('api/countries')
     .then(res => {
       countriesWithItsCities = res.data;
       for(let country in countriesWithItsCities) {

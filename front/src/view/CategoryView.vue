@@ -61,7 +61,8 @@ export default {
             } else {
                 this.cateNameError = '';
                 for(let cate of this.categories) {
-                    if(cate.name.toLowerCase() === newValue.toLowerCase()) {
+                    if((cate.name.toLowerCase() === newValue.toLowerCase()) && 
+                        (this.dialogMode === 'create' || newValue !== this.categoryToEdit.name)) {
                         this.cateNameError = 'Category name already existed';
                     }
                 }
@@ -96,7 +97,7 @@ export default {
             let data = {
                 name: categoryName
             }
-            axios.post('/categories', data)
+            axios.post('api/categories', data)
             .then(res => {
                 this.categories.unshift(res.data.data);
                 this.isShowAddForm = false,
@@ -104,7 +105,7 @@ export default {
             })
         },
         removeCategory(id) {
-            axios.delete('/categories/' + id)
+            axios.delete('api/categories/' + id)
             .then(() => {
                 this.categories = this.categories.filter(cate => cate.id !== id);
             })
@@ -123,7 +124,7 @@ export default {
             let data = {
                 name: newCateName
             }
-            axios.put('/categories/' + id, data)
+            axios.put('api/categories/' + id, data)
             .then(res => {
                 this.categories.forEach((cate, index) => {
                     if(cate.id == id) {
@@ -147,19 +148,19 @@ export default {
         },
         search(key) {
             if(key === '') {
-                axios.get('/').then(res => {
+                axios.get('api/categories').then(res => {
                     this.categories = res.data.data;
                 });
             } else {
-                axios.get('/search/' + key).then(res => {
+                axios.get('api/categories/search/' + key).then(res => {
                     this.categories = res.data;
                 })
             }
         }
     },
     mounted() {
-        axios.get('/categories').then(res => {
-            this.categories = res.data;
+        axios.get('api/categories').then(res => {
+            this.categories = res.data.data;
         })
     },
 }
