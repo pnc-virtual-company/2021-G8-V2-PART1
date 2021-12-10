@@ -6,7 +6,7 @@
           type="text"
           class="searchKey"
           placeholder="What are you looking for?"
-          v-model="keyWord"
+          v-model="cardKeyWord"
         />
         <button type="button" class="searchButton" @click="clearSearch">
           X
@@ -17,7 +17,6 @@
           type="text"
           class="city-searchKey"
           placeholder="Not far from city"
-          v-model="keyWord"
         />
         <button type="button" class="city-searchButton" @click="clearSearch">
           X
@@ -31,8 +30,18 @@
 export default {
   data() {
     return {
-    
+      cardKeyWord: '',
     };
+  },
+  watch: {
+    cardKeyWord: function(newValue) {
+      this.$emit('cardSearch', newValue);
+    },
+  },
+  methods: {
+    clearSearch() {
+      this.keyWord = '';
+    }
   },
 };
 </script>

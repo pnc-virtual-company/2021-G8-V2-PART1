@@ -1,6 +1,6 @@
 <template>
   <section>
-    <search-filter></search-filter>
+    <search-filter @cardSearch="cardSearch"></search-filter>
     <my-event-card
       v-for="event of this.events"
       :key="event.id"
@@ -15,7 +15,10 @@ import SearchFilter from "../components/pages/event/exploreEvent/SearchFilter.vu
 import MyEventCard from '../components/pages/event/myevent/MyEventCard.vue';
 import axios from "../axios-http.js";
 export default {
-  components: { SearchFilter, MyEventCard },
+  components: { 
+    'search-filter': SearchFilter, 
+    'my-event-card': MyEventCard 
+    },
   data() {
     return {
       events: [],
@@ -29,10 +32,21 @@ export default {
         this.events = res.data;
         this.events = this.events.filter(event => event.user_id != localStorage.getItem("userID"));
       })
+    },
+    cardSearch(key){
+      if(key === ''){
+        axios.get('api/userjoinevents').then(res=>{
+          this.events = res.data.data
+        });
+      }else{
+        axios.get('api/userjoinevents/search/' + key).then(res=>{
+          this.events = res.data;
+        })
+      }
     }
   },
   mounted() {
-    this.getMyEventData()
+    this.getMyEventData();
   },
 };
 </script>

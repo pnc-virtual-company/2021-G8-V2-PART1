@@ -24,8 +24,8 @@
                 <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
               </div>
               <div class="quitJoin" v-if="buttonMode === 'event'">
-                <button class="quit">Quit</button>
-                <button class="join">Join</button>
+                <button class="quit" @click="toggleButton" v-if =" joinEventisVisible">Quit</button>
+                <button class="join" @click ="toggleButton" v-else>Join</button>
               </div>
             </div>
           </div>
@@ -40,7 +40,13 @@ export default {
   data() {
     return {
       url : 'http://127.0.0.1:8000/storage/images/',
+      joinEventisVisible:false
     };
+  },
+   methods: {
+    toggleButton() {
+      this.joinEventisVisible = !this.joinEventisVisible;
+    },
   },
  
 

@@ -95,3 +95,4 @@ class UserJoinEventController extends Controller
       }
     }
 }
+
