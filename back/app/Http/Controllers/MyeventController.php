@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Myevent;
-use App\Http\Resources\MyeventResource;
+use Illuminate\Support\Facades\DB;
 
 class MyeventController extends Controller
 {
@@ -15,11 +15,22 @@ class MyeventController extends Controller
      */
     public function index()
     {
-        
-        return Myevent::with(['category'])->latest()->get();
-
-
-
+        $events = DB::table('myevents')
+            ->join('categories', 'myevents.category_id', '=', 'categories.id')
+            ->select('myevents.*', 'categories.name as categoryName')
+            ->latest()
+            ->get()
+            ->toArray();
+        foreach($events as $event) {
+            $userIdList = DB::table('user_join_events')
+            ->select('user_id')
+            ->where('myevent_id', '=', $event->id)
+            ->get()
+            ->toArray();
+            
+            $event->joinUserIdList = $userIdList;
+        }
+        return $events;
     }
 
     /**
@@ -61,7 +72,9 @@ class MyeventController extends Controller
             $myevent->image = $img;
         }
         $myevent->save();
-        return response()->json(["message"=>"My event Created!","myEvent"=> Myevent::with(['category'])->latest()->first()],201);
+        
+        $myevent->joinUserIdList = [];
+        return response()->json(["message"=>"My event Created!","myEvent"=> $myevent],201);
         
         
     }
@@ -74,8 +87,15 @@ class MyeventController extends Controller
      */
     public function show($id)
     {
-        //
-        return Myevent::findOrFail($id);
+        $event = Myevent::findOrFail($id);
+        $userIdList = DB::table('user_join_events')
+            ->select('user_id')
+            ->where('myevent_id', '=', $event->id)
+            ->get()
+            ->toArray();
+            
+            $event->joinUserIdList = $userIdList;
+        return $event;
     }
 
     /**
