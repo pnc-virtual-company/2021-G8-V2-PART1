@@ -5,7 +5,7 @@
       v-for="event of this.events"
       :key="event.id"
       :myEvent="event"
-      :buttonMode="onEventMode"
+      :buttonMode="quitOrJoin(event.joinedUserIdList)"
     ></my-event-card>
   </section>
 </template>
@@ -26,6 +26,15 @@ export default {
     };
   },
   methods: {
+    quitOrJoin(joinedUserIdList) {
+      let myID = localStorage.getItem('userID');
+      for(let joinedUserId of joinedUserIdList) {
+        if(joinedUserId.user_id === myID) {
+          return 'QUIT'
+        }
+      }
+      return 'JOIN'
+    },
     getMyEventData(){
       axios.get("api/myevents")
       .then( res => {
@@ -36,9 +45,10 @@ export default {
           axios.get('/api/userjoinevents/getUserIdList/' + event.id)
           .then(res => {
             joinedUserIdList = res.data;
-            event.joinedUserIdList = joinedUserIdList;
+            event.joinedUserIdList = Object.keys(joinedUserIdList).map((key) => joinedUserIdList[key]);
           })
         }
+        console.log(this.events)
       })
     },
     cardSearch(key){

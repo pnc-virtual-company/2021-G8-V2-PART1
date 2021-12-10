@@ -280,12 +280,12 @@ export default {
       };
       this.closeCategoryList();
     },
-     //===========================get image
-     getImage(e){
-       this.file = e.target.files[0];
-       let img = e.target.files[0];
-       this.imageTitle = URL.createObjectURL(img);
-     },
+    //===========================get image
+    getImage(e){
+      this.file = e.target.files[0];
+      let img = e.target.files[0];
+      this.imageTitle = URL.createObjectURL(img);
+    },
   //===========================search myevent
   search(key) {
             if(key === '') {
@@ -327,7 +327,7 @@ export default {
       axios.post('api/myevents', myNewEvent)
       .then(res => {
         this.myEvents.unshift(res.data.myEvent);
-        this.myEvents[0].joinedUserIdList = [];
+        this.myEvents[0].joinedUserIdList = 0;
       })
     },
     deleteMyEventCard(id){
@@ -373,7 +373,7 @@ export default {
         axios.get('/api/userjoinevents/getUserIdList/' + myEvent.id)
         .then(res => {
           joinedUserIdList = res.data;
-          myEvent.joinedUserIdList = joinedUserIdList;
+          myEvent.joinedUserIdList = joinedUserIdList.length;
         })
       }
       console.log(this.myEvents);

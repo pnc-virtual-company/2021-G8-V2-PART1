@@ -17,15 +17,15 @@
             <div class="bottom-info">
               <div class="bottom-left">
                 <p>{{myEvent.category.name}} at {{myEvent.city}}</p>
-                <p>{{myEvent.members}} people joined</p>
+                <p>{{myEvent.joinedUserIdList.length}} people joined</p>
               </div>
               <div class="bottom-right" v-if="buttonMode === 'myEvent'">
                 <button class="edit" @click="$emit('updateMyEvent',myEvent)">Edit</button>
                 <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
               </div>
               <div class="quitJoin" v-if="buttonMode === 'event'">
-                <button class="quit" @click="toggleButton" v-if =" joinEventisVisible">Quit</button>
-                <button class="join" @click ="toggleButton" v-else>Join</button>
+                <button class="quit" v-if ="buttonMode === 'QUIT'">{{ buttonMode }}</button>
+                <button class="join"  v-if ="buttonMode === 'JOIN'">{{ buttonMode }}</button>
               </div>
             </div>
           </div>
@@ -40,16 +40,8 @@ export default {
   data() {
     return {
       url : 'http://127.0.0.1:8000/storage/images/',
-      joinEventisVisible:false
-    };
+    }
   },
-   methods: {
-    toggleButton() {
-      this.joinEventisVisible = !this.joinEventisVisible;
-    },
-  },
- 
-
 };
 </script>
 <style scoped>
