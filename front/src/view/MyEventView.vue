@@ -327,8 +327,7 @@ export default {
       axios.post('api/myevents', myNewEvent)
       .then(res => {
         this.myEvents.unshift(res.data.myEvent);
-        this.getMyEventData();
-        
+        this.myEvents[0].joinedUserIdList = [];
       })
     },
     deleteMyEventCard(id){
@@ -368,7 +367,16 @@ export default {
       axios.get("api/myevents")
     .then( res => {
       this.myEvents = res.data
-      this.myEvents = this.myEvents.filter(event => event.user_id == localStorage.getItem("userID"))
+      this.myEvents = this.myEvents.filter(event => event.user_id == localStorage.getItem("userID"));
+      for(let myEvent of this.myEvents) {
+        let joinedUserIdList = [];
+        axios.get('/api/userjoinevents/getUserIdList/' + myEvent.id)
+        .then(res => {
+          joinedUserIdList = res.data;
+          myEvent.joinedUserIdList = joinedUserIdList;
+        })
+      }
+      console.log(this.myEvents);
     })
     }
      /// =======================crud=====================

@@ -2,7 +2,7 @@
   <section>
     <div class="card-container">
       <div class="left-side">
-        <img :src="url + myEvent.image" alt="asdfasd"/>
+        <img :src="url + myEvent.image" alt="image not found"/>
       </div>
       <div class="right-side">
           <div class="right-top">

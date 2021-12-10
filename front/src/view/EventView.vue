@@ -31,6 +31,14 @@ export default {
       .then( res => {
         this.events = res.data;
         this.events = this.events.filter(event => event.user_id != localStorage.getItem("userID"));
+        for(let event of this.events) {
+          let joinedUserIdList = [];
+          axios.get('/api/userjoinevents/getUserIdList/' + event.id)
+          .then(res => {
+            joinedUserIdList = res.data;
+            event.joinedUserIdList = joinedUserIdList;
+          })
+        }
       })
     },
     cardSearch(key){
