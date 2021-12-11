@@ -39,10 +39,5 @@ Route::delete('/categories/{id}', [CategoryController::class ,'destroy']);
 // user join event
 
 Route::get('/userjoinevents', [UserJoinEventController::class ,'index']);
-Route::get('/userjoinevents/{id}', [UserJoinEventController::class ,'show']);
-Route::get('/userjoinevents/getUserIdList/{id}', [UserJoinEventController::class ,'getAllUserIdList']);
-Route::get('/userjoinevents/search/{key}', [UserJoinEventController::class ,'search']);
-
 Route::post('/userjoinevents', [UserJoinEventController::class ,'store']);
-Route::put('/userjoinevents/{id}', [UserJoinEventController::class ,'update']);
 Route::post('/userjoinevents/quit', [UserJoinEventController::class ,'destroy']);

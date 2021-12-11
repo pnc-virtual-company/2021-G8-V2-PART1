@@ -127,7 +127,6 @@ class MyeventController extends Controller
         $myevent->city = $request->city;
         $myevent->description = $request->description;
         if($request->image !== null){
-            // $myevent->image =$request->file('image')->hashName();
             // move image to storage folder
             $request -> file('image')->store('public/images');
         }else{
@@ -137,7 +136,6 @@ class MyeventController extends Controller
         $myevent->save();
         return response()->json(['message'=>"My event Updated!","myEvent"=> Myevent::with(['category'])->latest()->first()],200);
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -155,7 +153,6 @@ class MyeventController extends Controller
     }
     public function search($title) 
     {
-        //
         return Myevent::where("title", "like", "%".$title."%")->get();
     }
 

@@ -17,12 +17,6 @@ class UserJoinEventController extends Controller
     {
         return UserJoinEvent::with(['user', 'myevent'])->latest()->get();
     }
-    
-    public function getAllUserIdList($id)
-    {
-        return UserJoinEvent::select('user_id')->where('myevent_id', $id)->get();
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -44,41 +38,6 @@ class UserJoinEventController extends Controller
 
         return response()->json(['message' => 'User joined event',  'userJoinEvent' => UserJoinEvent::with(['user', 'myevent'])->latest()->first()], 201);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-       return UserJoinEvent::findOrFail($id);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'user_id' => 'required',
-            'myevent_id' => 'required',
-        ]);
-
-        $userJoinEvent = UserJoinEvent::findOrFail($id);
-        $userJoinEvent->user_id = $request->user_id;
-        $userJoinEvent->myevent_id = $request->myevent_id;
-
-        $userJoinEvent->save();
-
-        return response()->json(['message' => 'Updated User join event',  'userJoinEvent' => UserJoinEvent::with(['user', 'myevent'])->latest()->first()], 200);
-    }
-
     /**
      * Remove the specified resource from storage.
      *
