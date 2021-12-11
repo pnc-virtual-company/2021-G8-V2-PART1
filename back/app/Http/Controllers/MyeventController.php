@@ -151,25 +151,27 @@ class MyeventController extends Controller
         }
         return response()->json(['message'=>"Failed to delete"],404);
     }
-    public function search($title) 
+    public function search($keyword) 
     {
         $events = DB::table('myevents')
             ->join('categories', 'myevents.category_id', '=', 'categories.id')
             ->select('myevents.*', 'categories.name as categoryName')
-            ->where("title", "like", "%".$title."%")
+            ->where("title", "like", "%".$keyword."%")
+            ->orWhere("description", "like", "%".$keyword."%")
             ->latest()
             ->get()
             ->toArray();
-        foreach($events as $event) {
-            $userIdList = DB::table('user_join_events')
-            ->select('user_id')
-            ->where('myevent_id', '=', $event->id)
-            ->get()
-            ->toArray();
-            
-            $event->joinUserIdList = $userIdList;
-        }
+            foreach($events as $event) {
+                $userIdList = DB::table('user_join_events')
+                ->select('user_id')
+                ->where('myevent_id', '=', $event->id)
+                ->get()
+                ->toArray();
+                
+                $event->joinUserIdList = $userIdList;
+            }
         return $events;
     }
+    
 
 }

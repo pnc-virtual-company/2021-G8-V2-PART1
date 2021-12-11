@@ -42,6 +42,7 @@ export default {
     clearSearch() {
       this.cardKeyWord = '';
     }
+
   },
 };
 </script>
