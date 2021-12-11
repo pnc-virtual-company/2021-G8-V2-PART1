@@ -16,7 +16,7 @@
         <input
           type="text"
           class="city-searchKey"
-          placeholder="Not far from city"
+          placeholder="Select your city"
         />
         <button type="button" class="city-searchButton" @click="clearSearch">
           X
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     clearSearch() {
-      this.keyWord = '';
+      this.cardKeyWord = '';
     }
   },
 };

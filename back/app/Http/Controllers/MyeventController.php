@@ -153,7 +153,23 @@ class MyeventController extends Controller
     }
     public function search($title) 
     {
-        return Myevent::where("title", "like", "%".$title."%")->get();
+        $events = DB::table('myevents')
+            ->join('categories', 'myevents.category_id', '=', 'categories.id')
+            ->select('myevents.*', 'categories.name as categoryName')
+            ->where("title", "like", "%".$title."%")
+            ->latest()
+            ->get()
+            ->toArray();
+        foreach($events as $event) {
+            $userIdList = DB::table('user_join_events')
+            ->select('user_id')
+            ->where('myevent_id', '=', $event->id)
+            ->get()
+            ->toArray();
+            
+            $event->joinUserIdList = $userIdList;
+        }
+        return $events;
     }
 
 }
