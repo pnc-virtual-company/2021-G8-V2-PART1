@@ -40,9 +40,6 @@ export default {
   watch: {
     cardKeyWord: function(newValue) {
       this.$emit('cardSearch', newValue);
-    },
-    cityKeyWord:function(newValue){
-      this.$emit('citySearch',newValue)
     }
   },
   methods: {

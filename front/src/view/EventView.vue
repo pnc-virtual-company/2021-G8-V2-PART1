@@ -1,6 +1,6 @@
 <template>
   <section>
-    <search-filter @cardSearch="cardSearch" @citySearch="citySearch"></search-filter>
+    <search-filter @cardSearch="cardSearch"></search-filter>
     <my-event-card
       v-for="event of this.events"
       :key="event.id"
@@ -60,61 +60,26 @@ export default {
       }
       return "JOIN";
     },
-    getMyEventData() {
+    getExploreEventData() {
       axios.get("api/myevents").then((res) => {
         this.events = res.data;
         this.events = this.events.filter(
           (event) => event.user_id != localStorage.getItem("userID")
         );
+        localStorage.setItem('getExploreEvents', JSON.stringify(this.events));
       });
     },
     cardSearch(key) {
       if (key === "") {
-        axios.get("api/myevents").then((res) => {
-          this.events = res.data;
-        });
+        this.events = JSON.parse(localStorage.getItem('getExploreEvents'));
       } else {
-        axios.get("api/myevents/search/" + key).then((res) => {
-          this.events = res.data;
-          this.events = this.events.filter(
-            (event) => event.user_id != localStorage.getItem("userID")
-          );
-          for (let event of this.events) {
-            let joinUserIdList = event.joinUserIdList;
-            let userIdList = [];
-            for (let userId of joinUserIdList) {
-              userIdList.push(userId.user_id);
-            }
-            event.joinUserIdList = userIdList;
-        }
-        });
-      }
-    },
-    citySearch(key){
-      if (key === "") {
-        axios.get("api/myevents").then((res) => {
-          this.events = res.data;
-        });
-      } else {
-        axios.get("api/myevents/search/city/" + key).then((res) => {
-          this.events = res.data;
-          this.events = this.events.filter(
-            (event) => event.user_id != localStorage.getItem("userID")
-          );
-          for (let event of this.events) {
-            let joinUserIdList = event.joinUserIdList;
-            let userIdList = [];
-            for (let userId of joinUserIdList) {
-              userIdList.push(userId.user_id);
-            }
-            event.joinUserIdList = userIdList;
-        }
-        });
+        let listEvents = JSON.parse(localStorage.getItem('getExploreEvents'));
+        this.events = listEvents.filter(event => event.title.includes(key) || event.description.includes(key));
       }
     }
   },
   mounted() {
-    this.getMyEventData();
+    this.getExploreEventData();
   },
 };
 </script>
