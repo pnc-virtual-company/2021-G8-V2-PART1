@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserJoinEvent;
+use Illuminate\Support\Facades\DB;
+
 class UserJoinEventController extends Controller
 {
     /**
@@ -19,7 +21,6 @@ class UserJoinEventController extends Controller
     public function getAllUserIdList($id)
     {
         return UserJoinEvent::select('user_id')->where('myevent_id', $id)->get();
-        // return 1;
     }
 
     /**
@@ -84,15 +85,10 @@ class UserJoinEventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-      $isDeleted = UserJoinEvent::destroy($id);
-      if($isDeleted) {
-        response()->json(['message' => 'user join event deleted'], 200);
-
-    } else {
-        response()->json(['message' => 'fail to delete user join event'], 404);
-      }
+        $joinedIdToDelete = UserJoinEvent::select('id')->where('user_id', '=', $request->user_id)->where('myevent_id', '=', $request->myevent_id)->get();
+        return UserJoinEvent::destroy($joinedIdToDelete[0]->id);
     }
 }
 

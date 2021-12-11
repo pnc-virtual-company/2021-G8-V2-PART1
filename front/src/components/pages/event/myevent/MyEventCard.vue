@@ -16,16 +16,16 @@
           <div class="right-bottom">
             <div class="bottom-info">
               <div class="bottom-left">
-                <p>{{myEvent.category.name}} at {{myEvent.city}}</p>
-                <p>{{myEvent.joinedUserIdList.length}} people joined</p>
+                <p>{{myEvent.categoryName}} at {{myEvent.city}}</p>
+                <p>{{myEvent.joinUserIdList.length}} people joined</p>
               </div>
               <div class="bottom-right" v-if="buttonMode === 'myEvent'">
                 <button class="edit" @click="$emit('updateMyEvent',myEvent)">Edit</button>
                 <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
               </div>
               <div class="quitJoin" v-if="buttonMode === 'event'">
-                <button class="quit" v-if ="buttonMode === 'QUIT'">{{ buttonMode }}</button>
-                <button class="join"  v-if ="buttonMode === 'JOIN'">{{ buttonMode }}</button>
+                <button class="quit" v-if ="quitOrJoinBtn === 'QUIT'" @click="$emit('quit', myEvent)">{{ quitOrJoinBtn }}</button>
+                <button class="join"  v-if ="quitOrJoinBtn === 'JOIN'"  @click="$emit('join', myEvent)">{{ quitOrJoinBtn }}</button>
               </div>
             </div>
           </div>
@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  props: ["myEvent", "buttonMode"],
+  props: ["myEvent", "buttonMode", "quitOrJoinBtn"],
   data() {
     return {
       url : 'http://127.0.0.1:8000/storage/images/',

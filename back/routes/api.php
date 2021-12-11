@@ -45,4 +45,4 @@ Route::get('/userjoinevents/search/{key}', [UserJoinEventController::class ,'sea
 
 Route::post('/userjoinevents', [UserJoinEventController::class ,'store']);
 Route::put('/userjoinevents/{id}', [UserJoinEventController::class ,'update']);
-Route::delete('/userjoinevents/{id}', [UserJoinEventController::class ,'destroy']);
+Route::post('/userjoinevents/quit', [UserJoinEventController::class ,'destroy']);
