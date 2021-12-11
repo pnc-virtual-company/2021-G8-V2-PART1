@@ -464,18 +464,13 @@ export default {
       this.myEventTitleError = '';
     },
 
-    getMyEventData() {
-      this.myEventTitle = "";
-      this.startDateTime = "";
-      this.end_date = "";
-      this.city = "";
-      this.description = "";
-      this.imageTitle = "";
-      this.category = "";
-      axios.get("api/myevents").then((res) => {
-        this.myEvents = res.data;
-      });
-    },
+    getMyEventData(){
+      axios.get("api/myevents")
+      .then( res => {
+        this.myEvents = res.data
+        this.myEvents = this.myEvents.filter(event => event.user_id == localStorage.getItem("userID"))
+      })
+    }
     /// =======================crud=====================
   },
   mounted() {
