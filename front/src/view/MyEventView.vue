@@ -179,7 +179,6 @@
 </template>
 
 <script>
-// const url = 'http://127.0.0.1:8000/storage/images/';
 
 import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
 import AddSearch from "../components/pages/event/myevent/AddSearch.vue";
@@ -450,6 +449,7 @@ export default {
     showFormMyEventUpdate(myEvent) {
       this.myEvent = myEvent;
       this.dialogMode = "edit";
+      
       this.dialogDisplayed = true;
       this.myEventTitle = myEvent.title;
       this.description = myEvent.description;
@@ -462,6 +462,11 @@ export default {
       this.imageForUpdate = myEvent.image;
       this.endDateError = '';
       this.myEventTitleError = '';
+      console.log(myEvent)
+      this.startDateTime = moment(myEvent.start_date).format('YYYY-MM-DDThh:mm')
+      this.endDate = moment(myEvent.end_date).format('YYYY-MM-DDThh:mm')
+      
+     
     },
 
     getMyEventData() {
