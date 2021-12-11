@@ -5,7 +5,7 @@
         <h3>Add Event</h3>
       </div>
       <div class="title">
-        <input type="text" placeholder="Title" v-model="title" />
+        <input type="text" placeholder="Title" v-model="title"/>
       </div>
       <div class="description">
         <textarea name id placeholder="Description" v-model="description"></textarea>

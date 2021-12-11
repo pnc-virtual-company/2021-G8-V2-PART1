@@ -88,6 +88,7 @@ export default {
 </script>
 
 <style>
+
 * {
   padding: 0;
   margin: 0;
@@ -101,4 +102,5 @@ export default {
 :root {
   --main-color: #f6ba1f;
 }
+
 </style>
