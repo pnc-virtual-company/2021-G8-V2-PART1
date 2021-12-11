@@ -23,6 +23,8 @@ Route::delete('/myevents/{id}', [MyeventController::class, 'destroy']);
 Route::put('/myevents/{id}', [MyeventController::class, 'update']);
 // search event
 Route::get('/myevents/search/{title?}/{description?}', [MyeventController::class, 'search']);
+// search event filter by city
+Route::get('/myevents/search/city/{city}', [MyeventController::class, 'searchCity']);
 
 // countries
 Route::get('/countries', [CountryCityController::class, 'getCountries']);

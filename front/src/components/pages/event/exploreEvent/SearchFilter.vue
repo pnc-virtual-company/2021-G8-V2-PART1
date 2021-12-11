@@ -13,10 +13,14 @@
         </button>
       </div>
       <div class="city-search">
+        <div class="city-container">
+
+        </div>
         <input
           type="text"
           class="city-searchKey"
           placeholder="Select your city"
+          v-model="cityKeyWord"
         />
         <button type="button" class="city-searchButton" @click="clearSearch">
           X
@@ -25,24 +29,27 @@
     </div>
   </section>
 </template>
-
 <script>
 export default {
   data() {
     return {
       cardKeyWord: '',
+      cityKeyWord: ''
     };
   },
   watch: {
     cardKeyWord: function(newValue) {
       this.$emit('cardSearch', newValue);
     },
+    cityKeyWord:function(newValue){
+      this.$emit('citySearch',newValue)
+    }
   },
   methods: {
     clearSearch() {
       this.cardKeyWord = '';
+      this.cityKeyWord = '';
     }
-
   },
 };
 </script>

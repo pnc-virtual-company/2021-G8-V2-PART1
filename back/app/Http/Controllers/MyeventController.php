@@ -27,8 +27,12 @@ class MyeventController extends Controller
             ->where('myevent_id', '=', $event->id)
             ->get()
             ->toArray();
-            
-            $event->joinUserIdList = $userIdList;
+
+            $cleanArrayUserIdList = [];
+            foreach($userIdList as $userId) {
+                array_push($cleanArrayUserIdList, $userId->user_id);
+            }
+            $event->joinUserIdList = $cleanArrayUserIdList;
         }
         return $events;
     }
@@ -77,25 +81,6 @@ class MyeventController extends Controller
         return response()->json(["message"=>"My event Created!","myEvent"=> $myevent],201);
         
         
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $event = Myevent::findOrFail($id);
-        $userIdList = DB::table('user_join_events')
-            ->select('user_id')
-            ->where('myevent_id', '=', $event->id)
-            ->get()
-            ->toArray();
-            
-            $event->joinUserIdList = $userIdList;
-        return $event;
     }
 
     /**
@@ -167,11 +152,31 @@ class MyeventController extends Controller
                 ->where('myevent_id', '=', $event->id)
                 ->get()
                 ->toArray();
-                
                 $event->joinUserIdList = $userIdList;
             }
         return $events;
     }
-    
-
+    public function searchCity($city){
+        $events = DB::table('myevents')
+            ->join('categories', 'myevents.category_id', '=', 'categories.id')
+            ->select('myevents.*', 'categories.name as categoryName')
+            ->where("city", "like", "%".$city."%")
+            ->latest()
+            ->get()
+            ->toArray();
+        foreach($events as $event) {
+            $userIdList = DB::table('user_join_events')
+            ->select('user_id')
+            ->where('myevent_id', '=', $event->id)
+            ->get()
+            ->toArray();
+            
+            $cleanArrayUserIdList = [];
+            foreach($userIdList as $userId) {
+                array_push($cleanArrayUserIdList, $userId->user_id);
+            }
+            $event->joinUserIdList = $cleanArrayUserIdList;
+        }
+        return $events;
+    }
 }

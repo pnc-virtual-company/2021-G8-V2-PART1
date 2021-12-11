@@ -1,6 +1,6 @@
 <template>
   <section>
-    <search-filter @cardSearch="cardSearch"></search-filter>
+    <search-filter @cardSearch="cardSearch" @citySearch="citySearch"></search-filter>
     <my-event-card
       v-for="event of this.events"
       :key="event.id"
@@ -66,14 +66,6 @@ export default {
         this.events = this.events.filter(
           (event) => event.user_id != localStorage.getItem("userID")
         );
-        for (let event of this.events) {
-          let joinUserIdList = event.joinUserIdList;
-          let userIdList = [];
-          for (let userId of joinUserIdList) {
-            userIdList.push(userId.user_id);
-          }
-          event.joinUserIdList = userIdList;
-        }
       });
     },
     cardSearch(key) {
@@ -98,6 +90,28 @@ export default {
         });
       }
     },
+    citySearch(key){
+      if (key === "") {
+        axios.get("api/myevents").then((res) => {
+          this.events = res.data;
+        });
+      } else {
+        axios.get("api/myevents/search/city/" + key).then((res) => {
+          this.events = res.data;
+          this.events = this.events.filter(
+            (event) => event.user_id != localStorage.getItem("userID")
+          );
+          for (let event of this.events) {
+            let joinUserIdList = event.joinUserIdList;
+            let userIdList = [];
+            for (let userId of joinUserIdList) {
+              userIdList.push(userId.user_id);
+            }
+            event.joinUserIdList = userIdList;
+        }
+        });
+      }
+    }
   },
   mounted() {
     this.getMyEventData();
