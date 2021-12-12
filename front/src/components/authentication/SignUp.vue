@@ -42,7 +42,9 @@
         <p v-text="existedEmailError"></p>
       </div>
       <div :class="isValidated ? 'buttonActive' : 'buttonInactive'">
-        <button type="button" id="registerOrSignin" @click="emitNewUserData">Register</button>
+        <button type="button" id="register" @click="emitNewUserData">
+          Register
+        </button>
       </div>
     </form>
   </section>
@@ -50,8 +52,8 @@
 
 <script>
 export default {
-  emit: ['emitNewUserData'],
-  props: ['existedEmailError'],
+  emit: ["emitNewUserData"],
+  props: ["existedEmailError"],
   data() {
     return {
       firstName: "",
@@ -59,54 +61,53 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
-      isActivateButton: 0,
 
-      firstnameError: "invalid firstname",
-      lastnameError: "invalid lastname",
-      emailError: "invalid email",
-      passwordError: "password must be at least 8 characters",
-      cPasswordError: "confirm password isn't matched",
+      firstnameError: "",
+      lastnameError: "",
+      emailError: "",
+      passwordError: "",
+      cPasswordError: "",
     };
   },
   watch: {
-    firstName: function(value) {
-      if(value !== '') {
-        this.firstnameError = '';
+    firstName: function (value) {
+      if (value !== "") {
+        this.firstnameError = "";
       } else {
-        this.firstnameError = "invalid firstname";
+        this.firstnameError = "require firstname";
       }
     },
-    lastName: function(value) {
-      if(value !== '') {
-        this.lastnameError = '';
+    lastName: function (value) {
+      if (value !== "") {
+        this.lastnameError = "";
       } else {
-        this.lastnameError = "invalid lastname";
+        this.lastnameError = "require lastname";
       }
     },
-    email: function(value) {
+    email: function (value) {
       const emailRegex = RegExp(
         /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
       );
-      if(emailRegex.test(value)) {
-        this.emailError = '';
+      if (emailRegex.test(value)) {
+        this.emailError = "";
       } else {
-        this.emailError = 'invalid email';
+        this.emailError = "invalid email";
       }
     },
-    password: function(value) {
-      if(value.length >= 8) {
-        this.passwordError = '';
-        if(this.confirmPassword === this.password) {
-          this.cPasswordError = '';
+    password: function (value) {
+      if (value.length >= 8) {
+        this.passwordError = "";
+        if (this.confirmPassword === this.password) {
+          this.cPasswordError = "";
         }
       } else {
         this.passwordError = "password must be at least 8 characters";
         this.cPasswordError = "confirm password isn't matched";
       }
     },
-    confirmPassword: function(value) {
-      if(this.passwordError === '' && value === this.password) {
-        this.cPasswordError = '';
+    confirmPassword: function (value) {
+      if (this.passwordError === "" && value === this.password) {
+        this.cPasswordError = "";
       } else {
         this.cPasswordError = "confirm password isn't matched";
       }
@@ -114,31 +115,43 @@ export default {
   },
   computed: {
     isValidated() {
-      let isOkay = this.firstnameError === '' && this.lastnameError === '' && this.emailError === '' && this.passwordError === '' && this.cPasswordError === '';
-      if(isOkay) {
-        return 1;
-      }
-      return 0;
-    }
+      return (
+        this.firstnameError === "" &&
+        this.lastnameError === "" &&
+        this.emailError === "" &&
+        this.passwordError === "" &&
+        this.cPasswordError === "" &&
+        this.firstName !== "" &&
+        this.lastName !== "" &&
+        this.email !== "" &&
+        this.password !== "" &&
+        this.confirmPassword !== ""
+      );
+    },
   },
   methods: {
     emitNewUserData() {
-      if(this.isValidated) {
+      if (this.isValidated) {
         let newUserData = {
           firstname: this.firstName,
           lastname: this.lastName,
           email: this.email,
           password: this.password,
-          password_confirmation: this.confirmPassword
+          password_confirmation: this.confirmPassword,
         };
-        this.$emit('register', newUserData);
+        this.$emit("register", newUserData);
       }
+    },
+  },
+  mounted() {
+    if(localStorage.userID) {
+      this.$router.push('/event');
     }
   },
 };
 </script>
 
-<style>
+<style scoped>
 form input,
 a,
 form button {
@@ -160,7 +173,7 @@ form .buttonActive {
   text-align: right;
   margin: 5px 0;
 }
-form button {
+form #register {
   width: 90px;
   height: 30px;
   color: white;
@@ -168,12 +181,13 @@ form button {
   border-radius: 15px;
 }
 form .buttonActive button {
-  background: #f6ba1f;
+  background: var(--main-color);
 }
 form .buttonInactive button {
-  background: grey;
+  background: rgba(128, 128, 128, 0.219);
+  color: rgba(128, 128, 128, 0.445);
 }
-form .buttonActive #registerOrSignin:hover {
+form .buttonActive #register:hover {
   color: rgb(173, 101, 233);
   border: 1px solid rgb(173, 101, 233);
 }
@@ -189,7 +203,7 @@ form input {
   outline: none;
 }
 form input:focus {
-  border: 1px solid #f6ba1f;
+  border: 1px solid var(--main-color);
 }
 form h2 {
   text-align: center;
@@ -200,7 +214,7 @@ form a {
 }
 .error,
 .serverMessage {
-  color: rgb(255, 125, 125);
+  color: rgb(255, 97, 97);
   margin: 5px 0;
   font-size: 12px;
 }

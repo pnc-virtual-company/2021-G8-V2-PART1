@@ -44,4 +44,12 @@ class UserController extends Controller
            
         ]);
     }
+
+    public function getAUser($id)
+    {
+        return User::find($id);
+    }
+    public function getUsers(){
+        return User::latest()->get();
+    }
 }

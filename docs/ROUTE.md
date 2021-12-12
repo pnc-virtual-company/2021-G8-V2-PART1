@@ -4,13 +4,13 @@
 
 ---
 
-| HTTP REQUEST | ROUTES  | DESCRIPTION                   |
-| :----------- | :------ | :---------------------------- |
-| POST         | /signup | The route for register a user |
-| POST         | /signin | The route to login            |
+| HTTP REQUEST | ROUTES         | DESCRIPTION                   |
+| :----------- | :------------- | :---------------------------- |
+| GET          | /getAUser/{id} | The route for get a user      |
+| POST         | /signup        | The route for register a user |
+| POST         | /signin        | The route to login            |
 
 ### 2. Category Routes (back)
-
 
 | HTTP REQUEST | ROUTES           | DESCRIPTION                      |
 | :----------- | :--------------- | :------------------------------- |

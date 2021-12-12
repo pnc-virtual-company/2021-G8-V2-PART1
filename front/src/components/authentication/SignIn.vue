@@ -14,13 +14,13 @@
           <p v-text="passwordError"></p>
         </div>
       </div>
-      <router-link to="/signup">Create an account?</router-link>
-
       <div class="serverMessage" v-if="unauthorizedError">
         <p v-text="unauthorizedError"></p>
       </div>
+      <router-link to="/signup">Create an account?</router-link>
+
       <div :class="isValidated ? 'buttonActive' : 'buttonInactive'">
-        <button type="button" id="registerOrSignin" @click="emitUserData">Sign in</button>
+        <button type="button" id="signIn" @click="emitUserData">Sign in</button>
       </div>
     </form>
   </section>
@@ -32,13 +32,11 @@ export default {
   props: ['unauthorizedError'],
   data() {
     return {
-      userData: {},
       email: "",
       password: "",
-      isActivateButton: 0,
 
-      emailError: "invalid email",
-      passwordError: "password must be at least 8 characters",
+      emailError: "",
+      passwordError: "",
     };
   },
   watch: {
@@ -62,11 +60,7 @@ export default {
   },
   computed: {
     isValidated() {
-      let isOkay = this.emailError === '' && this.passwordError === '';
-      if(isOkay) {
-        return 1;
-      }
-      return 0;
+      return this.emailError === '' && this.passwordError === '' && this.email !== '' && this.password !== '';
     }
   },
   methods: {
@@ -80,8 +74,92 @@ export default {
       }
     }
   },
-  provide() {
-    return {userData: this.userData};
-  }
+  mounted() {
+    window.onpopstate = () => {
+      if (
+        localStorage.getItem("userID") === null &&
+        (this.$route.path === "/event" ||
+        this.$route.path === "/myEvent" ||
+        this.$route.path === "/categoryView")
+      ) {
+        this.$router.push("/signin");
+      }
+    }
+    if(localStorage.userID) {
+      this.$router.push('/event');
+    }
+  },
 };
 </script>
+<style scoped>
+form input,
+a,
+form button {
+  margin-bottom: 10px;
+  font-size: 17px;
+  cursor: pointer;
+}
+form {
+  margin: auto;
+  width: 300px;
+  padding: 30px;
+  background: #ffffff;
+  box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  margin-bottom: 50px;
+}
+form .buttonInactive,
+form .buttonActive {
+  text-align: right;
+  margin: 5px 0;
+}
+form button {
+  width: 90px;
+  height: 30px;
+  color: white;
+  border: none;
+  border-radius: 15px;
+}
+form .buttonActive button {
+  background: var(--main-color);
+}
+form .buttonInactive button {
+  background: rgba(128, 128, 128, 0.219);
+  color: rgba(128, 128, 128, 0.445);
+
+}
+form .buttonActive #signIn:hover {
+  color: rgb(173, 101, 233);
+  border: 1px solid rgb(173, 101, 233);
+}
+form input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #fffdfd;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: none;
+  height: 30px;
+  padding: 2px 10px;
+  outline: none;
+}
+form input:focus {
+  border: 1px solid var(--main-color);
+}
+form h2 {
+  text-align: center;
+  margin-bottom: 5px;
+}
+form a {
+  margin-bottom: 5px;
+}
+.error,
+.serverMessage {
+  color: rgb(255, 97, 97);
+  margin: 5px 0;
+  font-size: 12px;
+}
+.serverMessage {
+  text-align: center;
+}
+</style>
