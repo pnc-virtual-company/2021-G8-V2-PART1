@@ -376,7 +376,6 @@ export default {
           myEvent.joinedUserIdList = joinedUserIdList.length;
         })
       }
-      console.log(this.myEvents);
     })
     }
      /// =======================crud=====================
