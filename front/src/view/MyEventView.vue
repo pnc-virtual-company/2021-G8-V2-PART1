@@ -1,180 +1,188 @@
 <template>
   <section>
-    <add-search @showForm="showAddForm" @search="search"></add-search>
-    <base-dialog
-      v-if="dialogDisplayed"
-      :title="dialogTitle"
-      :mode="dialogMode"
-      @close="closeDialog"
-    >
-      <!-- event from  -->
-      <div class="eventForm">
-        <div class="title-date">
-          <label for="title">Event Title</label>
-          <input type="text" placeholder="Title" v-model="myEventTitle" />
-          <div class="error" v-if="myEventTitleError">
-            <p v-text="myEventTitleError"></p>
-          </div>
-          <div class="start-date">
-            <label for>Start Date</label>
-            <input type="datetime-local" v-model="startDateTime" />
-            <div class="error" v-if="startDateError">
-              <p v-text="startDateError"></p>
+    <add-search
+      @showForm="showAddForm"
+      @search="search"
+    ></add-search>
+    <div v-if="isEmpty">
+      <base-dialog
+        v-if="dialogDisplayed"
+        :title="dialogTitle"
+        :mode="dialogMode"
+        @close="closeDialog"
+      >
+        <!-- event from  -->
+        <div class="eventForm">
+          <div class="title-date">
+            <label for="title">Event Title</label>
+            <input type="text" placeholder="Title" v-model="myEventTitle" />
+            <div class="error" v-if="myEventTitleError">
+              <p v-text="myEventTitleError"></p>
+            </div>
+            <div class="start-date">
+              <label for>Start Date</label>
+              <input type="datetime-local" v-model="startDateTime" />
+              <div class="error" v-if="startDateError">
+                <p v-text="startDateError"></p>
+              </div>
+            </div>
+            <div class="end-date">
+              <label for>End Date</label>
+              <input type="datetime-local" v-model="endDate" />
+              <div class="error" v-if="endDateError">
+                <p v-text="endDateError"></p>
+              </div>
             </div>
           </div>
-          <div class="end-date">
-            <label for>End Date</label>
-            <input type="datetime-local" v-model="endDate" />
-            <div class="error" v-if="endDateError">
-              <p v-text="endDateError"></p>
-            </div>
-          </div>
-        </div>
-        <div class="city-cate-container">
-          <!-- ===============CITY & CATEGORY RESULT================ -->
+          <div class="city-cate-container">
+            <!-- ===============CITY & CATEGORY RESULT================ -->
 
-          <!-- ===================CATEGORY AREA================== -->
+            <!-- ===================CATEGORY AREA================== -->
 
-          <div class="category-main-container">
-            <!-- category action -->
-            <label v-if="!isSelectedCate" for="category">Category</label>
-            <label v-else for="category">Category: {{ category.name }}</label>
-            <div class="category-container-actions">
-              <input
-                type="text"
-                class="searchKey"
-                placeholder="Search category"
-                v-model="cateKeySearch"
-              />
-              <button
-                type="button"
-                class="btnOpenCategoryList"
-                @click="showCategoryList"
-                v-if="!categoryListDisplayed"
-              >
-                ▽
-              </button>
-              <button
-                v-else
-                type="button"
-                class="btnCloseCategoryList"
-                @click="closeCategoryList"
-              >
-                △
-              </button>
-            </div>
-            <!-- category list  -->
-            <div v-if="categoryListDisplayed" class="category-list">
-              <ul>
-                <li
-                  v-for="cate of this.categories"
-                  :key="cate.id"
-                  @click="setCate(cate.id, cate.name)"
+            <div class="category-main-container">
+              <!-- category action -->
+              <label v-if="!isSelectedCate" for="category">Category</label>
+              <label v-else for="category">Category: {{ category.name }}</label>
+              <div class="category-container-actions">
+                <input
+                  type="text"
+                  class="searchKey"
+                  placeholder="Search category"
+                  v-model="cateKeySearch"
+                />
+                <button
+                  type="button"
+                  class="btnOpenCategoryList"
+                  @click="showCategoryList"
+                  v-if="!categoryListDisplayed"
                 >
-                  {{ cate.name }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <!-- CITY AREA -->
-
-          <div class="city-main-container">
-            <label v-if="!isSelectedCity" for="city">City</label>
-            <label v-else for="city">City: {{ city }}</label>
-            <!-- city action -->
-            <div class="city-container-actions">
-              <input
-                type="text"
-                class="searchKey"
-                placeholder="Search city"
-                v-model="cityKeySearch"
-              />
-              <button
-                type="button"
-                class="btnOpenCityList"
-                v-if="!cityListDisplayed"
-                @click="showCityList"
-              >
-                ▽
-              </button>
-              <button
-                v-else
-                type="button"
-                class="btnCloseCityList"
-                @click="closCityList"
-              >
-                △
-              </button>
-            </div>
-            <!-- city list  -->
-            <div v-if="cityListDisplayed" class="city-list">
-              <ul>
-                <li
-                  v-for="(countryCity, index) of countriesCities"
-                  :key="index"
-                  @click="setCity(countryCity.city, countryCity.country)"
+                  ▽
+                </button>
+                <button
+                  v-else
+                  type="button"
+                  class="btnCloseCategoryList"
+                  @click="closeCategoryList"
                 >
-                  {{ countryCity.city }}
-                </li>
-              </ul>
+                  △
+                </button>
+              </div>
+              <!-- category list  -->
+              <div v-if="categoryListDisplayed" class="category-list">
+                <ul>
+                  <li
+                    v-for="cate of this.categories"
+                    :key="cate.id"
+                    @click="setCate(cate.id, cate.name)"
+                  >
+                    {{ cate.name }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- CITY AREA -->
+
+            <div class="city-main-container">
+              <label v-if="!isSelectedCity" for="city">City</label>
+              <label v-else for="city">City: {{ city }}</label>
+              <!-- city action -->
+              <div class="city-container-actions">
+                <input
+                  type="text"
+                  class="searchKey"
+                  placeholder="Search city"
+                  v-model="cityKeySearch"
+                />
+                <button
+                  type="button"
+                  class="btnOpenCityList"
+                  v-if="!cityListDisplayed"
+                  @click="showCityList"
+                >
+                  ▽
+                </button>
+                <button
+                  v-else
+                  type="button"
+                  class="btnCloseCityList"
+                  @click="closCityList"
+                >
+                  △
+                </button>
+              </div>
+              <!-- city list  -->
+              <div v-if="cityListDisplayed" class="city-list">
+                <ul>
+                  <li
+                    v-for="(countryCity, index) of countriesCities"
+                    :key="index"
+                    @click="setCity(countryCity.city, countryCity.country)"
+                  >
+                    {{ countryCity.city }}
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- ============================================= -->
-        <div class="more">
-          <a href="#description"
-            ><p @click="showMoreChoice" id="see-more" v-if="!isShowMore">
-              See more..
-            </p></a
-          >
-        </div>
+          <!-- ============================================= -->
+          <div class="more">
+            <a href="#description"
+              ><p @click="showMoreChoice" id="see-more" v-if="!isShowMore">
+                See more..
+              </p></a
+            >
+          </div>
 
-        <div id="description" class="showMoreInfo" v-if="isShowMore">
-          <div class="description">
-            <textarea
-              placeholder="Description"
-              v-model="description"
-            ></textarea>
-            <div class="des">
-              <p>Description (optional)</p>
+          <div id="description" class="showMoreInfo" v-if="isShowMore">
+            <div class="description">
+              <textarea
+                placeholder="Description"
+                v-model="description"
+              ></textarea>
+              <div class="des">
+                <p>Description (optional)</p>
+              </div>
             </div>
+            <div class="right-side">
+              <input type="file" @change="getImage" />
+              <img
+                v-if="!this.imageTitle"
+                src="https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg "
+                alt="EMPTY PICTURE"
+              />
+              <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
+            </div>
+            <a href="#see-more">
+              <p id="see-less" @click="showLessChoice">See less..</p>
+            </a>
           </div>
-          <div class="right-side">
-            <input type="file" @change="getImage" />
-            <img
-              v-if="!this.imageTitle"
-              src="empty.jpg"
-              alt="EMPTY PICTURE"
-            />
-            <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
-          </div>
-          <a href="#see-more">
-            <p id="see-less" @click="showLessChoice">See less..</p>
-          </a>
         </div>
-      </div>
 
-      <!-- event from  -->
+        <!-- event from  -->
 
-      <!---------------------- myevent card and from -->
-      <template #actions>
-        <base-button
-          :class="isValidated ? 'buttonActive' : 'buttonInactive'"
-          @click="onConfirm"
-          >{{ dialogButtton }}
-        </base-button>
-      </template>
-    </base-dialog>
-    <my-event-card
-      v-for="(event, name, index) in myEvents"
-      :key="name"
-      :id="index"
-      :myEvent="event"
-      :buttonMode="onMyEventMode"
-      @deleteMyEvent="deleteMyEventCard"
-      @updateMyEvent="showFormMyEventUpdate"
-    ></my-event-card>
-    <!------------------------- myevent card and from -->
+        <!---------------------- myevent card and from -->
+        <template #actions>
+          <base-button
+            :class="isValidated ? 'buttonActive' : 'buttonInactive'"
+            @click="onConfirm"
+            >{{ dialogButtton }}
+          </base-button>
+        </template>
+      </base-dialog>
+      <my-event-card
+        v-for="(event, name, index) in myEvents"
+        :key="name"
+        :id="index"
+        :myEvent="event"
+        :buttonMode="onMyEventMode"
+        @deleteMyEvent="deleteMyEventCard"
+        @updateMyEvent="showFormMyEventUpdate"
+      ></my-event-card>
+      <!------------------------- myevent card and from -->
+    </div>
+    <div class="emptyMyevent" v-else>
+      <h1>NO MY EVENT YET!!</h1>
+    </div>
   </section>
 </template>
 
@@ -205,6 +213,7 @@ export default {
       myEventTitleError: "",
       startDateError: "",
       endDateError: "",
+      isEmpty: true,
 
       onMyEventMode: "myEvent",
       isShowMore: false,
@@ -266,31 +275,34 @@ export default {
         }
       }
     },
-    myEventTitle: function(newValue) {
-      if(newValue === '') {
-        this.myEventTitleError = 'title is required'
+    myEventTitle: function (newValue) {
+      if (newValue === "") {
+        this.myEventTitleError = "title is required";
       } else {
-        this.myEventTitleError = '';
+        this.myEventTitleError = "";
       }
     },
-    startDateTime: function(newValue) {
+    startDateTime: function (newValue) {
       let currentDate = new Date();
-      if(moment(newValue).isBefore(currentDate)) {
-        this.startDateError = 'start datetime must be after now';
+      if (moment(newValue).isBefore(currentDate)) {
+        this.startDateError = "start datetime must be after now";
       } else {
-        this.startDateError = '';
-        if(this.endDate && !moment(newValue).isBefore(this.endDate)) {
-          this.endDateError = 'end datetime must be after start datetime';
+        this.startDateError = "";
+        if (this.endDate && !moment(newValue).isBefore(this.endDate)) {
+          this.endDateError = "end datetime must be after start datetime";
         } else {
-          this.endDateError = '';
+          this.endDateError = "";
         }
       }
     },
-    endDate: function(newValue) {
-      if(this.startDateTime && !moment(this.startDateTime).isBefore(newValue)) {
-        this.endDateError = 'end datetime must be after start datetime'
+    endDate: function (newValue) {
+      if (
+        this.startDateTime &&
+        !moment(this.startDateTime).isBefore(newValue)
+      ) {
+        this.endDateError = "end datetime must be after start datetime";
       } else {
-        this.endDateError = ''
+        this.endDateError = "";
       }
     },
   },
@@ -330,8 +342,9 @@ export default {
       this.category = "";
       this.isSelectedCity = false;
       this.isSelectedCate = false;
-      this.endDateError = '';
-      this.myEventTitleError = '';
+      this.endDateError = "";
+      this.myEventTitleError = "";
+      this.isEmpty = true;
     },
     closeDialog() {
       this.dialogDisplayed = false;
@@ -341,6 +354,7 @@ export default {
       this.endDate = "";
       this.description = "";
       this.isShowMore = false;
+      this.isEmpty = true;
     },
     showCategoryList() {
       this.categoryListDisplayed = true;
@@ -420,26 +434,26 @@ export default {
       }
     },
     addNewEvent() {
+      this.isEmpty = false;
       let myNewEvent = new FormData();
-      let user_id = localStorage.getItem('userID')
+      let user_id = localStorage.getItem("userID");
       myNewEvent.append("category_id", this.category.id);
       myNewEvent.append("user_id", user_id);
       myNewEvent.append("title", this.myEventTitle);
       myNewEvent.append("start_date", this.startDateTime);
       myNewEvent.append("end_date", this.endDate);
       myNewEvent.append("city", this.city);
-      if(this.description !== '') {
+      if (this.description !== "") {
         myNewEvent.append("description", this.description);
       }
-      if(this.file !== null) {
-        myNewEvent.append('photo', this.file)
+      if (this.file !== null) {
+        myNewEvent.append("photo", this.file);
       }
 
-      axios.post("api/myevents", myNewEvent)
-      .then((res) => {
-        this.dialogDisplayed = false
+      axios.post("api/myevents", myNewEvent).then((res) => {
+        this.dialogDisplayed = false;
         this.myEvents.unshift(res.data.myEvent);
-      })
+      });
     },
 
     deleteMyEventCard(id) {
@@ -460,17 +474,22 @@ export default {
       this.isSelectedCity = true;
       this.imageTitle = null;
       this.imageForUpdate = myEvent.image;
-      this.endDateError = '';
-      this.myEventTitleError = '';
+      this.endDateError = "";
+      this.myEventTitleError = "";
     },
 
-    getMyEventData(){
-      axios.get("api/myevents")
-      .then( res => {
-        this.myEvents = res.data
-        this.myEvents = this.myEvents.filter(event => event.user_id == localStorage.getItem("userID"))
-      })
-    }
+    getMyEventData() {
+      axios.get("api/myevents").then((res) => {
+        this.myEvents = res.data;
+        this.myEvents = this.myEvents.filter(
+          (event) => event.user_id == localStorage.getItem("userID")
+        );
+        if(this.myEvents == '') {
+          this.isEmpty = false;
+        }
+        console.log(this.myEvents)
+      });
+    },
     /// =======================crud=====================
   },
   mounted() {
@@ -478,11 +497,10 @@ export default {
     this.getMyEventData();
 
     // GET CATEGORY DATA FROM BACKEND
-    axios.get("api/categories")
-    .then((res) => {
+    axios.get("api/categories").then((res) => {
       this.categories = res.data.data;
-    })
-    
+    });
+
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
     let countriesWithItsCities = [];
     axios.get("api/countries").then((res) => {
@@ -502,6 +520,11 @@ export default {
 </script>
 
 <style scoped>
+.emptyMyevent {
+  text-align: center;
+  opacity: 0.2;
+  margin-top: 10%;
+}
 #checkDate {
   color: red;
 }

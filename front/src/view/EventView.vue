@@ -5,15 +5,20 @@
       @selectedCityChange="filterByCity"
     >
     </search-filter>
-    <my-event-card
-      v-for="event of this.events"
-      :key="event.id"
-      :myEvent="event"
-      :buttonMode="onEventMode"
-      :quitOrJoinBtn="quitOrJoin(event.joinUserIdList)"
-      @join="join"
-      @quit="quit"
-    ></my-event-card>
+    <div v-if="isEmpty">
+      <my-event-card
+        v-for="event of this.events"
+        :key="event.id"
+        :myEvent="event"
+        :buttonMode="onEventMode"
+        :quitOrJoinBtn="quitOrJoin(event.joinUserIdList)"
+        @join="join"
+        @quit="quit"
+      ></my-event-card>
+    </div>
+    <div class="emptyCard" v-else>
+      <h1>NO EVENT YET!!</h1>
+    </div>
   </section>
 </template>
 
@@ -30,6 +35,7 @@ export default {
     return {
       events: [],
       onEventMode: "event",
+      isEmpty: true,
     };
   },
   methods: {
@@ -83,17 +89,20 @@ export default {
         this.events = this.events.filter(
           (event) => event.user_id != localStorage.getItem("userID")
         );
-        localStorage.setItem('getExploreEvents', JSON.stringify(this.events));
+        if(this.events == '') {
+          this.isEmpty = false
+        }
+        localStorage.setItem("getExploreEvents", JSON.stringify(this.events));
       });
     },
     cardSearch(key) {
       if (key === "") {
-        this.events = JSON.parse(localStorage.getItem('getExploreEvents'));
+        this.events = JSON.parse(localStorage.getItem("getExploreEvents"));
       } else {
         let listEvents = JSON.parse(localStorage.getItem('getExploreEvents'));
         this.events = listEvents.filter(event => event.title.toLowerCase().includes(key.toLowerCase()));
       }
-    }
+    },
   },
   mounted() {
     this.getExploreEventData();
@@ -102,4 +111,9 @@ export default {
 </script>
 
 <style scoped>
+.emptyCard {
+  text-align: center;
+  opacity: 0.2;
+  margin-top: 10%;
+}
 </style>

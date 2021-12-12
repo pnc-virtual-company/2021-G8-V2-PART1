@@ -1,6 +1,8 @@
 <template>
     <section>
+        
         <add-search @showForm='showAddForm' @search='search'></add-search>
+        <div v-if="isEmpty">
         <base-dialog
             v-if="dialogDisplayed"
             :title="dialogTitle"
@@ -30,6 +32,10 @@
             @requestToEdit="showEditForm"
             @updateCategory="updateCategory"
         ></category-card>
+        </div>
+        <div class="emptyCategory" v-else>
+            <h1>NO CATEGORY YET!!</h1>
+        </div>
     </section>
 </template>
 
@@ -52,6 +58,7 @@ export default {
             categoryToEdit: null,
             categories: [],
             cateNameError:'',
+            isEmpty: true,
         }
     },
     watch: {
@@ -87,13 +94,17 @@ export default {
             this.dialogMode = 'create';
             this.dialogDisplayed = true;
             this.cateNameError = '';
+            this.isEmpty = true;
         },
         closeDialog() {
             this.dialogDisplayed = false;
             this.categoryName = '';
             this.cateNameError = '';
+            this.isEmpty = true;
         },
         addNewCategory(categoryName){
+            this.isEmpty = true;
+            this.dialogDisplayed = true;
             let data = {
                 name: categoryName
             }
@@ -121,6 +132,7 @@ export default {
             this.cateNameError = '';
         },
         updateCategory(newCateName, id) {
+            this.isEmpty = true;
             let data = {
                 name: newCateName
             }
@@ -156,17 +168,28 @@ export default {
                     this.categories = res.data;
                 })
             }
+        },
+        getCategory() {
+            axios.get('api/categories').then(res => {
+            this.categories = res.data.data;
+            if(this.categories == '') {
+                this.isEmpty = false;
+            }
+        })
         }
     },
     mounted() {
-        axios.get('api/categories').then(res => {
-            this.categories = res.data.data;
-        })
+        this.getCategory();
     },
 }
 </script>
 
 <style scoped>
+.emptyCategory {
+    text-align: center;
+    opacity: 0.2;
+    margin-top: 10%;
+}
 input {
   padding: 15px;
 }
