@@ -1,6 +1,8 @@
 <template>
     <section>
+        
         <add-search @showForm='showAddForm' @search='search'></add-search>
+        <div v-if="isEmpty">
         <base-dialog
             v-if="dialogDisplayed"
             :title="dialogTitle"
@@ -30,6 +32,10 @@
             @requestToEdit="showEditForm"
             @updateCategory="updateCategory"
         ></category-card>
+        </div>
+        <div class="emptyCategory" v-else>
+            <h1>NO CATEGORY YET!!</h1>
+        </div>
     </section>
 </template>
 
@@ -52,6 +58,7 @@ export default {
             categoryToEdit: null,
             categories: [],
             cateNameError:'',
+            isEmpty: true,
         }
     },
     watch: {
@@ -87,13 +94,17 @@ export default {
             this.dialogMode = 'create';
             this.dialogDisplayed = true;
             this.cateNameError = '';
+            this.isEmpty = true;
         },
         closeDialog() {
             this.dialogDisplayed = false;
             this.categoryName = '';
             this.cateNameError = '';
+            this.isEmpty = true;
         },
         addNewCategory(categoryName){
+            this.isEmpty = true;
+            this.dialogDisplayed = true;
             let data = {
                 name: categoryName
             }
@@ -102,12 +113,20 @@ export default {
                 this.categories.unshift(res.data.data);
                 this.isShowAddForm = false,
                 this.createError = '';
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories.unshift(res.data.data);
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
             })
         },
         removeCategory(id) {
             axios.delete('api/categories/' + id)
             .then(() => {
                 this.categories = this.categories.filter(cate => cate.id !== id);
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories = storedCategories.filter(cate => cate.id !== id);
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
             })
         },
         showEditForm(id, name) {
@@ -121,6 +140,7 @@ export default {
             this.cateNameError = '';
         },
         updateCategory(newCateName, id) {
+            this.isEmpty = true;
             let data = {
                 name: newCateName
             }
@@ -131,6 +151,15 @@ export default {
                         this.categories.splice(index, 1, res.data.data);
                     }
                 });
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories.forEach((cate, index) => {
+                    if(cate.id == id) {
+                        storedCategories.splice(index, 1, res.data.data);
+                    }
+                });
+               
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
                 this.isEditing = false;
                 this.editError = '';
                 this.cateNameError = '';
@@ -148,25 +177,34 @@ export default {
         },
         search(key) {
             if(key === '') {
-                axios.get('api/categories').then(res => {
-                    this.categories = res.data.data;
-                });
+                this.categories = JSON.parse(localStorage.getItem("getCategories"));
             } else {
-                axios.get('api/categories/search/' + key).then(res => {
-                    this.categories = res.data;
-                })
+                let categoryList = JSON.parse(localStorage.getItem("getCategories"));
+                this.categories = categoryList.filter(cate => cate.name.toLowerCase().includes(key.toLowerCase()));
             }
+        },
+        getCategory() {
+            axios.get('api/categories').then(res => {
+            this.categories = res.data.data;
+            if(this.categories == '') {
+                this.isEmpty = false;
+            }
+            localStorage.setItem("getCategories", JSON.stringify(this.categories));
+        })
         }
     },
     mounted() {
-        axios.get('api/categories').then(res => {
-            this.categories = res.data.data;
-        })
+        this.getCategory();
     },
 }
 </script>
 
 <style scoped>
+.emptyCategory {
+    text-align: center;
+    opacity: 0.2;
+    margin-top: 10%;
+}
 input {
   padding: 15px;
 }
