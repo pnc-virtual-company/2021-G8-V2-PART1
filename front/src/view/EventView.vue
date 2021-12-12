@@ -1,6 +1,10 @@
 <template>
   <section>
-    <search-filter @cardSearch="cardSearch"></search-filter>
+    <search-filter 
+      @cardSearch="cardSearch"
+      @selectedCityChange="filterByCity"
+    >
+    </search-filter>
     <my-event-card
       v-for="event of this.events"
       :key="event.id"
@@ -29,6 +33,19 @@ export default {
     };
   },
   methods: {
+    filterByCity(city) {
+      if (city === "All Cities, Default") {
+        this.getExploreEventData()
+      } else {
+        axios.get('api/myevents/city/' + city).then((res) => {
+          this.events = res.data;
+          this.events = this.events.filter(
+            (event) => event.user_id != localStorage.getItem("userID")
+          );
+          localStorage.setItem('getExploreEvents', JSON.stringify(this.events));
+        });
+      }
+    },
     join(event) {
       let userId = localStorage.getItem("userID");
       let newJoined = {
@@ -74,7 +91,7 @@ export default {
         this.events = JSON.parse(localStorage.getItem('getExploreEvents'));
       } else {
         let listEvents = JSON.parse(localStorage.getItem('getExploreEvents'));
-        this.events = listEvents.filter(event => event.title.includes(key) || event.description.includes(key));
+        this.events = listEvents.filter(event => event.title.toLowerCase().includes(key.toLowerCase()));
       }
     }
   },

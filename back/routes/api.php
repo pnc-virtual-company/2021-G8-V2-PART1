@@ -18,6 +18,7 @@ Route::post('/signin', [UserController::class, "signin"]);
 
 // myEvent
 Route::get('/myevents', [MyeventController::class, 'index']);
+Route::get('/myevents/city/{city}', [MyeventController::class, 'filterByCity']);
 Route::post('/myevents', [MyeventController::class, 'store']);
 Route::delete('/myevents/{id}', [MyeventController::class, 'destroy']);
 Route::put('/myevents/{id}', [MyeventController::class, 'update']);

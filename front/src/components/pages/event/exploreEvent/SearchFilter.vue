@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="add-and-search">
+    <div class="search-filter">
       <div class="event-search">
         <input
           type="text"
@@ -11,18 +11,20 @@
         <button type="button" class="searchButton" @click="clearSearch">X</button>
       </div>
 
-      <div class="city-search">
-        <div class="city-search-actions">
+      <div class="city-filter">
+        <div class="city-filter-action">
           <p>{{ selectedCity }}</p>
-          <input
-            type="text"
-            class="city-searchKey"
-            v-model="searchKey"
-            placeholder="Select your city"
-          />
-          <button type="button" class="city-searchButton" @click="clearSearch">x</button>
+          <div class="city-select">
+            <input
+              type="text"
+              class="searchKey"
+              v-model="filterKey"
+              placeholder="Select your city"
+            />
+            <button type="button" class="searchButton" @click="clearSearch">X</button>
+          </div>
         </div>
-        <div v-if="countriesCities" class="city-list">
+        <div v-if="countriesCities.length > 0" class="city-list">
           <ul>
             <li
               v-for="(countryCity, index) of countriesCities"
@@ -41,8 +43,8 @@ export default {
   data() {
     return {
       cardKeyWord: "",
-      selectedCity: "All Cities",
-      searchKey: "",
+      selectedCity: "All Cities, Default",
+      filterKey: "",
       countriesCities: [],
       countriesCitiesInitial: [],
     };
@@ -51,9 +53,12 @@ export default {
     selectedCity: function(newValue) {
       this.$emit("selectedCityChange", newValue);
     },
-    searchKey: function(key) {
+    cardKeyWord: function(newValue) {
+      this.$emit("cardSearch", newValue);
+    },
+    filterKey: function(key) {
       if (key === "") {
-        this.countriesCities = this.countriesCitiesInitial;
+        this.countriesCities = [];
       } else {
         this.countriesCities = [];
         for (let countryCity of this.countriesCitiesInitial) {
@@ -70,9 +75,15 @@ export default {
   },
   methods: {
     clearSearch() {
-      this.searchKey = "";
+      this.cardKeyWord = "";
+      this.filterKey = "";
       this.countriesCities = [];
     },
+    setCity(city, country) {
+      this.selectedCity = city + ', ' + country;
+      this.countriesCities = [];
+      this.filterKey = '';
+    }
   },
   mounted() {
     let countriesWithItsCities = [];
@@ -86,103 +97,90 @@ export default {
           });
         }
       }
-      this.countriesCitiesInitial;
+      this.countriesCitiesInitial.push({
+            country: 'Default',
+            city: 'All Cities',
+          });
     });
   },
 };
 </script>
 
 <style scoped>
-.add-and-search {
-  width: 82%;
-  display: flex;
-  margin: auto;
-  justify-content: space-between;
-}
-.event-search{
-  display: flex;
-  height: 30px;
-  padding: 10px;
-}
-.searchKey{
+.city-list {
+  width: 58%;
+  max-height: 100px;
+  padding: 15px;
   border: 2px solid var(--main-color);
-  padding-left: 7px;
-  border-radius: 5px 0px 0px 5px;
-}
-.city-search{
-  padding: 10px;
- 
-  display: flex;
-  flex-direction: column;
-}
-.city-search-actions{
-  display: flex;
-  align-items: center;
-  height: 30px;
-  padding: 0px;
-  margin: 0px;
-}
-.city-searchKey, .city-searchButton{
-  height: 85%;
-}
-.city-searchKey{
-  border:2px solid rgb(103, 219, 223) ;
-  border-radius: 5px 0px 0px 5px;
-  padding-left: 7px;
-}
-.city-search-actions p{
-  margin-right: 10px;
-}
-.city-searchButton{
-  padding:1px 10px 25px 10px;
-  border:2px solid rgb(103, 219, 223) ;
-  background:rgb(103, 219, 223) ;
-  color: white;
-  font-size: 20px;
-}
-.searchButton{
-  background: var(--main-color);
-  border:2px solid var(--main-color);
-  padding:3px 10px 23px 10px;
-  font-size: 16px;
-   color: white;
-}
-
-.city-list{
-  margin-top: 5px;
-  background: rgb(255, 255, 255);
-  height: 200px;
-  padding:10px;
+  border-top: none;
   overflow-y: scroll;
-  box-shadow: 1px 1px 10px  rgb(102, 102, 102) inset;
 }
-.city-list ul {
+ul li {
   list-style: none;
 }
-
-/* .btn-add {
-  margin: 0;
-  width: 150px;
-  background: var(--main-color);
-  border: none;
-  padding: 15px 20px;
-  border-radius: 50px;
-  color: white;
-  font-weight: bold;
+ul li:hover {
+  background: rgb(226, 226, 123);
   cursor: pointer;
 }
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 15px;
+}
+  ::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 15px;
+}
+  ::-webkit-scrollbar-thumb {
+  background: rgb(182, 182, 182); 
+    border-radius:10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  
+  background: rgb(153, 153, 153); 
+} 
+
+
+
+.search-filter {
+  width: 82%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.city-filter {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.city-filter-action {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: right;
+}
 .btn-add:hover,
-.searchButton:hover,
-.city-searchButton:hover {
+.searchButton:hover {
   color: rgb(173, 101, 233);
 }
 
+.event-search {
+  width: 40%;
+  display: flex;
+}
+.city-select {
+  width: 70%;
+  display: flex;
+  justify-content: flex-end;
+}
 
 .searchKey {
-  width: 90%;
-  height: 81%;
+  width: 75%;
   border: 2px solid var(--main-color);
   border-right: none;
+  padding: 15px;
   border-radius: 15px 0 0 15px;
   outline: none;
 }
@@ -197,69 +195,4 @@ export default {
   cursor: pointer;
   font-size: 24px;
 }
-.city-filter-container, .even-search{
-  height: 45px;
-  display: flex;
-  align-items: center;
-}
-.city-filter-container :nth-child(1){
-  margin-right: 5px;
-}
-.city-filter-container input, button{
-  height: 90%;
-  padding: 0;
-}
-.city-searchKey{
-  padding: 0;
-  margin: 0;
-  border: none;
-  border: 2.3px solid rgb(98, 194, 233);
-  border-radius:10px 0px 0px 10px ;
-}
-.city-searchButton{
-  height: 100%;
-  padding: 0px 10px;
-  border: 3px solid rgb(98, 194, 233);
-  border-radius: 0 10px 10px 0;
-  background: rgb(98, 194, 233);
-  color: #fff;
-  outline: none;
-  font-size: 20px;
-}
-.city-searchKey:focus{
-   outline: none;
-
-}
-.city-list{
-  height: 200px;
-  background: red;
-  padding: 5px;
-  overflow-y: scroll;
-}
-/* .city-search {
-  width: 60%;
-  display: flex;
-  justify-content: flex-end;
-} */
-/* 
-.city-searchKey {
-  width: 40%;
-  border: 2px solid rgb(34, 152, 207);
-  border-right: none;
-  padding: 15px;
-  border-radius: 15px 0 0 15px;
-  outline: none;
-} */
-/* .city-searchButton {
-  margin: 0;
-  width: 45px;
-  border: 1px solid rgb(34, 152, 207);
-  background: rgb(34, 152, 207);
-  color: #fff;
-  border-radius: 0 15px 15px 0;
-  cursor: pointer;
-  font-size: 24px;
-  padding:9px 0px 13px 0px;
-  text-align: center;
-} */
 </style>

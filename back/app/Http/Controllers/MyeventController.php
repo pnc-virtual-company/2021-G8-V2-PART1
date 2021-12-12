@@ -36,6 +36,31 @@ class MyeventController extends Controller
         }
         return $events;
     }
+    
+    public function filterByCity($city)
+    {
+        $events = DB::table('myevents')
+            ->join('categories', 'myevents.category_id', '=', 'categories.id')
+            ->select('myevents.*', 'categories.name as categoryName')
+            ->where('city', '=', $city)
+            ->latest()
+            ->get()
+            ->toArray();
+        foreach($events as $event) {
+            $userIdList = DB::table('user_join_events')
+            ->select('user_id')
+            ->where('myevents_id', '=', $event->id)
+            ->get()
+            ->toArray();
+
+            $cleanArrayUserIdList = [];
+            foreach($userIdList as $userId) {
+                array_push($cleanArrayUserIdList, $userId->user_id);
+            }
+            $event->joinUserIdList = $cleanArrayUserIdList;
+        }
+        return $events;
+    }
 
     /**
      * Store a newly created resource in storage.
