@@ -74,7 +74,8 @@ export default {
         this.events = JSON.parse(localStorage.getItem('getExploreEvents'));
       } else {
         let listEvents = JSON.parse(localStorage.getItem('getExploreEvents'));
-        this.events = listEvents.filter(event => event.title.includes(key) || event.description.includes(key));
+        console.log(listEvents[0].description)
+        this.events = listEvents.filter(event => event.title.includes(key));
       }
     }
   },

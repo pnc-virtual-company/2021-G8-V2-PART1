@@ -98,7 +98,6 @@ class MyeventController extends Controller
         $myevent->city = $request->city;
         $myevent->description = $request->description;
         if($request->hasfile('photo')){
-            // $file = $request->file('image');
             $myevent->photo =$request->file('photo')->hashName();
             $request->file('photo')->store('public/photos');
 
