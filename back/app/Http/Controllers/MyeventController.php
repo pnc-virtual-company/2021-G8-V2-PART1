@@ -71,10 +71,13 @@ class MyeventController extends Controller
 
         $myevent->save();
         
+        $categoryName = DB::table('categories')
+            ->select('categories.name as categoryName')
+            ->where('categories.id', '=', $myevent->category_id)
+            ->get();
         $myevent->joinUserIdList = [];
+        $myevent->categoryName = $categoryName[0]->categoryName;
         return response()->json(["message"=>"My event Created!","myEvent"=> $myevent],201);
-        
-        
     }
 
     /**
