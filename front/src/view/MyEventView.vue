@@ -143,7 +143,7 @@
             <input type="file" @change="getImage" />
             <img
               v-if="!this.imageTitle"
-              src="https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg"
+              src="empty.jpg"
               alt="EMPTY PICTURE"
             />
             <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
