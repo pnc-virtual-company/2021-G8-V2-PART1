@@ -413,13 +413,10 @@ export default {
     //===========================search myevent
     search(key) {
       if (key === "") {
-        axios.get("api/myevents").then((res) => {
-          this.myEvents = res.data;
-        });
+        this.myEvents = JSON.parse(localStorage.getItem("getMyEvents"));
       } else {
-        axios.get("api/myevents/search/" + key).then((res) => {
-          this.myEvents = res.data;
-        });
+        let listEvents = JSON.parse(localStorage.getItem('getMyEvents'));
+        this.myEvents = listEvents.filter(event => event.title.toLowerCase().includes(key.toLowerCase()));
       }
     },
     /// =======================crud=====================
@@ -453,6 +450,7 @@ export default {
       axios.post("api/myevents", myNewEvent).then((res) => {
         this.dialogDisplayed = false;
         this.myEvents.unshift(res.data.myEvent);
+        localStorage.setItem("getMyEvents", JSON.stringify(this.myEvents));
       });
     },
 
@@ -487,7 +485,7 @@ export default {
         if(this.myEvents == '') {
           this.isEmpty = false;
         }
-        console.log(this.myEvents)
+        localStorage.setItem("getMyEvents", JSON.stringify(this.myEvents));
       });
     },
     /// =======================crud=====================
