@@ -450,13 +450,20 @@ export default {
       axios.post("api/myevents", myNewEvent).then((res) => {
         this.dialogDisplayed = false;
         this.myEvents.unshift(res.data.myEvent);
-        localStorage.setItem("getMyEvents", JSON.stringify(this.myEvents));
+
+        let storedMyEvents = JSON.parse(localStorage.getItem("getMyEvents"));
+        storedMyEvents.unshift(res.data.myEvent);
+        localStorage.setItem("getMyEvents", JSON.stringify(storedMyEvents));
       });
     },
 
     deleteMyEventCard(id) {
       axios.delete("api/myevents/" + id).then(() => {
-        this.getMyEventData();
+        this.myEvents = this.myEvents.filter(event => event.id !== id);
+
+        let storedMyEvents = JSON.parse(localStorage.getItem("getMyEvents"));
+        storedMyEvents = storedMyEvents.filter(event => event.id !== id);
+        localStorage.setItem("getMyEvents", JSON.stringify(storedMyEvents));
       });
     },
     showFormMyEventUpdate(myEvent) {

@@ -28,8 +28,6 @@ Route::get('/countries', [CountryCityController::class, 'getCountries']);
 
 // category
 Route::get('/categories', [CategoryController::class ,'index']);
-Route::get('/categories/{id}', [CategoryController::class ,'show']);
-Route::get('/categories/search/{key}', [CategoryController::class ,'search']);
 
 Route::post('/categories', [CategoryController::class ,'store']);
 Route::put('/categories/{id}', [CategoryController::class ,'update']);

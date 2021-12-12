@@ -113,12 +113,20 @@ export default {
                 this.categories.unshift(res.data.data);
                 this.isShowAddForm = false,
                 this.createError = '';
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories.unshift(res.data.data);
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
             })
         },
         removeCategory(id) {
             axios.delete('api/categories/' + id)
             .then(() => {
                 this.categories = this.categories.filter(cate => cate.id !== id);
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories = storedCategories.filter(cate => cate.id !== id);
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
             })
         },
         showEditForm(id, name) {
@@ -143,6 +151,15 @@ export default {
                         this.categories.splice(index, 1, res.data.data);
                     }
                 });
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories.forEach((cate, index) => {
+                    if(cate.id == id) {
+                        storedCategories.splice(index, 1, res.data.data);
+                    }
+                });
+               
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
                 this.isEditing = false;
                 this.editError = '';
                 this.cateNameError = '';
@@ -160,13 +177,10 @@ export default {
         },
         search(key) {
             if(key === '') {
-                axios.get('api/categories').then(res => {
-                    this.categories = res.data.data;
-                });
+                this.categories = JSON.parse(localStorage.getItem("getCategories"));
             } else {
-                axios.get('api/categories/search/' + key).then(res => {
-                    this.categories = res.data;
-                })
+                let categoryList = JSON.parse(localStorage.getItem("getCategories"));
+                this.categories = categoryList.filter(cate => cate.name.toLowerCase().includes(key.toLowerCase()));
             }
         },
         getCategory() {
@@ -175,6 +189,7 @@ export default {
             if(this.categories == '') {
                 this.isEmpty = false;
             }
+            localStorage.setItem("getCategories", JSON.stringify(this.categories));
         })
         }
     },
