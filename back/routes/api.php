@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+
 use App\Http\Controllers\MyeventController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CountryCityController;
@@ -17,7 +18,6 @@ Route::post('/signin', [UserController::class, "signin"]);
 
 // myEvent
 Route::get('/myevents', [MyeventController::class, 'index']);
-Route::get('/myevents/{id}', [MyeventController::class, 'show']);
 Route::post('/myevents', [MyeventController::class, 'store']);
 Route::delete('/myevents/{id}', [MyeventController::class, 'destroy']);
 Route::put('/myevents/{id}', [MyeventController::class, 'update']);
@@ -26,7 +26,6 @@ Route::put('/myevents/{id}', [MyeventController::class, 'update']);
 Route::get('/countries', [CountryCityController::class, 'getCountries']);
 
 // category
-
 Route::get('/categories', [CategoryController::class ,'index']);
 Route::get('/categories/{id}', [CategoryController::class ,'show']);
 Route::get('/categories/search/{key}', [CategoryController::class ,'search']);

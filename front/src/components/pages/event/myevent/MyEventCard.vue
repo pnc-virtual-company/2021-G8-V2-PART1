@@ -2,7 +2,7 @@
   <section>
     <div class="card-container">
       <div class="left-side">
-        <img :src="url + myEvent.image" alt="image not found"/>
+        <img :src="url + myEvent.photo"/>
       </div>
       <div class="right-side">
           <div class="right-top">
@@ -39,8 +39,8 @@ export default {
   props: ["myEvent", "buttonMode", "quitOrJoinBtn"],
   data() {
     return {
-      url : 'http://127.0.0.1:8000/storage/images/',
-    }
+      url : 'http://127.0.0.1:8000/storage/photos/',
+    };
   },
 };
 </script>

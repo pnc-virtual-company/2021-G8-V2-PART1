@@ -14,11 +14,11 @@
           <p v-text="passwordError"></p>
         </div>
       </div>
-      <router-link to="/signup">Create an account?</router-link>
-
       <div class="serverMessage" v-if="unauthorizedError">
         <p v-text="unauthorizedError"></p>
       </div>
+      <router-link to="/signup">Create an account?</router-link>
+
       <div :class="isValidated ? 'buttonActive' : 'buttonInactive'">
         <button type="button" id="signIn" @click="emitUserData">Sign in</button>
       </div>

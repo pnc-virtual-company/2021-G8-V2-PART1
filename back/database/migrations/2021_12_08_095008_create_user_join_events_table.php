@@ -15,8 +15,8 @@ class CreateUserJoinEventsTable extends Migration
     {
         Schema::create('user_join_events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('CASCADE');
-            $table->foreignId('myevent_id')->constrained()->onDelete('CASCADE');
+            $table->foreignId('user_id');
+            $table->foreignId('myevents_id');
             $table->timestamps();
         });
     }

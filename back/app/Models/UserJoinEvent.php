@@ -10,7 +10,7 @@ class UserJoinEvent extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'myevent_id'
+        'myevents_id'
     ];
 
     public function user() {

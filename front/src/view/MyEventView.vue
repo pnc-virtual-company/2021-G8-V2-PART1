@@ -1,97 +1,135 @@
 <template>
   <section>
-    <add-search @showForm="showAddForm" @search='search'></add-search>
+    <add-search @showForm="showAddForm" @search="search"></add-search>
     <base-dialog
       v-if="dialogDisplayed"
       :title="dialogTitle"
       :mode="dialogMode"
       @close="closeDialog"
     >
+      <!-- event from  -->
       <div class="eventForm">
-        <div class="left-side">
-          <div class="title">
-            <input type="text" placeholder="Title" v-model="myEventTitle" />
-            <div class="error" v-if="myEventTitleError">
-              <p v-text="myEventTitleError"></p>
+        <div class="title-date">
+          <label for="title">Event Title</label>
+          <input type="text" placeholder="Title" v-model="myEventTitle" />
+          <div class="error" v-if="myEventTitleError">
+            <p v-text="myEventTitleError"></p>
+          </div>
+          <div class="start-date">
+            <label for>Start Date</label>
+            <input type="datetime-local" v-model="startDateTime" />
+            <div class="error" v-if="startDateError">
+              <p v-text="startDateError"></p>
             </div>
-            <div class="date">
-              <label for>Start Date</label>
+          </div>
+          <div class="end-date">
+            <label for>End Date</label>
+            <input type="datetime-local" v-model="endDate" />
+            <div class="error" v-if="endDateError">
+              <p v-text="endDateError"></p>
+            </div>
+          </div>
+        </div>
+        <div class="city-cate-container">
+          <!-- ===============CITY & CATEGORY RESULT================ -->
+
+          <!-- ===================CATEGORY AREA================== -->
+
+          <div class="category-main-container">
+            <!-- category action -->
+            <label v-if="!isSelectedCate" for="category">Category</label>
+            <label v-else for="category">Category: {{ category.name }}</label>
+            <div class="category-container-actions">
               <input
-                type="datetime-local"
-                v-model="startDateTime"
+                type="text"
+                class="searchKey"
+                placeholder="Search category"
+                v-model="cateKeySearch"
               />
-            </div>
-            <div class="time">
-              <label for>End Date</label>
-              <input type="datetime-local" v-model="endDate"/>
-            </div>
-          </div>
-          <div class="city-cate">
-            <div class="category">
-              <button type="button" @click="showCategoryList">
-                Category
+              <button
+                type="button"
+                class="btnOpenCategoryList"
+                @click="showCategoryList"
+                v-if="!categoryListDisplayed"
+              >
+                ▽
               </button>
-              <p v-if="category" v-text="category.name"></p>
-
-              <category-city-dialog
-                v-if="categoryListDisplayed"
-                @closeCategoryList="closeCategoryList"
+              <button
+                v-else
+                type="button"
+                class="btnCloseCategoryList"
+                @click="closeCategoryList"
               >
-                <div class="cate-search">
-                    <input
-                        type="text"
-                        class="searchKey"
-                        placeholder="search category"
-                        v-model="cateKeySearch"
-                    />
-                    <button type="button" class="clearButton" @click="clearCateSearch">X</button>
-                </div>
-                <div class="categoryContainer">
-                    <ul>
-                        <li v-for="cate of this.categories" 
-                          :key="cate.id"
-                          @click="setCate(cate.id, cate.name)"
-                        >{{ cate.name }}
-                        </li>
-                    </ul>
-                </div>
-              </category-city-dialog>
+                △
+              </button>
             </div>
-            <div class="city">
-              <button type="button"  @click="showCityList">City</button>
-              <p v-if="city" v-text="city"></p>
-
-              <category-city-dialog
-                v-if="cityListDisplayed"
-                @closeCategoryList="closeCategoryList"
-              >
-                <div class="cate-search">
-                    <input
-                        type="text"
-                        class="searchKey"
-                        placeholder="search city"
-                        v-model="cityKeySearch"
-                    />
-                    <button type="button" class="clearButton" @click="clearCitySearch">X</button>
-                </div>
-                <div class="categoryContainer">
-                    <ul>
-                        <li v-for="(countryCity, index) of countriesCities" 
-                            :key="index"
-                            @click="setCity(countryCity.city, countryCity.country)"
-                        >{{ countryCity.city }}
-                        </li>
-                    </ul>
-                </div>
-              </category-city-dialog>
+            <!-- category list  -->
+            <div v-if="categoryListDisplayed" class="category-list">
+              <ul>
+                <li
+                  v-for="cate of this.categories"
+                  :key="cate.id"
+                  @click="setCate(cate.id, cate.name)"
+                >
+                  {{ cate.name }}
+                </li>
+              </ul>
             </div>
           </div>
+          <!-- CITY AREA -->
+
+          <div class="city-main-container">
+            <label v-if="!isSelectedCity" for="city">City</label>
+            <label v-else for="city">City: {{ city }}</label>
+            <!-- city action -->
+            <div class="city-container-actions">
+              <input
+                type="text"
+                class="searchKey"
+                placeholder="Search city"
+                v-model="cityKeySearch"
+              />
+              <button
+                type="button"
+                class="btnOpenCityList"
+                v-if="!cityListDisplayed"
+                @click="showCityList"
+              >
+                ▽
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btnCloseCityList"
+                @click="closCityList"
+              >
+                △
+              </button>
+            </div>
+            <!-- city list  -->
+            <div v-if="cityListDisplayed" class="city-list">
+              <ul>
+                <li
+                  v-for="(countryCity, index) of countriesCities"
+                  :key="index"
+                  @click="setCity(countryCity.city, countryCity.country)"
+                >
+                  {{ countryCity.city }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================= -->
         <div class="more">
-          <p @click="showMoreChoice" v-if="!isShowMore">See more..</p>
-          <p @click="showLessChoice" v-if="isShowMore">See less..</p>
+          <a href="#description"
+            ><p @click="showMoreChoice" id="see-more" v-if="!isShowMore">
+              See more..
+            </p></a
+          >
         </div>
-        </div>
-        <div class="showMoreInfo" v-if="isShowMore">
+
+        <div id="description" class="showMoreInfo" v-if="isShowMore">
           <div class="description">
             <textarea
               placeholder="Description"
@@ -101,16 +139,26 @@
               <p>Description (optional)</p>
             </div>
           </div>
-        <div class="right-side">
-          <input type="file" @change="getImage"/>
-          <img :src="imageTitle" alt="EMPTY PICTURE" />
+          <div class="right-side">
+            <input type="file" @change="getImage" />
+            <img
+              v-if="!this.imageTitle"
+              src="https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg"
+              alt="EMPTY PICTURE"
+            />
+            <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
+          </div>
+          <a href="#see-more">
+            <p id="see-less" @click="showLessChoice">See less..</p>
+          </a>
         </div>
       </div>
-  </div>
-    <!---------------------- myevent card and from -->
+
+      <!-- event from  -->
+
+      <!---------------------- myevent card and from -->
       <template #actions>
         <base-button
-          
           :class="isValidated ? 'buttonActive' : 'buttonInactive'"
           @click="onConfirm"
           >{{ dialogButtton }}
@@ -118,89 +166,133 @@
       </template>
     </base-dialog>
     <my-event-card
-      v-for="myEvent of this.myEvents"
-      :key="myEvent.id"
-      :myEvent="myEvent"
+      v-for="(event, name, index) in myEvents"
+      :key="name"
+      :id="index"
+      :myEvent="event"
       :buttonMode="onMyEventMode"
-      @deleteMyEvent='deleteMyEventCard'
-      @updateMyEvent='EditMyEventCard'
+      @deleteMyEvent="deleteMyEventCard"
+      @updateMyEvent="showFormMyEventUpdate"
     ></my-event-card>
     <!------------------------- myevent card and from -->
   </section>
 </template>
 
 <script>
+// const url = 'http://127.0.0.1:8000/storage/images/';
+
 import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
 import AddSearch from "../components/pages/event/myevent/AddSearch.vue";
 import BaseButton from "../components/UI/BaseButton.vue";
 
 import axios from "../axios-http.js";
+import moment from "moment";
 export default {
-  components: {MyEventCard, AddSearch, BaseButton},
-  props: ['userDataAppToEvent'],
+  components: { MyEventCard, AddSearch, BaseButton },
   data() {
     return {
-        myEvent:'',
-        myEventTitle:'',
-        startDateTime:'',
-        endDate:'',
-        description:'',
-        category: '',
-        city: '',
-        imageTitle:'',
-        file: null,
-  
-        
-        myEventTitleError:'',
-        startDateTimeError:'',
-        endDateError:'',
-        categoryError: '',
-        cityError: '',
+      imageForUpdate: "",
+      myEvent: "",
+      myEventTitle: "",
+      startDateTime: "",
+      endDate: "",
+      description: "",
+      category: "",
+      city: "",
+      imageTitle: "",
+      file: null,
 
+      myEventTitleError: "",
+      startDateError: "",
+      endDateError: "",
 
-        onMyEventMode: 'myEvent',
-        isShowMore: false,
-        dialogDisplayed: false,
-        categoryListDisplayed: false,
-        cityListDisplayed: false,
-        dialogMode: "create",
-        eventKeySearch: "",
-        cateKeySearch: "",
-        cityKeySearch: "",
-        eventToEdit: null,
-        
-        countriesCitiesInitial: [],
-        countriesCities: [],
-        categories: [],
-        myEvents: [],
+      onMyEventMode: "myEvent",
+      isShowMore: false,
+      dialogDisplayed: false,
+      categoryListDisplayed: false,
+      cityListDisplayed: false,
+      dialogMode: "create",
+      eventKeySearch: "",
+      cateKeySearch: "",
+      cityKeySearch: "",
+      eventToEdit: null,
+
+      countriesCitiesInitial: [],
+      countriesCities: [],
+      categories: [],
+      myEvents: [],
+      isSelectedCate: false,
+      isSelectedCity: false,
     };
   },
   watch: {
-      cateKeySearch: function(key) {
-        if(key === '') {
-            axios.get('api/categories').then(res => {
-                this.categories = res.data.data;
-            });
+    cateKeySearch: function (key) {
+      if (key === "") {
+        if (this.isSelectedCate) {
+          this.categoryListDisplayed = false;
         } else {
-            axios.get('api/categories' + '/search/' + key).then(res => {
-                this.categories = res.data;
-            })
+          this.categoryListDisplayed = true;
         }
-      },
-      cityKeySearch: function(key) {
-        if(key === '') {
-          this.countriesCities = this.countriesCitiesInitial;
+        axios.get("api/categories").then((res) => {
+          this.categories = res.data.data;
+        });
+      } else {
+        axios.get("api/categories" + "/search/" + key).then((res) => {
+          this.categories = res.data;
+          this.categoryListDisplayed = true;
+          this.isSelectedCate = false;
+        });
+      }
+    },
+    cityKeySearch: function (key) {
+      if (key === "") {
+        this.countriesCities = this.countriesCitiesInitial;
+        if (this.isSelectedCity) {
+          this.cityListDisplayed = false;
         } else {
-          this.countriesCities = [];
-          for(let countryCity of this.countriesCitiesInitial) {
-            if(countryCity.city.toLowerCase().includes(key.toLowerCase()) ||
-              countryCity.country.toLowerCase().includes(key.toLowerCase()))
-            {
-              this.countriesCities.push(countryCity);
-            }
+          this.cityListDisplayed = true;
+        }
+      } else {
+        this.countriesCities = [];
+        for (let countryCity of this.countriesCitiesInitial) {
+          if (
+            countryCity.city.toLowerCase().includes(key.toLowerCase()) ||
+            countryCity.country.toLowerCase().includes(key.toLowerCase())
+          ) {
+            this.countriesCities.push(countryCity);
+            this.cityListDisplayed = true;
+            this.isSelectedCity = false;
           }
         }
-      },
+      }
+    },
+    myEventTitle: function(newValue) {
+      if(newValue === '') {
+        this.myEventTitleError = 'title is required'
+      } else {
+        this.myEventTitleError = '';
+      }
+    },
+    startDateTime: function(newValue) {
+      let currentDate = new Date();
+      if(moment(newValue).isBefore(currentDate)) {
+        this.startDateError = 'start datetime must be after now';
+      } else {
+        this.startDateError = '';
+        if(this.endDate && !moment(newValue).isBefore(this.endDate)) {
+          this.endDateError = 'end datetime must be after start datetime';
+        } else {
+          this.endDateError = '';
+        }
+      }
+    },
+    endDate: function(newValue) {
+      if(this.startDateTime && !moment(this.startDateTime).isBefore(newValue)) {
+        this.endDateError = 'end datetime must be after start datetime'
+      } else {
+        this.endDateError = ''
+      }
+    },
   },
   computed: {
     dialogTitle() {
@@ -209,51 +301,73 @@ export default {
     dialogButtton() {
       return this.dialogMode === "edit" ? "EDIT" : "CREATE";
     },
-    isValidated(){
+    isValidated() {
       return (
-        this.myEventTitleError === '' &&
-        this.startDateTimeError === '' &&
-        this.endDateError === '' &&
-        this.categoryError === '' &&
-        this.cityError === '' &&
-        this.myEventTitle !== '' &&
-        this.startDateTime !== '' &&
-        this.endDate !== '' &&
-        this.category !== '' &&
-        this.city !== ''
-      )
-    }
+        this.myEventTitleError === "" &&
+        this.startDateError === "" &&
+        this.endDateError === "" &&
+        this.myEventTitle !== "" &&
+        (this.startDateTime !== "" || this.dialogMode === "edit") &&
+        (this.endDate !== "" || this.dialogMode === "edit") &&
+        this.category !== "" &&
+        this.city !== ""
+      );
+    },
   },
   methods: {
-    
     getCategoryData(data) {
       this.categoryData = data;
     },
     showAddForm() {
       this.dialogMode = "create";
       this.dialogDisplayed = true;
+      this.myEventTitle = "";
+      this.startDateTime = "";
+      this.end_date = "";
+      this.city = "";
+      this.description = "";
+      this.imageTitle = "";
+      this.category = "";
+      this.isSelectedCity = false;
+      this.isSelectedCate = false;
+      this.endDateError = '';
+      this.myEventTitleError = '';
     },
     closeDialog() {
       this.dialogDisplayed = false;
       this.categoryName = "";
-      this.myEventTitle = ''
-      this.startDateTime = ''
-      this.endDate = ''
-      this.description = ''
-      this.isShowMore = false
+      this.myEventTitle = "";
+      this.startDateTime = "";
+      this.endDate = "";
+      this.description = "";
+      this.isShowMore = false;
     },
     showCategoryList() {
       this.categoryListDisplayed = true;
-      axios.get('api/categories').then(res => {
-          this.categories = res.data.data;
+      axios.get("api/categories").then((res) => {
+        this.categories = res.data.data;
       });
     },
     showCityList() {
       this.cityListDisplayed = true;
     },
     closeCategoryList() {
-        this.categoryListDisplayed = false;
-        this.cityListDisplayed = false;
+      this.categoryListDisplayed = false;
+      this.cateKeySearch = "";
+      if (this.category !== "") {
+        this.isSelectedCate = true;
+      } else {
+        this.isSelectedCate = false;
+      }
+    },
+    closCityList() {
+      this.cityListDisplayed = false;
+      this.cityKeySearch = "";
+      if (this.city !== "") {
+        this.isSelectedCity = true;
+      } else {
+        this.isSelectedCity = false;
+      }
     },
     showMoreChoice() {
       this.isShowMore = true;
@@ -261,131 +375,107 @@ export default {
     showLessChoice() {
       this.isShowMore = false;
     },
-    clearCateSearch() {
-      this.cateKeySearch = '';
-      this.showCategoryList()
-    },
-    clearCitySearch() {
-      this.cityKeySearch = '';
-      this.countriesCities = this.countriesCitiesInitial;
-    },
+
     setCity(city, country) {
-      this.city = city + ', ' + country;
-      this.closeCategoryList();
+      this.city = city + ", " + country;
+      this.cityKeySearch = "";
+      this.isSelectedCity = true;
+      this.closCityList();
     },
     setCate(id, name) {
       this.category = {
         id: id,
-        name: name
+        name: name,
       };
+      this.cateKeySearch = "";
+      this.isSelectedCate = true;
       this.closeCategoryList();
     },
     //===========================get image
-    getImage(e){
+    getImage(e) {
       this.file = e.target.files[0];
-      let img = e.target.files[0];
-      this.imageTitle = URL.createObjectURL(img);
+      this.imageTitle = URL.createObjectURL(this.file);
     },
-  //===========================search myevent
-  search(key) {
-            if(key === '') {
-                axios.get('api/myevents').then(res => {
-                    this.myEvents = res.data.data;
-                });
-            } else {
-                axios.get('api/myevents/search/' + key).then(res => {
-                    this.myEvents = res.data.data;
-                })
-            }
-        },
-  /// =======================crud=====================
+    //===========================search myevent
+    search(key) {
+      if (key === "") {
+        axios.get("api/myevents").then((res) => {
+          this.myEvents = res.data;
+        });
+      } else {
+        axios.get("api/myevents/search/" + key).then((res) => {
+          this.myEvents = res.data;
+        });
+      }
+    },
+    /// =======================crud=====================
     onConfirm() {
-            if(this.isValidated) {
-                if (this.dialogMode === 'create') {
-                    this.addNewEvent();
-                } else if (this.dialogMode === 'edit') {
-                    this.updateMyEventCard(this.myEvent);
-                }
-                this.closeDialog();
-            }
-        },
-    addNewEvent(){
-      this.dialogDisplayed = false;
-      
+      if (this.isValidated) {
+        if (this.dialogMode === "create") {
+          this.addNewEvent();
+        } else if (this.dialogMode === "edit") {
+          this.updateMyEventCard(this.myEvent);
+        }
+        this.closeDialog();
+      }
+    },
+    addNewEvent() {
       let myNewEvent = new FormData();
-      myNewEvent.append('category_id', this.category.id);
-      myNewEvent.append('user_id', this.userDataAppToEvent.id);
-      myNewEvent.append('title', this.myEventTitle);
-      myNewEvent.append('start_date', this.startDateTime);
-      myNewEvent.append('end_date', this.endDate);
-      myNewEvent.append('city', this.city);
-      myNewEvent.append('description', this.description);
+      let user_id = localStorage.getItem('userID')
+      myNewEvent.append("category_id", this.category.id);
+      myNewEvent.append("user_id", user_id);
+      myNewEvent.append("title", this.myEventTitle);
+      myNewEvent.append("start_date", this.startDateTime);
+      myNewEvent.append("end_date", this.endDate);
+      myNewEvent.append("city", this.city);
+      if(this.description !== '') {
+        myNewEvent.append("description", this.description);
+      }
       if(this.file !== null) {
-        myNewEvent.append('image', this.file);
+        myNewEvent.append('photo', this.file)
       }
 
-      axios.post('api/myevents', myNewEvent)
-      .then(res => {
+      axios.post("api/myevents", myNewEvent)
+      .then((res) => {
+        this.dialogDisplayed = false
         this.myEvents.unshift(res.data.myEvent);
-        this.myEvents[0].joinedUserIdList = 0;
       })
     },
-    deleteMyEventCard(id){
-      axios.delete('api/myevents/'+id)
-      .then(()=>{
-        this.getMyEventData()
-      })
-    },
-    EditMyEventCard(myEvent){
-      this.myEvent = myEvent;
-      this.dialogMode = 'edit'
-       this.dialogDisplayed = true;
-       this.myEventTitle = myEvent.title
-       this.startDateTime = myEvent.start_date
-       this.endDate = myEvent.end_date
-       this.description = myEvent.description
-       
-    },
-    updateMyEventCard(myEvent){
-        let myEventUpdate = {
-         category_id: myEvent.category_id,
-         user_id: myEvent.user_id,
-         title: this.myEventTitle,
-         start_date: this.startDateTime,
-         end_date: this.endDate,
-         city: this.city,
-         description: this.description,
-         image: this.file,
-       }
-       axios.put('api/myevents/'+myEvent.id, myEventUpdate)
-       .then(()=>{
-         this.getMyEventData()
-       })
 
+    deleteMyEventCard(id) {
+      axios.delete("api/myevents/" + id).then(() => {
+        this.getMyEventData();
+      });
     },
+    showFormMyEventUpdate(myEvent) {
+      this.myEvent = myEvent;
+      this.dialogMode = "edit";
+      this.dialogDisplayed = true;
+      this.myEventTitle = myEvent.title;
+      this.description = myEvent.description;
+      this.city = myEvent.city;
+      this.category = myEvent.category;
+      this.imageTitle = "";
+      this.isSelectedCate = true;
+      this.isSelectedCity = true;
+      this.imageTitle = null;
+      this.imageForUpdate = myEvent.image;
+      this.endDateError = '';
+      this.myEventTitleError = '';
+    },
+
     getMyEventData(){
       axios.get("api/myevents")
-    .then( res => {
-      this.myEvents = res.data
-      this.myEvents = this.myEvents.filter(event => event.user_id == localStorage.getItem("userID"));
-      for(let myEvent of this.myEvents) {
-        let joinedUserIdList = [];
-        axios.get('/api/userjoinevents/getUserIdList/' + myEvent.id)
-        .then(res => {
-          joinedUserIdList = res.data;
-          myEvent.joinedUserIdList = joinedUserIdList.length;
-        })
-      }
-    })
+      .then( res => {
+        this.myEvents = res.data
+        this.myEvents = this.myEvents.filter(event => event.user_id == localStorage.getItem("userID"))
+      })
     }
-     /// =======================crud=====================
-
-
-
+    /// =======================crud=====================
   },
   mounted() {
     // GET MYEVENT DATA FROM BACKEND
-    this.getMyEventData()
+    this.getMyEventData();
 
     // GET CATEGORY DATA FROM BACKEND
     axios.get("api/categories")
@@ -395,15 +485,14 @@ export default {
     
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
     let countriesWithItsCities = [];
-    axios.get('api/countries')
-    .then(res => {
+    axios.get("api/countries").then((res) => {
       countriesWithItsCities = res.data;
-      for(let country in countriesWithItsCities) {
-        for(let city of countriesWithItsCities[country]) {
+      for (let country in countriesWithItsCities) {
+        for (let city of countriesWithItsCities[country]) {
           this.countriesCities.push({
-            'country': country,
-            'city': city
-          })
+            country: country,
+            city: city,
+          });
         }
       }
       this.countriesCitiesInitial = this.countriesCities;
@@ -413,6 +502,9 @@ export default {
 </script>
 
 <style scoped>
+#checkDate {
+  color: red;
+}
 .categoryContainer {
   overflow-y: scroll;
   height: 45vh;
@@ -428,9 +520,10 @@ export default {
 }
 .eventForm {
   width: 350px;
-  height: 220px;
+  height: 270px;
   padding: 20px;
   overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 .title input,
@@ -448,32 +541,18 @@ export default {
   color: gray;
 }
 textarea {
-  height: 200px;
+  height: 130px;
   resize: none;
 }
 textarea::-webkit-scrollbar {
   display: none;
 }
-.city-cate {
+.city-cate-container {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 }
-.city-cate button {
-  width: 100%;
-  padding: 5px 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  background: var(--main-color);
-  border: none;
-  outline: none;
-  border-radius: 15px;
-  cursor: pointer;
-  color: white;
-}
-.city-cate button:hover {
-  color: rgb(173, 101, 233);
-}
+
 .city,
 .category {
   width: 45%;
@@ -481,32 +560,9 @@ textarea::-webkit-scrollbar {
   justify-content: space-around;
   flex-wrap: wrap;
 }
-.city-cate p {
+.city-cate-container p {
   width: 100%;
   text-align: center;
-}
-.city-cate button {
-  background: rgb(34, 152, 207);
-}
-.date,
-.time {
-  display: flex;
-  justify-content: space-between;
-}
-.date label,
-.time label {
-  width: 35%;
-}
-.date input,
-.time input {
-  width: 60%;
-  padding: 5px 10px;
-  text-align: left;
-  margin-bottom: 15px;
-  outline: none;
-  border: 1px solid white;
-  border-radius: 15px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .right-side input {
@@ -548,57 +604,131 @@ textarea:focus {
   font-size: 12px;
   text-align: left;
 }
-.des p{
- 
+.des p {
   margin: 5px 0;
-  font-size: 12px;
+  font-size: 15px;
   text-align: left;
 }
 
 /* categorylist style */
-.clearButton:hover {
-  color: rgb(173, 101, 233);
-}
-.cate-search {
-  width: 100%;
-  display: flex;
-  margin-bottom: 5px;
-}
 
-.searchKey {
-  width: 65%;
-  border: 2px solid var(--main-color);
-  border-right: none;
-  padding: 0 15px;
-  border-radius: 15px 0 0 15px;
-  outline: none;
-}
-.cate-search .searchKey:focus {
-    border: 2px solid var(--main-color);
-    border-right: none;
-}
-.clearButton {
-  margin: 0;
-  width: 45px;
-  border: 1px solid var(--main-color);
-  background: var(--main-color);
-  color: #fff;
-  border-radius: 0 15px 15px 0;
-  cursor: pointer;
-  font-size: 24px;
-}
 .categoryContainer {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 .categoryContainer ul li {
-    text-align: left;
-    cursor: pointer;
+  text-align: left;
+  cursor: pointer;
 }
+
+.category-container-actions,
+.city-container-actions {
+  display: flex;
+  justify-content: space-between;
+}
+.category-container-actions .searchKey,
+.city-container-actions .searchKey {
+  width: 90%;
+  padding: 5px;
+  margin: 0;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1px solid white;
+  outline: none;
+  color: gray;
+}
+.category-container-actions .searchKey:focus {
+  border: 3px solid var(--main-color);
+}
+.city-container-actions .searchKey:focus {
+  border: 3px solid var(--main-color);
+}
+.btnCloseCategoryList,
+.btnOpenCategoryList,
+.btnOpenCityList,
+.btnCloseCityList {
+  color: rgb(0, 0, 0);
+  padding: 0 10px;
+  width: 10%;
+  border: 1px solid rgb(2, 2, 2);
+  border-radius: 2px;
+  background: rgb(253, 252, 249);
+}
+.category-list,
+.city-list {
+  background: rgb(255, 255, 255);
+  height: 150px;
+  padding: 3px;
+  overflow-y: scroll;
+}
+.category-list ul li,
+.city-list ul li {
+  list-style: none;
+  margin-bottom: 5px;
+  padding: 7px;
+  font-size: 17px;
+  cursor: pointer;
+  background: white;
+  border: 1px solid rgb(128, 124, 124);
+  color: gray;
+  outline: none;
+}
+.category-list ul li:hover {
+  border: 3px solid rgb(252, 198, 50);
+  color: rgb(0, 0, 0);
+}
+.city-list ul li:hover {
+  border: 2.4px solid rgb(252, 198, 50);
+  color: rgb(0, 0, 0);
+}
+.category-city-selected {
+  display: flex;
+  justify-content: space-between;
+}
+.category-city-selected :nth-child(1) {
+  text-align: left;
+}
+.category-city-selected :nth-child(2) {
+  text-align: right;
+}
+
+.category-city {
+  display: flex;
+  justify-content: space-between;
+}
+.title-date,
+.start-date,
+.end-date {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.title-date label,
+input,
+div {
+  margin: 3px 0px;
+}
+
+.title-date input {
+  padding: 5px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1px solid white;
+  outline: none;
+  color: gray;
+}
+.title-date input:focus {
+  border: 3px solid var(--main-color);
+}
+#see-less,
 .more {
   text-align: left;
   color: blue;
   cursor: pointer;
-  margin-bottom: 5px;
+  font-size: 18px;
 }
-
+.category-main-container label,
+.city-main-container label {
+  display: flex;
+  text-align: left;
+}
 </style>

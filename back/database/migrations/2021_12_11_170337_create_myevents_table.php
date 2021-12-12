@@ -21,8 +21,8 @@ class CreateMyeventsTable extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('city');
-            $table->text('description');
-            $table->string('image');
+            $table->text('description')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

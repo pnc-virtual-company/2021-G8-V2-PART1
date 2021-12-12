@@ -24,7 +24,7 @@ class MyeventController extends Controller
         foreach($events as $event) {
             $userIdList = DB::table('user_join_events')
             ->select('user_id')
-            ->where('myevent_id', '=', $event->id)
+            ->where('myevents_id', '=', $event->id)
             ->get()
             ->toArray();
 
@@ -45,7 +45,6 @@ class MyeventController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $request->validate([
             'category_id'=>'required',
             'user_id'=>'required',
@@ -53,11 +52,8 @@ class MyeventController extends Controller
             'start_date'=>'required',
             'end_date'=>'required|after:start_date',
             'city'=>'required',
-            'description'=>'nullable',
-            'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:19999'
         ]);
-        
-        // insert to database
+
         $myevent = new Myevent();
         $myevent->category_id = $request->category_id;
         $myevent->user_id = $request->user_id;
@@ -66,15 +62,13 @@ class MyeventController extends Controller
         $myevent->end_date = $request->end_date;
         $myevent->city = $request->city;
         $myevent->description = $request->description;
-        if($request->image !== null){
-            $myevent->image =$request->file('image')->hashName();
-            // move image to storage folder
-            $request->file('image')->store('images', 'public');
-            echo $request->file('image')->hashName();
-        }else{
-            $img = 'empty.jpg';
-            $myevent->image = $img;
+        if($request->photo == null) {
+            $myevent->photo = 'empty.jpg';
+        } else {
+            $myevent->photo = $request->file('photo')->hashName();
+            $request->file('photo')->store('public/photos');
         }
+
         $myevent->save();
         
         $myevent->joinUserIdList = [];
@@ -92,17 +86,6 @@ class MyeventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        $request->validate([
-            'category_id'=>'required',
-            'user_id'=>'required',
-            'title'=>'required',
-            'start_date'=>'required',
-            'end_date'=>'required|after:start_date',
-            'city'=>'required',
-            'description'=>'nullable',
-            'image'=>'nullable|image|mimes:jpg,jpeg,png,gif,jfif|max:1999'
-        ]);
         $myevent = Myevent::findOrFail($id);
         $myevent->category_id = $request->category_id;
         $myevent->user_id = $request->user_id;
@@ -111,15 +94,17 @@ class MyeventController extends Controller
         $myevent->end_date = $request->end_date;
         $myevent->city = $request->city;
         $myevent->description = $request->description;
-        if($request->image !== null){
-            // move image to storage folder
-            $request -> file('image')->store('public/images');
+        if($request->hasfile('photo')){
+            // $file = $request->file('image');
+            $myevent->photo =$request->file('photo')->hashName();
+            $request->file('photo')->store('public/photos');
+
         }else{
             $img = 'empty.jpg';
-            $myevent->image = $img;
+            $myevent->photo = $img;
         }
         $myevent->save();
-        return response()->json(['message'=>"My event Updated!","myEvent"=> Myevent::with(['category'])->latest()->first()],200);
+        return response()->json(["message"=>"My event updated!","myEvent"=> Myevent::with(['category'])->latest()->first()],201);
     }
     /**
      * Remove the specified resource from storage.
@@ -133,6 +118,6 @@ class MyeventController extends Controller
         if($isDeleted === 1){
             return response()->json(["message"=>'My event deleted!'],200);
         }
-        return response()->json(['message'=>"Failed to delete"],404);
+        return response()->json(['message'=>"Failed to delete"],404);  
     }
 }

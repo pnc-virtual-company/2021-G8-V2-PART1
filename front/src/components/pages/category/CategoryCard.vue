@@ -1,10 +1,10 @@
 <template>
   <section class="cate-card">
     <div class="cate-name">
-      <h2>{{ category.name }}</h2>
+      <h4>{{ category.name }}</h4>
     </div>
     <div  class="cate-date">
-      <p>{{ category.created_at }}</p>
+      <p>{{ category.updated_at }}</p>
     </div>
     <div class="cate-btn">
       <button type="button" class="btn-change" @click="edit(category.id, category.name)">Edit</button>
@@ -34,7 +34,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: 20px auto;
-  padding: 10px;
+  padding: 10px 20px;
   border: 1px solid #ccc;
   border-radius: 12px;
   width: 80%;

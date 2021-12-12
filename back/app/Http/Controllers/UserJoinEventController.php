@@ -23,7 +23,7 @@ class UserJoinEventController extends Controller
 
         $userJoinEvent = new UserJoinEvent();
         $userJoinEvent->user_id = $request->user_id;
-        $userJoinEvent->myevent_id = $request->myevent_id;
+        $userJoinEvent->myevents_id = $request->myevent_id;
 
         $userJoinEvent->save();
 
@@ -37,7 +37,7 @@ class UserJoinEventController extends Controller
      */
     public function destroy(Request $request)
     {
-        $joinedIdToDelete = UserJoinEvent::select('id')->where('user_id', '=', $request->user_id)->where('myevent_id', '=', $request->myevent_id)->get();
+        $joinedIdToDelete = UserJoinEvent::select('id')->where('user_id', '=', $request->user_id)->where('myevents_id', '=', $request->myevent_id)->get();
         return UserJoinEvent::destroy($joinedIdToDelete[0]->id);
     }
 }
