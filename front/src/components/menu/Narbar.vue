@@ -1,5 +1,5 @@
 <template>
-  <nav class="container">
+  <nav class="container" v-if="!$route.meta.hideNavbar">
     <div v-if="userData !== null" class="navbar">
       <div class="username">
         <p id="username">{{ userData.firstname }}</p>
@@ -15,7 +15,7 @@
           <router-link to="/categoryView">Categories </router-link>
         </li>
       </ul>
-      <div  class="btn">
+      <div class="btn">
         <button id="logoutBtn" @click="emitSignout">Sign out</button>
       </div>
     </div>
@@ -36,6 +36,11 @@ export default {
 </script>
 
 <style scoped>
+nav {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
 .container {
   display: flex;
   justify-content: space-between;
@@ -94,7 +99,7 @@ ul li {
 a {
   text-decoration: none;
 }
-.navbar ul li .router-link-active{
+.navbar ul li .router-link-active {
   color: red;
 }
 </style>
