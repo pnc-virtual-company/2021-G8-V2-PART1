@@ -121,11 +121,11 @@ export default {
         this.emailError === "" &&
         this.passwordError === "" &&
         this.cPasswordError === "" &&
-        this.firstname !== "" &&
-        this.lastname !== "" &&
+        this.firstName !== "" &&
+        this.lastName !== "" &&
         this.email !== "" &&
         this.password !== "" &&
-        this.cPassword !== ""
+        this.confirmPassword !== ""
       );
     },
   },
