@@ -9,15 +9,6 @@ use Illuminate\Support\Facades\DB;
 class UserJoinEventController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return UserJoinEvent::with(['user', 'myevent'])->latest()->get();
-    }
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

@@ -21,10 +21,6 @@ Route::get('/myevents/{id}', [MyeventController::class, 'show']);
 Route::post('/myevents', [MyeventController::class, 'store']);
 Route::delete('/myevents/{id}', [MyeventController::class, 'destroy']);
 Route::put('/myevents/{id}', [MyeventController::class, 'update']);
-// search event
-Route::get('/myevents/search/{title?}/{description?}', [MyeventController::class, 'search']);
-// search event filter by city
-Route::get('/myevents/search/city/{city}', [MyeventController::class, 'searchCity']);
 
 // countries
 Route::get('/countries', [CountryCityController::class, 'getCountries']);
@@ -40,7 +36,5 @@ Route::put('/categories/{id}', [CategoryController::class ,'update']);
 Route::delete('/categories/{id}', [CategoryController::class ,'destroy']);
 
 // user join event
-
-Route::get('/userjoinevents', [UserJoinEventController::class ,'index']);
 Route::post('/userjoinevents', [UserJoinEventController::class ,'store']);
 Route::post('/userjoinevents/quit', [UserJoinEventController::class ,'destroy']);

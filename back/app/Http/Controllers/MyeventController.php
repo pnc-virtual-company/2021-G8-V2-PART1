@@ -129,54 +129,10 @@ class MyeventController extends Controller
      */
     public function destroy($id)
     {
-        //
         $isDeleted = Myevent::destroy($id);
         if($isDeleted === 1){
             return response()->json(["message"=>'My event deleted!'],200);
         }
         return response()->json(['message'=>"Failed to delete"],404);
-    }
-    public function search($keyword) 
-    {
-        $events = DB::table('myevents')
-            ->join('categories', 'myevents.category_id', '=', 'categories.id')
-            ->select('myevents.*', 'categories.name as categoryName')
-            ->where("title", "like", "%".$keyword."%")
-            ->orWhere("description", "like", "%".$keyword."%")
-            ->latest()
-            ->get()
-            ->toArray();
-            foreach($events as $event) {
-                $userIdList = DB::table('user_join_events')
-                ->select('user_id')
-                ->where('myevent_id', '=', $event->id)
-                ->get()
-                ->toArray();
-                $event->joinUserIdList = $userIdList;
-            }
-        return $events;
-    }
-    public function searchCity($city){
-        $events = DB::table('myevents')
-            ->join('categories', 'myevents.category_id', '=', 'categories.id')
-            ->select('myevents.*', 'categories.name as categoryName')
-            ->where("city", "like", "%".$city."%")
-            ->latest()
-            ->get()
-            ->toArray();
-        foreach($events as $event) {
-            $userIdList = DB::table('user_join_events')
-            ->select('user_id')
-            ->where('myevent_id', '=', $event->id)
-            ->get()
-            ->toArray();
-            
-            $cleanArrayUserIdList = [];
-            foreach($userIdList as $userId) {
-                array_push($cleanArrayUserIdList, $userId->user_id);
-            }
-            $event->joinUserIdList = $cleanArrayUserIdList;
-        }
-        return $events;
     }
 }
