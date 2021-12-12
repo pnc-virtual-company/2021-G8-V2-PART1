@@ -20,7 +20,6 @@
           type="text"
           class="city-searchKey"
           placeholder="Select your city"
-          v-model="cityKeyWord"
         />
         <button type="button" class="city-searchButton" @click="clearSearch">
           X
@@ -33,8 +32,7 @@
 export default {
   data() {
     return {
-      cardKeyWord: '',
-      cityKeyWord: ''
+      cardKeyWord: ''
     };
   },
   watch: {
@@ -45,7 +43,6 @@ export default {
   methods: {
     clearSearch() {
       this.cardKeyWord = '';
-      this.cityKeyWord = '';
     }
   },
 };
