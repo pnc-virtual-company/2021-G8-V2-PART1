@@ -143,7 +143,7 @@
             <input type="file" @change="getImage" />
             <img
               v-if="!this.imageTitle"
-              src="https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg"
+              src=""
               alt="EMPTY PICTURE"
             />
             <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
@@ -248,10 +248,10 @@ export default {
       if (key === "") {
         this.countriesCities = this.countriesCitiesInitial;
         if (this.isSelectedCity) {
-          this.cityListDisplayed = false;
-        } else {
-          this.cityListDisplayed = true;
-        }
+          this.cityListDisplayed  = !this.isSelectedCity
+
+
+        } 
       } else {
         this.countriesCities = [];
         for (let countryCity of this.countriesCitiesInitial) {

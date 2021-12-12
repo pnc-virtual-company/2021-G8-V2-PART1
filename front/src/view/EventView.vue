@@ -1,4 +1,4 @@
-<template>
+-<template>
   <section>
     <search-filter @cardSearch="cardSearch"></search-filter>
     <my-event-card
@@ -65,6 +65,7 @@ export default {
         this.events = res.data;
         this.events = this.events.filter(
           (event) => event.user_id != localStorage.getItem("userID")
+         
         );
         localStorage.setItem('getExploreEvents', JSON.stringify(this.events));
       });
@@ -74,7 +75,6 @@ export default {
         this.events = JSON.parse(localStorage.getItem('getExploreEvents'));
       } else {
         let listEvents = JSON.parse(localStorage.getItem('getExploreEvents'));
-        console.log(listEvents[0].description)
         this.events = listEvents.filter(event => event.title.includes(key));
       }
     }
