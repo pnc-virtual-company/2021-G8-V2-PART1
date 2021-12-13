@@ -37,17 +37,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return new CategoryResource(Category::findOrFail($id));
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -75,11 +64,5 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         return  Category::destroy($id);
-    }
-
-    
-    public function search($key)
-    {
-        return Category::where('name','like','%'.$key.'%')->get();
     }
 }

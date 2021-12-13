@@ -65,7 +65,7 @@ export default {
 }
 
 .even-search {
-  width: 60%;
+  width: 40%;
   display: flex;
 }
 

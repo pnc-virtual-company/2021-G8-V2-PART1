@@ -1,36 +1,55 @@
 <template>
   <section>
-    <div class="card-container">
+    <div class="card-container" v-if="myEvent.end_date > todayDateTime">
       <div class="left-side">
-        <img :src="url + myEvent.photo"/>
+        <img :src="url + myEvent.photo" />
       </div>
       <div class="right-side">
-          <div class="right-top">
-            <h1>{{myEvent.title}}</h1>
-            <div class="date">
-              <p>Date: {{myEvent.start_date}}</p>
-              <p>- {{myEvent.end_date}}</p>
-            </div>
-            <p v-if="myEvent.description" v-text="myEvent.description"></p>
+        <div class="right-top">
+          <h1>{{ myEvent.title }}</h1>
+          <div class="date">
+            <p>Date: {{ myEvent.start_date }}</p>
+            <p> - {{ myEvent.end_date }}</p>
           </div>
-          <div class="right-bottom">
-            <div class="bottom-info">
-              <div class="bottom-left">
-                <p>{{myEvent.categoryName}} at {{myEvent.city}}</p>
-                <p>{{myEvent.joinUserIdList.length}} people joined</p>
-              </div>
-              <div class="bottom-right" v-if="buttonMode === 'myEvent'">
-                <button class="edit" @click="$emit('updateMyEvent',myEvent)">Edit</button>
-                <button class="delete" @click="$emit('deleteMyEvent',myEvent.id)">Remove</button>
-              </div>
-              <div class="quitJoin" v-if="buttonMode === 'event'">
-                <button class="quit" v-if ="quitOrJoinBtn === 'QUIT'" @click="$emit('quit', myEvent)">{{ quitOrJoinBtn }}</button>
-                <button class="join"  v-if ="quitOrJoinBtn === 'JOIN'"  @click="$emit('join', myEvent)">{{ quitOrJoinBtn }}</button>
-              </div>
+          <p v-if="myEvent.description" v-text="myEvent.description"></p>
+        </div>
+        <div class="right-bottom">
+          <div class="bottom-info">
+            <div class="bottom-left">
+              <p>{{ myEvent.categoryName }} at {{ myEvent.city }}</p>
+              <p>{{ myEvent.joinUserIdList.length }} people joined</p>
+            </div>
+            <div class="bottom-right" v-if="buttonMode === 'myEvent'">
+              <button class="edit" @click="$emit('updateMyEvent', myEvent)">
+                Edit
+              </button>
+              <button
+                class="delete"
+                @click="$emit('deleteMyEvent', myEvent.id)"
+              >
+                Remove
+              </button>
+            </div>
+            <div class="quitJoin" v-if="buttonMode === 'event'">
+              <button
+                class="quit"
+                v-if="quitOrJoinBtn === 'QUIT'"
+                @click="$emit('quit', myEvent)"
+              >
+                {{ quitOrJoinBtn }}
+              </button>
+              <button
+                class="join"
+                v-if="quitOrJoinBtn === 'JOIN'"
+                @click="$emit('join', myEvent)"
+              >
+                {{ quitOrJoinBtn }}
+              </button>
             </div>
           </div>
         </div>
       </div>
+    </div>
   </section>
 </template>
 
@@ -39,8 +58,22 @@ export default {
   props: ["myEvent", "buttonMode", "quitOrJoinBtn"],
   data() {
     return {
-      url : 'http://127.0.0.1:8000/storage/photos/',
+      url: "http://127.0.0.1:8000/storage/photos/",
+      todayDateTime:'',
     };
+  },
+  mounted() {
+    var today = new Date();
+    var date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    var time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    this.todayDateTime = date + " " + time;
+   
   },
 };
 </script>
@@ -118,7 +151,7 @@ button {
 }
 
 .quit {
-   background-color: rgb(255, 50, 50);
+  background-color: rgb(255, 50, 50);
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   margin-right: 8px;

@@ -3,9 +3,9 @@
     <div class="background" @click="$emit('close')"></div>
     <dialog open>
       <form>
-        <div class="title">
-          <h2>{{ title }}</h2>
-        </div>
+        
+        <h2>{{ title }}</h2>
+       
         <section>
           <slot></slot>
         </section>

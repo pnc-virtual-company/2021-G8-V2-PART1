@@ -9,7 +9,7 @@ import EventView from './view/EventView.vue';
 import MyEventView from './view/MyEventView.vue';
 import BaseDialog from './components/UI/BaseDialog.vue';
 import BaseButton from './components/UI/BaseButton.vue';
-
+import PageNotFound from './view/PageNotFound.vue';
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -19,6 +19,14 @@ const router = createRouter({
         {path: '/categoryView',component: CategoryView},
         {path: '/event',component: EventView},
         {path: '/myEvent',component: MyEventView},
+        {
+            name: 'NotFound',
+            path: '/:pathMath(.*)*',
+            component: PageNotFound,
+            meta: {
+                hideNavbar: true,
+               }
+        }
     ]
 })
 const app = createApp(App);

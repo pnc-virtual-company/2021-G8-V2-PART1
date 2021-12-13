@@ -1,17 +1,20 @@
 <template>
     <section>
         <add-search @showForm='showAddForm' @search='search'></add-search>
+        <div v-if="isEmpty">
         <base-dialog
             v-if="dialogDisplayed"
             :title="dialogTitle"
             :mode="dialogMode"
             @close="closeDialog"
         >
-            <input type="text" id="formInput" placeholder="Name..." v-model="categoryName"/>
-            <div
-                v-if="cateNameError" 
-                class="error">
-                <p v-text="cateNameError"></p>
+            <div v-if="dialogMode !== 'delete' ">
+                <input type="text" id="formInput" placeholder="Name..." v-model="categoryName"/>
+                <div
+                    v-if="cateNameError" 
+                    class="error">
+                    <p v-text="cateNameError"></p>
+                </div>
             </div>
 
             <template #actions>
@@ -26,10 +29,14 @@
             v-for="category of categories" 
             :key="category.id" 
             :category="category"
-            @requestToRemove="removeCategory"
+            @requestToRemove="showDeleteDialog"
             @requestToEdit="showEditForm"
             @updateCategory="updateCategory"
         ></category-card>
+        </div>
+        <div class="emptyCategory" v-else>
+            <h1>NO CATEGORY YET!!</h1>
+        </div>
     </section>
 </template>
 
@@ -45,6 +52,7 @@ export default {
     },
     data() {
         return {
+
             dialogMode: 'create',
             dialogDisplayed: false,
             categoryName: '',
@@ -52,6 +60,7 @@ export default {
             categoryToEdit: null,
             categories: [],
             cateNameError:'',
+            isEmpty: true,
         }
     },
     watch: {
@@ -71,14 +80,34 @@ export default {
     },
     computed: {
         dialogTitle() {
-            return this.dialogMode === 'edit' ? 'EDIT CATEGORY' : 'CREATE CATEGORY';
+            // return this.dialogMode === 'edit' ? 'EDIT CATEGORY' : 'CREATE CATEGORY';
+            let message = "";
+            if(this.dialogMode === 'edit') {
+                message = 'EDIT CATEGORY';
+            } else if (this.dialogMode === 'create') {
+                message = 'CREATE CATEGORY';
+        
+            } else {
+                message = 'Are you sure you want to delete this category?';
+            }
+            return message;
         },
         dialogButtton() {
-            return this.dialogMode === 'edit' ? 'EDIT' : 'CREATE';
+            // return this.dialogMode === 'edit' ? 'EDIT' : 'CREATE';
+            let message = "";
+            if(this.dialogMode === 'edit') {
+                message = 'EDIT';
+            } else if (this.dialogMode === 'create') {
+                message = 'CREATE';
+        
+            } else {
+                message = 'DELETE';
+            }
+            return message;
         },
         isValidated() {
             return (
-                this.cateNameError === '' && this.categoryName !== ''
+                this.cateNameError === '' && this.categoryName !== '' || this.dialogMode ==='delete'
             );
         }
     },
@@ -87,27 +116,48 @@ export default {
             this.dialogMode = 'create';
             this.dialogDisplayed = true;
             this.cateNameError = '';
+            this.isEmpty = true;
+        },
+        showDeleteDialog(id) {
+            this.dialogMode = 'delete';
+            this.dialogDisplayed = true;
+            this.isEmpty = true;
+            this.categoryToEdit = {
+                id: id
+            }
         },
         closeDialog() {
             this.dialogDisplayed = false;
             this.categoryName = '';
             this.cateNameError = '';
+            this.isEmpty = true;
         },
         addNewCategory(categoryName){
+            this.isEmpty = true;
+            this.dialogDisplayed = true;
             let data = {
                 name: categoryName
             }
             axios.post('api/categories', data)
             .then(res => {
+                this.message
                 this.categories.unshift(res.data.data);
                 this.isShowAddForm = false,
                 this.createError = '';
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories.unshift(res.data.data);
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
             })
         },
         removeCategory(id) {
             axios.delete('api/categories/' + id)
             .then(() => {
                 this.categories = this.categories.filter(cate => cate.id !== id);
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories = storedCategories.filter(cate => cate.id !== id);
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
             })
         },
         showEditForm(id, name) {
@@ -121,6 +171,7 @@ export default {
             this.cateNameError = '';
         },
         updateCategory(newCateName, id) {
+            this.isEmpty = true;
             let data = {
                 name: newCateName
             }
@@ -131,6 +182,15 @@ export default {
                         this.categories.splice(index, 1, res.data.data);
                     }
                 });
+
+                let storedCategories = JSON.parse(localStorage.getItem("getCategories"));
+                storedCategories.forEach((cate, index) => {
+                    if(cate.id == id) {
+                        storedCategories.splice(index, 1, res.data.data);
+                    }
+                });
+               
+                localStorage.setItem("getCategories", JSON.stringify(storedCategories));
                 this.isEditing = false;
                 this.editError = '';
                 this.cateNameError = '';
@@ -142,31 +202,42 @@ export default {
                     this.addNewCategory(this.categoryName);
                 } else if (this.dialogMode === 'edit') {
                     this.updateCategory(this.categoryName, this.categoryToEdit.id);
+                } else if (this.dialogMode === 'delete') {
+                    this.removeCategory(this.categoryToEdit.id)
                 }
                 this.closeDialog();
             }
         },
         search(key) {
             if(key === '') {
-                axios.get('api/categories').then(res => {
-                    this.categories = res.data.data;
-                });
+                this.categories = JSON.parse(localStorage.getItem("getCategories"));
             } else {
-                axios.get('api/categories/search/' + key).then(res => {
-                    this.categories = res.data;
-                })
+                let categoryList = JSON.parse(localStorage.getItem("getCategories"));
+                this.categories = categoryList.filter(cate => cate.name.toLowerCase().includes(key.toLowerCase()));
             }
+        },
+        getCategory() {
+            axios.get('api/categories').then(res => {
+            this.categories = res.data.data;
+            if(this.categories == '') {
+                this.isEmpty = false;
+            }
+            localStorage.setItem("getCategories", JSON.stringify(this.categories));
+        })
         }
     },
     mounted() {
-        axios.get('api/categories').then(res => {
-            this.categories = res.data.data;
-        })
+        this.getCategory();
     },
 }
 </script>
 
 <style scoped>
+.emptyCategory {
+    text-align: center;
+    opacity: 0.2;
+    margin-top: 10%;
+}
 input {
   padding: 15px;
 }
