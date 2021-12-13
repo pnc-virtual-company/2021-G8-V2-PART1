@@ -4,12 +4,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import SignIn from './components/authentication/SignIn.vue';
 import SignUp from './components/authentication/SignUp.vue';
-import CategoryView from './view/CategoryView.vue';
-import EventView from './view/EventView.vue';
-import MyEventView from './view/MyEventView.vue';
+import CategoryView from './components/pages/category/CategoryView.vue';
+import EventView from './components/pages/event/exploreEvent/EventView.vue';
+import MyEventView from './components/pages/event/myevent/MyEventView.vue';
 import BaseDialog from './components/UI/BaseDialog.vue';
 import BaseButton from './components/UI/BaseButton.vue';
-import PageNotFound from './view/PageNotFound.vue';
+import PageNotFound from './components/pages/PageNotFound.vue';
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -25,7 +25,7 @@ const router = createRouter({
             component: PageNotFound,
             meta: {
                 hideNavbar: true,
-               }
+            }
         }
     ]
 })

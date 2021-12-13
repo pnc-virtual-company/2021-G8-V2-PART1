@@ -44,10 +44,10 @@
 </template>
 
 <script>
-import AddSearch from "../components/pages/category/AddSearch.vue";
-import CategoryCard from "../components/pages/category/CategoryCard.vue";
+import AddSearch from "./AddSearch.vue";
+import CategoryCard from "./CategoryCard.vue";
 
-import axios from "../axios-http.js";
+import axios from "../../../axios-http.js";
 export default {
   components: {
     "add-search": AddSearch,

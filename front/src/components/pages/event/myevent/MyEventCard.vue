@@ -8,8 +8,8 @@
         <div class="right-top">
           <h1>{{ myEvent.title }}</h1>
           <div class="date">
-            <p>Date: {{ myEvent.start_date }}</p>
-            <p> - {{ myEvent.end_date }}</p>
+            <p>{{ getGoodDatetimeFormat(myEvent.start_date) }}</p>
+            <p>{{ getGoodDatetimeFormat(myEvent.end_date) }}</p>
           </div>
           <p v-if="myEvent.description" v-text="myEvent.description"></p>
         </div>
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   props: ["myEvent", "buttonMode", "quitOrJoinBtn"],
   data() {
@@ -61,6 +62,11 @@ export default {
       url: "http://127.0.0.1:8000/storage/photos/",
       todayDateTime:'',
     };
+  },
+  methods: {
+    getGoodDatetimeFormat(datetime) {
+      return moment(String(datetime)).format("ddd, D/M/Y, h:mm A");
+    }
   },
   mounted() {
     var today = new Date();

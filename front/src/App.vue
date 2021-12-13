@@ -103,4 +103,21 @@ export default {
   --main-color: #f6ba1f;
 }
 
+
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 15px;
+}
+  ::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 15px;
+}
+  ::-webkit-scrollbar-thumb {
+  background: rgb(182, 182, 182); 
+    border-radius:10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  
+  background: rgb(153, 153, 153); 
+} 
 </style>

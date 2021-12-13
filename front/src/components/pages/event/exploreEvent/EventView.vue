@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import SearchFilter from "../components/pages/event/exploreEvent/SearchFilter.vue";
-import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
-import axios from "../axios-http.js";
+import SearchFilter from "./SearchFilter.vue";
+import MyEventCard from "../myevent/MyEventCard.vue";
+import axios from "../../../../axios-http.js";
 export default {
   components: {
     "search-filter": SearchFilter,

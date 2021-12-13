@@ -37,7 +37,7 @@
 
           <div class="category-main-container">
             <!-- category action -->
-            <label v-if="!isSelectedCate" for="category">Category</label>
+            <label v-if="category === ''" for="category">Category</label>
             <label v-else for="category">Category: {{ category.name }}</label>
             <div class="category-container-actions">
               <input
@@ -50,7 +50,7 @@
                 type="button"
                 class="btnOpenCategoryList"
                 @click="showCategoryList"
-                v-if="!categoryListDisplayed"
+                v-if="categories.length === 0"
               >
                 ▽
               </button>
@@ -64,7 +64,7 @@
               </button>
             </div>
             <!-- category list  -->
-            <div v-if="categoryListDisplayed" class="category-list">
+            <div v-if="categories.length > 0" class="category-list">
               <ul>
                 <li
                   v-for="cate of this.categories"
@@ -79,7 +79,7 @@
           <!-- CITY AREA -->
 
           <div class="city-main-container">
-            <label v-if="!isSelectedCity" for="city">City</label>
+            <label v-if="city === ''" for="city">City</label>
             <label v-else for="city">City: {{ city }}</label>
             <!-- city action -->
             <div class="city-container-actions">
@@ -92,7 +92,7 @@
               <button
                 type="button"
                 class="btnOpenCityList"
-                v-if="!cityListDisplayed"
+                v-if="countriesCities.length === 0"
                 @click="showCityList"
               >
                 ▽
@@ -107,7 +107,7 @@
               </button>
             </div>
             <!-- city list  -->
-            <div v-if="cityListDisplayed" class="city-list">
+            <div v-if="countriesCities.length > 0" class="city-list">
               <ul>
                 <li
                   v-for="(countryCity, index) of countriesCities"
@@ -125,8 +125,8 @@
           <a href="#description"
             ><p @click="showMoreChoice" id="see-more" v-if="!isShowMore">
               See more..
-            </p></a
-          >
+            </p>
+          </a>
         </div>
 
         <div id="description" class="showMoreInfo" v-if="isShowMore">
@@ -178,7 +178,7 @@
     </div>
     <!------------------------- myevent card and from -->
     <div class="emptyCard" v-else>
-      <h1 v-cloak>{{ message }}</h1>
+      <h1 >{{ message }}</h1>
     </div>
   </section>
 </template>
@@ -186,11 +186,11 @@
 <script>
 // const url = 'http://127.0.0.1:8000/storage/images/';
 
-import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
-import AddSearch from "../components/pages/event/myevent/AddSearch.vue";
-import BaseButton from "../components/UI/BaseButton.vue";
+import MyEventCard from "./MyEventCard.vue";
+import AddSearch from "./AddSearch.vue";
+import BaseButton from "../../../UI/BaseButton.vue";
 
-import axios from "../axios-http.js";
+import axios from "../../../../axios-http.js";
 import moment from "moment";
 export default {
   components: { MyEventCard, AddSearch, BaseButton },
@@ -215,8 +215,8 @@ export default {
       onMyEventMode: "myEvent",
       isShowMore: false,
       dialogDisplayed: false,
-      categoryListDisplayed: false,
-      cityListDisplayed: false,
+      isClosingCateList: false, 
+      isClosingCityList: false, 
       dialogMode: "create",
       eventKeySearch: "",
       cateKeySearch: "",
@@ -227,27 +227,17 @@ export default {
       countriesCities: [],
       categories: [],
       myEvents: [],
-      isSelectedCate: false,
-      isSelectedCity: false,
     };
   },
   watch: {
     cateKeySearch: function (key) {
       if (key === "") {
-        if (this.isSelectedCate) {
-          this.categoryListDisplayed = false;
-        } else {
-          this.categoryListDisplayed = true;
-        }
-        axios.get("api/categories").then((res) => {
-          this.categories = res.data.data;
-        });
+        this.categories = JSON.parse(localStorage.getItem("getCategories"));
       } else {
-        axios.get("api/categories" + "/search/" + key).then((res) => {
-          this.categories = res.data;
-          this.categoryListDisplayed = true;
-          this.isSelectedCate = false;
-        });
+        let categoryList = JSON.parse(localStorage.getItem("getCategories"));
+        this.categories = categoryList.filter((cate) =>
+          cate.name.toLowerCase().includes(key.toLowerCase())
+        );
       }
     },
     cityKeySearch: function (key) {
@@ -366,33 +356,26 @@ export default {
       this.endDate = "";
       this.description = "";
       this.isShowMore = false;
+      this.closeCategoryList();
+      this.closCityList();
     },
     showCategoryList() {
-      this.categoryListDisplayed = true;
-      axios.get("api/categories").then((res) => {
-        this.categories = res.data.data;
-      });
+      this.isClosingCateList = false;
+      this.categories = JSON.parse(localStorage.getItem('getCategories'));
     },
     showCityList() {
-      this.cityListDisplayed = true;
+      this.isClosingCityList = false;
+      this.countriesCities = this.countriesCitiesInitial;
     },
     closeCategoryList() {
-      this.categoryListDisplayed = false;
+      this.isClosingCateList = true;
       this.cateKeySearch = "";
-      if (this.category !== "") {
-        this.isSelectedCate = true;
-      } else {
-        this.isSelectedCate = false;
-      }
+      this.categories = [];
     },
     closCityList() {
-      this.cityListDisplayed = false;
+      this.isClosingCityList = true;
       this.cityKeySearch = "";
-      if (this.city !== "") {
-        this.isSelectedCity = true;
-      } else {
-        this.isSelectedCity = false;
-      }
+      this.countriesCities = [];
     },
     showMoreChoice() {
       this.isShowMore = true;
@@ -412,8 +395,6 @@ export default {
         id: id,
         name: name,
       };
-      this.cateKeySearch = "";
-      this.isSelectedCate = true;
       this.closeCategoryList();
     },
     //===========================get image
@@ -522,6 +503,8 @@ export default {
     // GET CATEGORY DATA FROM BACKEND
     axios.get("api/categories").then((res) => {
       this.categories = res.data.data;
+      localStorage.setItem("getCategories", JSON.stringify(this.categories));
+      this.categories = []
     });
 
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
@@ -530,13 +513,12 @@ export default {
       countriesWithItsCities = res.data;
       for (let country in countriesWithItsCities) {
         for (let city of countriesWithItsCities[country]) {
-          this.countriesCities.push({
+          this.countriesCitiesInitial.push({
             country: country,
             city: city,
           });
         }
       }
-      this.countriesCitiesInitial = this.countriesCities;
     });
   },
 };
@@ -705,7 +687,7 @@ textarea:focus {
 .category-list,
 .city-list {
   background: rgb(255, 255, 255);
-  height: 150px;
+  max-height: 150px;
   padding: 3px;
   overflow-y: scroll;
 }
@@ -780,4 +762,21 @@ div {
   display: flex;
   text-align: left;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 15px;
+}
+  ::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 15px;
+}
+  ::-webkit-scrollbar-thumb {
+  background: rgb(182, 182, 182); 
+    border-radius:10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  
+  background: rgb(153, 153, 153); 
+} 
 </style>
