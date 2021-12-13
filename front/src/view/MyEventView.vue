@@ -1,179 +1,171 @@
 <template>
   <section>
     <add-search @showForm="showAddForm" @search="search"></add-search>
-    <div v-if="isEmpty">
-      <base-dialog
-        v-if="dialogDisplayed"
-        :title="dialogTitle"
-        :mode="dialogMode"
-        @close="closeDialog"
-      >
-        <!-- event from  -->
-        <div class="eventForm" v-if="this.dialogMode !== 'delete'">
-          <div class="title-date">
-            <label for="title">Event Title</label>
-            <input type="text" placeholder="Title" v-model="myEventTitle" />
-            <div class="error" v-if="myEventTitleError">
-              <p v-text="myEventTitleError"></p>
-            </div>
-            <div class="start-date">
-              <label for>Start Date</label>
-              <input type="datetime-local" v-model="startDateTime" />
-              <div class="error" v-if="startDateError">
-                <p v-text="startDateError"></p>
-              </div>
-            </div>
-            <div class="end-date">
-              <label for>End Date</label>
-              <input type="datetime-local" v-model="endDate" />
-              <div class="error" v-if="endDateError">
-                <p v-text="endDateError"></p>
-              </div>
+    <base-dialog
+      v-if="dialogDisplayed"
+      :title="dialogTitle"
+      :mode="dialogMode"
+      @close="closeDialog"
+    >
+      <!-- event from  -->
+      <div class="eventForm" v-if="this.dialogMode !== 'delete'">
+        <div class="title-date">
+          <label for="title">Event Title</label>
+          <input type="text" placeholder="Title" v-model="myEventTitle" />
+          <div class="error" v-if="myEventTitleError">
+            <p v-text="myEventTitleError"></p>
+          </div>
+          <div class="start-date">
+            <label for>Start Date</label>
+            <input type="datetime-local" v-model="startDateTime" />
+            <div class="error" v-if="startDateError">
+              <p v-text="startDateError"></p>
             </div>
           </div>
-          <div class="city-cate-container">
-            <!-- ===============CITY & CATEGORY RESULT================ -->
-
-            <!-- ===================CATEGORY AREA================== -->
-
-            <div class="category-main-container">
-              <!-- category action -->
-              <label v-if="!isSelectedCate" for="category">Category</label>
-              <label v-else for="category">Category: {{ category.name }}</label>
-              <div class="category-container-actions">
-                <input
-                  type="text"
-                  class="searchKey"
-                  placeholder="Search category"
-                  v-model="cateKeySearch"
-                />
-                <button
-                  type="button"
-                  class="btnOpenCategoryList"
-                  @click="showCategoryList"
-                  v-if="!categoryListDisplayed"
-                >
-                  ▽
-                </button>
-                <button
-                  v-else
-                  type="button"
-                  class="btnCloseCategoryList"
-                  @click="closeCategoryList"
-                >
-                  △
-                </button>
-              </div>
-              <!-- category list  -->
-              <div v-if="categoryListDisplayed" class="category-list">
-                <ul>
-                  <li
-                    v-for="cate of this.categories"
-                    :key="cate.id"
-                    @click="setCate(cate.id, cate.name)"
-                  >
-                    {{ cate.name }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <!-- CITY AREA -->
-
-            <div class="city-main-container">
-              <label v-if="!isSelectedCity" for="city">City</label>
-              <label v-else for="city">City: {{ city }}</label>
-              <!-- city action -->
-              <div class="city-container-actions">
-                <input
-                  type="text"
-                  class="searchKey"
-                  placeholder="Search city"
-                  v-model="cityKeySearch"
-                />
-                <button
-                  type="button"
-                  class="btnOpenCityList"
-                  v-if="!cityListDisplayed"
-                  @click="showCityList"
-                >
-                  ▽
-                </button>
-                <button
-                  v-else
-                  type="button"
-                  class="btnCloseCityList"
-                  @click="closCityList"
-                >
-                  △
-                </button>
-              </div>
-              <!-- city list  -->
-              <div v-if="cityListDisplayed" class="city-list">
-                <ul>
-                  <li
-                    v-for="(countryCity, index) of countriesCities"
-                    :key="index"
-                    @click="setCity(countryCity.city, countryCity.country)"
-                  >
-                    {{ countryCity.city }}
-                  </li>
-                </ul>
-              </div>
+          <div class="end-date">
+            <label for>End Date</label>
+            <input type="datetime-local" v-model="endDate" />
+            <div class="error" v-if="endDateError">
+              <p v-text="endDateError"></p>
             </div>
           </div>
-          <!-- ============================================= -->
-          <div class="more">
-            <a href="#description"
-              ><p @click="showMoreChoice" id="see-more" v-if="!isShowMore">
-                See more..
-              </p></a
-            >
-          </div>
+        </div>
+        <div class="city-cate-container">
+          <!-- ===============CITY & CATEGORY RESULT================ -->
 
-          <div id="description" class="showMoreInfo" v-if="isShowMore">
-            <div class="description">
-              <textarea
-                placeholder="Description"
-                v-model="description"
-              ></textarea>
-              <div class="des">
-                <p>Description (optional)</p>
-              </div>
-            </div>
-            <div class="right-side">
-              <input type="file" @change="getImage" />
-              <img
-                v-if="!this.imageTitle"
-                src="https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg "
-                alt="EMPTY PICTURE"
+          <!-- ===================CATEGORY AREA================== -->
+
+          <div class="category-main-container">
+            <!-- category action -->
+            <label v-if="!isSelectedCate" for="category">Category</label>
+            <label v-else for="category">Category: {{ category.name }}</label>
+            <div class="category-container-actions">
+              <input
+                type="text"
+                class="searchKey"
+                placeholder="Search category"
+                v-model="cateKeySearch"
               />
-              <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
+              <button
+                type="button"
+                class="btnOpenCategoryList"
+                @click="showCategoryList"
+                v-if="!categoryListDisplayed"
+              >
+                ▽
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btnCloseCategoryList"
+                @click="closeCategoryList"
+              >
+                △
+              </button>
             </div>
-            <a href="#see-more">
-              <p id="see-less" @click="showLessChoice">See less..</p>
-            </a>
+            <!-- category list  -->
+            <div v-if="categoryListDisplayed" class="category-list">
+              <ul>
+                <li
+                  v-for="cate of this.categories"
+                  :key="cate.id"
+                  @click="setCate(cate.id, cate.name)"
+                >
+                  {{ cate.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- CITY AREA -->
+
+          <div class="city-main-container">
+            <label v-if="!isSelectedCity" for="city">City</label>
+            <label v-else for="city">City: {{ city }}</label>
+            <!-- city action -->
+            <div class="city-container-actions">
+              <input
+                type="text"
+                class="searchKey"
+                placeholder="Search city"
+                v-model="cityKeySearch"
+              />
+              <button
+                type="button"
+                class="btnOpenCityList"
+                v-if="!cityListDisplayed"
+                @click="showCityList"
+              >
+                ▽
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btnCloseCityList"
+                @click="closCityList"
+              >
+                △
+              </button>
+            </div>
+            <!-- city list  -->
+            <div v-if="cityListDisplayed" class="city-list">
+              <ul>
+                <li
+                  v-for="(countryCity, index) of countriesCities"
+                  :key="index"
+                  @click="setCity(countryCity.city, countryCity.country)"
+                >
+                  {{ countryCity.city }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================= -->
+        <div class="more">
+          <a href="#description"
+            ><p @click="showMoreChoice" id="see-more" v-if="!isShowMore">
+              See more..
+            </p></a
+          >
+        </div>
+
+        <div id="description" class="showMoreInfo" v-if="isShowMore">
+          <div class="description">
+            <textarea
+              placeholder="Description"
+              v-model="description"
+            ></textarea>
+            <div class="des">
+              <p>Description (optional)</p>
+            </div>
           </div>
           <div class="right-side">
             <input type="file" @change="getImage" />
-            <img v-if="!this.imageTitle" src="" alt="EMPTY PICTURE" />
+            <img
+              v-if="!this.imageTitle"
+              src="https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg "
+              alt="EMPTY PICTURE"
+            />
             <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
           </div>
           <a href="#see-more">
             <p id="see-less" @click="showLessChoice">See less..</p>
           </a>
         </div>
+      </div>
 
-        <!-- event from  -->
+      <!-- event from  -->
 
-        <!---------------------- myevent card and from -->
-        <template #actions>
-          <base-button
-            :class="isValidated ? 'buttonActive' : 'buttonInactive'"
-            @click="onConfirm"
-            >{{ dialogButtton }}
-          </base-button>
-        </template>
-      </base-dialog>
+      <!---------------------- myevent card and from -->
+      <template #actions>
+        <base-button
+          :class="isValidated ? 'buttonActive' : 'buttonInactive'"
+          @click="onConfirm"
+          >{{ dialogButtton }}
+        </base-button>
+      </template>
+    </base-dialog>
+    <div v-if="myEvents.length !== 0">
       <my-event-card
         v-for="(event, name, index) in myEvents"
         :key="name"
@@ -183,10 +175,10 @@
         @deleteMyEvent="showFormConfirmDelete"
         @updateMyEvent="showFormMyEventUpdate"
       ></my-event-card>
-      <!------------------------- myevent card and from -->
     </div>
-    <div class="emptyMyevent" v-else>
-      <h1>NO MY EVENT YET!!</h1>
+    <!------------------------- myevent card and from -->
+    <div class="emptyCard" v-else>
+      <h1 v-cloak>{{ message }}</h1>
     </div>
   </section>
 </template>
@@ -218,7 +210,7 @@ export default {
       myEventTitleError: "",
       startDateError: "",
       endDateError: "",
-      isEmpty: true,
+      message: "NO MY EVENT YET",
 
       onMyEventMode: "myEvent",
       isShowMore: false,
@@ -365,7 +357,6 @@ export default {
       this.isSelectedCate = false;
       this.endDateError = "";
       this.myEventTitleError = "";
-      this.isEmpty = true;
     },
     closeDialog() {
       this.dialogDisplayed = false;
@@ -375,7 +366,6 @@ export default {
       this.endDate = "";
       this.description = "";
       this.isShowMore = false;
-      this.isEmpty = true;
     },
     showCategoryList() {
       this.categoryListDisplayed = true;
@@ -456,7 +446,6 @@ export default {
       }
     },
     addNewEvent() {
-      this.isEmpty = false;
       let myNewEvent = new FormData();
       let user_id = localStorage.getItem("userID");
 
@@ -521,9 +510,6 @@ export default {
         this.myEvents = this.myEvents.filter(
           (event) => event.user_id == localStorage.getItem("userID")
         );
-        if (this.myEvents == "") {
-          this.isEmpty = false;
-        }
         localStorage.setItem("getMyEvents", JSON.stringify(this.myEvents));
       });
     },
@@ -557,7 +543,10 @@ export default {
 </script>
 
 <style scoped>
-.emptyMyevent {
+[v-cloak] {
+  display: none;
+}
+.emptyCard {
   text-align: center;
   opacity: 0.2;
   margin-top: 10%;
