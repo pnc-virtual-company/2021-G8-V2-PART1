@@ -146,6 +146,9 @@ form input {
 form input:focus {
   border: 1px solid var(--main-color);
 }
+::-webkit-input-placeholder{
+  opacity: 0.6;
+}
 form h2 {
   text-align: center;
   margin-bottom: 5px;

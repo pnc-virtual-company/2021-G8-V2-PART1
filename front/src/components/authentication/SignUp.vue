@@ -99,6 +99,8 @@ export default {
         this.passwordError = "";
         if (this.confirmPassword === this.password) {
           this.cPasswordError = "";
+        } else {
+          this.cPasswordError = "confirm password isn't matched";
         }
       } else {
         this.passwordError = "password must be at least 8 characters";
@@ -186,6 +188,9 @@ form .buttonActive button {
 form .buttonInactive button {
   background: rgba(128, 128, 128, 0.219);
   color: rgba(128, 128, 128, 0.445);
+}
+::-webkit-input-placeholder{
+  opacity: 0.6;
 }
 form .buttonActive #register:hover {
   color: rgb(173, 101, 233);

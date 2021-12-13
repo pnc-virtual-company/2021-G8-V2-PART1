@@ -69,5 +69,6 @@ h2 {
   font-size: 20px;
   color: var(--main-color);
   margin: 0 0 0.5rem 0;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 </style>

@@ -177,7 +177,7 @@
     </div>
     <!------------------------- myevent card and from -->
     <div class="emptyCard" v-else>
-      <h1 >{{ message }}</h1>
+      <h1>{{ message }}</h1>
     </div>
   </section>
 </template>
@@ -214,8 +214,8 @@ export default {
       onMyEventMode: "myEvent",
       isShowMore: false,
       dialogDisplayed: false,
-      isClosingCateList: false, 
-      isClosingCityList: false, 
+      isClosingCateList: false,
+      isClosingCityList: false,
       dialogMode: "create",
       eventKeySearch: "",
       cateKeySearch: "",
@@ -360,7 +360,7 @@ export default {
     },
     showCategoryList() {
       this.isClosingCateList = false;
-      this.categories = JSON.parse(localStorage.getItem('getCategories'));
+      this.categories = JSON.parse(localStorage.getItem("getCategories"));
     },
     showCityList() {
       this.isClosingCityList = false;
@@ -487,7 +487,7 @@ export default {
     axios.get("api/categories").then((res) => {
       this.categories = res.data.data;
       localStorage.setItem("getCategories", JSON.stringify(this.categories));
-      this.categories = []
+      this.categories = [];
     });
 
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
@@ -538,6 +538,7 @@ export default {
   padding: 20px;
   overflow-y: scroll;
   scroll-behavior: smooth;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
 .title input,
@@ -622,6 +623,10 @@ textarea:focus {
   margin: 5px 0;
   font-size: 15px;
   text-align: left;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+body{
+  font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
 /* categorylist style */
@@ -750,16 +755,15 @@ div {
   width: 10px;
   border-radius: 15px;
 }
-  ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
   border-radius: 15px;
 }
-  ::-webkit-scrollbar-thumb {
-  background: rgb(182, 182, 182); 
-    border-radius:10px;
+::-webkit-scrollbar-thumb {
+  background: rgb(182, 182, 182);
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  
-  background: rgb(153, 153, 153); 
-} 
+  background: rgb(153, 153, 153);
+}
 </style>
