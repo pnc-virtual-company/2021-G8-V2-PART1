@@ -173,7 +173,6 @@
         :myEvent="event"
         :buttonMode="onMyEventMode"
         @deleteMyEvent="showFormConfirmDelete"
-        @updateMyEvent="showFormMyEventUpdate"
       ></my-event-card>
     </div>
     <!------------------------- myevent card and from -->
@@ -467,22 +466,6 @@ export default {
         storedMyEvents = storedMyEvents.filter((event) => event.id !== id);
         localStorage.setItem("getMyEvents", JSON.stringify(storedMyEvents));
       });
-    },
-    showFormMyEventUpdate(myEvent) {
-      this.myEvent = myEvent;
-      this.dialogMode = "edit";
-      this.dialogDisplayed = true;
-      this.myEventTitle = myEvent.title;
-      this.description = myEvent.description;
-      this.city = myEvent.city;
-      this.category = myEvent.category;
-      this.imageTitle = "";
-      this.isSelectedCate = true;
-      this.isSelectedCity = true;
-      this.imageTitle = null;
-      this.imageForUpdate = myEvent.image;
-      this.endDateError = "";
-      this.myEventTitleError = "";
     },
 
     getMyEventData() {

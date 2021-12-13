@@ -78,6 +78,8 @@ export default {
       this.cardKeyWord = "";
       this.filterKey = "";
       this.countriesCities = [];
+      this.selectedCity = "All Cities, Default";
+      this.$emit('clearfilter')
     },
     setCity(city, country) {
       this.selectedCity = city + ', ' + country;

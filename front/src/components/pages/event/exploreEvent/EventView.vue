@@ -1,7 +1,7 @@
 -
 <template>
   <section>
-    <search-filter @cardSearch="cardSearch" @selectedCityChange="filterByCity">
+    <search-filter @cardSearch="cardSearch" @selectedCityChange="filterByCity"  @clearfilter="getExploreEventData">
     </search-filter>
     <div v-if="events.length !== 0">
       <my-event-card

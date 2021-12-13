@@ -20,7 +20,7 @@
               <p>{{ myEvent.joinUserIdList.length }} people joined</p>
             </div>
             <div class="bottom-right" v-if="buttonMode === 'myEvent'">
-              <button class="edit" @click="$emit('updateMyEvent', myEvent)">
+              <button class="edit">
                 Edit
               </button>
               <button
