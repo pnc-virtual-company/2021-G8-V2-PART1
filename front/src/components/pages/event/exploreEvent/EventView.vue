@@ -1,11 +1,9 @@
+-
 <template>
   <section>
-    <search-filter 
-      @cardSearch="cardSearch"
-      @selectedCityChange="filterByCity"
-    >
+    <search-filter @cardSearch="cardSearch" @selectedCityChange="filterByCity"  @clearfilter="getExploreEventData">
     </search-filter>
-    <div v-if="isEmpty">
+    <div v-if="events.length !== 0">
       <my-event-card
         v-for="event of this.events"
         :key="event.id"
@@ -17,15 +15,15 @@
       ></my-event-card>
     </div>
     <div class="emptyCard" v-else>
-      <h1>NO EVENT YET!!</h1>
+      <h1 v-cloak>{{ message }}</h1>
     </div>
   </section>
 </template>
 
 <script>
-import SearchFilter from "../components/pages/event/exploreEvent/SearchFilter.vue";
-import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
-import axios from "../axios-http.js";
+import SearchFilter from "./SearchFilter.vue";
+import MyEventCard from "../myevent/MyEventCard.vue";
+import axios from "../../../../axios-http.js";
 export default {
   components: {
     "search-filter": SearchFilter,
@@ -35,20 +33,20 @@ export default {
     return {
       events: [],
       onEventMode: "event",
-      isEmpty: true,
+      message: "NO EVENT YET",
     };
   },
   methods: {
     filterByCity(city) {
       if (city === "All Cities, Default") {
-        this.getExploreEventData()
+        this.getExploreEventData();
       } else {
-        axios.get('api/myevents/city/' + city).then((res) => {
+        axios.get("api/myevents/city/" + city).then((res) => {
           this.events = res.data;
           this.events = this.events.filter(
             (event) => event.user_id != localStorage.getItem("userID")
           );
-          localStorage.setItem('getExploreEvents', JSON.stringify(this.events));
+          localStorage.setItem("getExploreEvents", JSON.stringify(this.events));
         });
       }
     },
@@ -89,9 +87,6 @@ export default {
         this.events = this.events.filter(
           (event) => event.user_id != localStorage.getItem("userID")
         );
-        if(this.events == '') {
-          this.isEmpty = false
-        }
         localStorage.setItem("getExploreEvents", JSON.stringify(this.events));
       });
     },
@@ -99,8 +94,10 @@ export default {
       if (key === "") {
         this.events = JSON.parse(localStorage.getItem("getExploreEvents"));
       } else {
-        let listEvents = JSON.parse(localStorage.getItem('getExploreEvents'));
-        this.events = listEvents.filter(event => event.title.toLowerCase().includes(key.toLowerCase()));
+        let listEvents = JSON.parse(localStorage.getItem("getExploreEvents"));
+        this.events = listEvents.filter((event) =>
+          event.title.toLowerCase().includes(key.toLowerCase())
+        );
       }
     },
   },
@@ -115,5 +112,8 @@ export default {
   text-align: center;
   opacity: 0.2;
   margin-top: 10%;
+}
+[v-cloak] {
+  display: none;
 }
 </style>

@@ -1,187 +1,183 @@
 <template>
   <section>
-    <add-search
-      @showForm="showAddForm"
-      @search="search"
-    ></add-search>
-    <div v-if="isEmpty">
-      <base-dialog
-        v-if="dialogDisplayed"
-        :title="dialogTitle"
-        :mode="dialogMode"
-        @close="closeDialog"
-      >
-        <!-- event from  -->
-        <div class="eventForm">
-          <div class="title-date">
-            <label for="title">Event Title</label>
-            <input type="text" placeholder="Title" v-model="myEventTitle" />
-            <div class="error" v-if="myEventTitleError">
-              <p v-text="myEventTitleError"></p>
-            </div>
-            <div class="start-date">
-              <label for>Start Date</label>
-              <input type="datetime-local" v-model="startDateTime" />
-              <div class="error" v-if="startDateError">
-                <p v-text="startDateError"></p>
-              </div>
-            </div>
-            <div class="end-date">
-              <label for>End Date</label>
-              <input type="datetime-local" v-model="endDate" />
-              <div class="error" v-if="endDateError">
-                <p v-text="endDateError"></p>
-              </div>
+    <add-search @showForm="showAddForm" @search="search"></add-search>
+    <base-dialog
+      v-if="dialogDisplayed"
+      :title="dialogTitle"
+      :mode="dialogMode"
+      @close="closeDialog"
+    >
+      <!-- event from  -->
+      <div class="eventForm" v-if="this.dialogMode !== 'delete'">
+        <div class="title-date">
+          <label for="title">Event Title</label>
+          <input type="text" placeholder="Title" v-model="myEventTitle" />
+          <div class="error" v-if="myEventTitleError">
+            <p v-text="myEventTitleError"></p>
+          </div>
+          <div class="start-date">
+            <label for>Start Date</label>
+            <input type="datetime-local" v-model="startDateTime" />
+            <div class="error" v-if="startDateError">
+              <p v-text="startDateError"></p>
             </div>
           </div>
-          <div class="city-cate-container">
-            <!-- ===============CITY & CATEGORY RESULT================ -->
-
-            <!-- ===================CATEGORY AREA================== -->
-
-            <div class="category-main-container">
-              <!-- category action -->
-              <label v-if="!isSelectedCate" for="category">Category</label>
-              <label v-else for="category">Category: {{ category.name }}</label>
-              <div class="category-container-actions">
-                <input
-                  type="text"
-                  class="searchKey"
-                  placeholder="Search category"
-                  v-model="cateKeySearch"
-                />
-                <button
-                  type="button"
-                  class="btnOpenCategoryList"
-                  @click="showCategoryList"
-                  v-if="!categoryListDisplayed"
-                >
-                  ▽
-                </button>
-                <button
-                  v-else
-                  type="button"
-                  class="btnCloseCategoryList"
-                  @click="closeCategoryList"
-                >
-                  △
-                </button>
-              </div>
-              <!-- category list  -->
-              <div v-if="categoryListDisplayed" class="category-list">
-                <ul>
-                  <li
-                    v-for="cate of this.categories"
-                    :key="cate.id"
-                    @click="setCate(cate.id, cate.name)"
-                  >
-                    {{ cate.name }}
-                  </li>
-                </ul>
-              </div>
+          <div class="end-date">
+            <label for>End Date</label>
+            <input type="datetime-local" v-model="endDate" />
+            <div class="error" v-if="endDateError">
+              <p v-text="endDateError"></p>
             </div>
-            <!-- CITY AREA -->
-
-            <div class="city-main-container">
-              <label v-if="!isSelectedCity" for="city">City</label>
-              <label v-else for="city">City: {{ city }}</label>
-              <!-- city action -->
-              <div class="city-container-actions">
-                <input
-                  type="text"
-                  class="searchKey"
-                  placeholder="Search city"
-                  v-model="cityKeySearch"
-                />
-                <button
-                  type="button"
-                  class="btnOpenCityList"
-                  v-if="!cityListDisplayed"
-                  @click="showCityList"
-                >
-                  ▽
-                </button>
-                <button
-                  v-else
-                  type="button"
-                  class="btnCloseCityList"
-                  @click="closCityList"
-                >
-                  △
-                </button>
-              </div>
-              <!-- city list  -->
-              <div v-if="cityListDisplayed" class="city-list">
-                <ul>
-                  <li
-                    v-for="(countryCity, index) of countriesCities"
-                    :key="index"
-                    @click="setCity(countryCity.city, countryCity.country)"
-                  >
-                    {{ countryCity.city }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- ============================================= -->
-          <div class="more">
-            <a href="#description"
-              ><p @click="showMoreChoice" id="see-more" v-if="!isShowMore">
-                See more..
-              </p></a
-            >
-          </div>
-
-          <div id="description" class="showMoreInfo" v-if="isShowMore">
-            <div class="description">
-              <textarea
-                placeholder="Description"
-                v-model="description"
-              ></textarea>
-              <div class="des">
-                <p>Description (optional)</p>
-              </div>
-            </div>
-            <div class="right-side">
-              <input type="file" @change="getImage" />
-              <img
-                v-if="!this.imageTitle"
-                src="https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg "
-                alt="EMPTY PICTURE"
-              />
-              <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
-            </div>
-            <a href="#see-more">
-              <p id="see-less" @click="showLessChoice">See less..</p>
-            </a>
           </div>
         </div>
+        <div class="city-cate-container">
+          <!-- ===============CITY & CATEGORY RESULT================ -->
 
-        <!-- event from  -->
+          <!-- ===================CATEGORY AREA================== -->
 
-        <!---------------------- myevent card and from -->
-        <template #actions>
-          <base-button
-            :class="isValidated ? 'buttonActive' : 'buttonInactive'"
-            @click="onConfirm"
-            >{{ dialogButtton }}
-          </base-button>
-        </template>
-      </base-dialog>
+          <div class="category-main-container">
+            <!-- category action -->
+            <label v-if="category === ''" for="category">Category</label>
+            <label v-else for="category">Category: {{ category.name }}</label>
+            <div class="category-container-actions">
+              <input
+                type="text"
+                class="searchKey"
+                placeholder="Search category"
+                v-model="cateKeySearch"
+              />
+              <button
+                type="button"
+                class="btnOpenCategoryList"
+                @click="showCategoryList"
+                v-if="categories.length === 0"
+              >
+                ▽
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btnCloseCategoryList"
+                @click="closeCategoryList"
+              >
+                △
+              </button>
+            </div>
+            <!-- category list  -->
+            <div v-if="categories.length > 0" class="category-list">
+              <ul>
+                <li
+                  v-for="cate of this.categories"
+                  :key="cate.id"
+                  @click="setCate(cate.id, cate.name)"
+                >
+                  {{ cate.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- CITY AREA -->
+
+          <div class="city-main-container">
+            <label v-if="city === ''" for="city">City</label>
+            <label v-else for="city">City: {{ city }}</label>
+            <!-- city action -->
+            <div class="city-container-actions">
+              <input
+                type="text"
+                class="searchKey"
+                placeholder="Search city"
+                v-model="cityKeySearch"
+              />
+              <button
+                type="button"
+                class="btnOpenCityList"
+                v-if="countriesCities.length === 0"
+                @click="showCityList"
+              >
+                ▽
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btnCloseCityList"
+                @click="closCityList"
+              >
+                △
+              </button>
+            </div>
+            <!-- city list  -->
+            <div v-if="countriesCities.length > 0" class="city-list">
+              <ul>
+                <li
+                  v-for="(countryCity, index) of countriesCities"
+                  :key="index"
+                  @click="setCity(countryCity.city, countryCity.country)"
+                >
+                  {{ countryCity.city }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================= -->
+        <div class="more">
+          <a href="#description"
+            ><p @click="showMoreChoice" id="see-more" v-if="!isShowMore">
+              See more..
+            </p>
+          </a>
+        </div>
+
+        <div id="description" class="showMoreInfo" v-if="isShowMore">
+          <div class="description">
+            <textarea
+              placeholder="Description"
+              v-model="description"
+            ></textarea>
+            <div class="des">
+              <p>Description (optional)</p>
+            </div>
+          </div>
+          <div class="right-side">
+            <input type="file" @change="getImage" />
+            <img
+              v-if="!this.imageTitle"
+              src="https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg "
+              alt="EMPTY PICTURE"
+            />
+            <img v-else :src="imageTitle" alt="EMPTY PICTURE" />
+          </div>
+          <a href="#see-more">
+            <p id="see-less" @click="showLessChoice">See less..</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- event from  -->
+
+      <!---------------------- myevent card and from -->
+      <template #actions>
+        <base-button
+          :class="isValidated ? 'buttonActive' : 'buttonInactive'"
+          @click="onConfirm"
+          >{{ dialogButtton }}
+        </base-button>
+      </template>
+    </base-dialog>
+    <div v-if="myEvents.length !== 0">
       <my-event-card
         v-for="(event, name, index) in myEvents"
         :key="name"
         :id="index"
         :myEvent="event"
         :buttonMode="onMyEventMode"
-        @deleteMyEvent="deleteMyEventCard"
-        @updateMyEvent="showFormMyEventUpdate"
+        @deleteMyEvent="showFormConfirmDelete"
       ></my-event-card>
-      <!------------------------- myevent card and from -->
     </div>
-    <div class="emptyMyevent" v-else>
-      <h1>NO MY EVENT YET!!</h1>
+    <!------------------------- myevent card and from -->
+    <div class="emptyCard" v-else>
+      <h1>{{ message }}</h1>
     </div>
   </section>
 </template>
@@ -189,11 +185,11 @@
 <script>
 // const url = 'http://127.0.0.1:8000/storage/images/';
 
-import MyEventCard from "../components/pages/event/myevent/MyEventCard.vue";
-import AddSearch from "../components/pages/event/myevent/AddSearch.vue";
-import BaseButton from "../components/UI/BaseButton.vue";
+import MyEventCard from "./MyEventCard.vue";
+import AddSearch from "./AddSearch.vue";
+import BaseButton from "../../../UI/BaseButton.vue";
 
-import axios from "../axios-http.js";
+import axios from "../../../../axios-http.js";
 import moment from "moment";
 export default {
   components: { MyEventCard, AddSearch, BaseButton },
@@ -213,13 +209,13 @@ export default {
       myEventTitleError: "",
       startDateError: "",
       endDateError: "",
-      isEmpty: true,
+      message: "NO MY EVENT YET",
 
       onMyEventMode: "myEvent",
       isShowMore: false,
       dialogDisplayed: false,
-      categoryListDisplayed: false,
-      cityListDisplayed: false,
+      isClosingCateList: false,
+      isClosingCityList: false,
       dialogMode: "create",
       eventKeySearch: "",
       cateKeySearch: "",
@@ -230,36 +226,24 @@ export default {
       countriesCities: [],
       categories: [],
       myEvents: [],
-      isSelectedCate: false,
-      isSelectedCity: false,
     };
   },
   watch: {
     cateKeySearch: function (key) {
       if (key === "") {
-        if (this.isSelectedCate) {
-          this.categoryListDisplayed = false;
-        } else {
-          this.categoryListDisplayed = true;
-        }
-        axios.get("api/categories").then((res) => {
-          this.categories = res.data.data;
-        });
+        this.categories = JSON.parse(localStorage.getItem("getCategories"));
       } else {
-        axios.get("api/categories" + "/search/" + key).then((res) => {
-          this.categories = res.data;
-          this.categoryListDisplayed = true;
-          this.isSelectedCate = false;
-        });
+        let categoryList = JSON.parse(localStorage.getItem("getCategories"));
+        this.categories = categoryList.filter((cate) =>
+          cate.name.toLowerCase().includes(key.toLowerCase())
+        );
       }
     },
     cityKeySearch: function (key) {
       if (key === "") {
         this.countriesCities = this.countriesCitiesInitial;
         if (this.isSelectedCity) {
-          this.cityListDisplayed = false;
-        } else {
-          this.cityListDisplayed = true;
+          this.cityListDisplayed = !this.isSelectedCity;
         }
       } else {
         this.countriesCities = [];
@@ -308,21 +292,39 @@ export default {
   },
   computed: {
     dialogTitle() {
-      return this.dialogMode === "edit" ? "EDIT MY EVENT" : "CREATE MY EVENT";
+      // return this.dialogMode === "edit" ? "EDIT MY EVENT" : "CREATE MY EVENT";
+      let message = "";
+      if (this.dialogMode === "edit") {
+        message = "EDIT MY EVENT";
+      } else if (this.dialogMode === "create") {
+        message = "CREATE MY EVENT";
+      } else {
+        message = "Are you sure you want to delete this Event?";
+      }
+      return message;
     },
     dialogButtton() {
-      return this.dialogMode === "edit" ? "EDIT" : "CREATE";
+      let message = "";
+      if (this.dialogMode === "edit") {
+        message = "EDIT";
+      } else if (this.dialogMode === "create") {
+        message = "CREATE";
+      } else {
+        message = "DELETE";
+      }
+      return message;
     },
     isValidated() {
       return (
-        this.myEventTitleError === "" &&
-        this.startDateError === "" &&
-        this.endDateError === "" &&
-        this.myEventTitle !== "" &&
-        (this.startDateTime !== "" || this.dialogMode === "edit") &&
-        (this.endDate !== "" || this.dialogMode === "edit") &&
-        this.category !== "" &&
-        this.city !== ""
+        (this.myEventTitleError === "" &&
+          this.startDateError === "" &&
+          this.endDateError === "" &&
+          this.myEventTitle !== "" &&
+          (this.startDateTime !== "" || this.dialogMode === "edit") &&
+          (this.endDate !== "" || this.dialogMode === "edit") &&
+          this.category !== "" &&
+          this.city !== "") ||
+        this.dialogMode === "delete"
       );
     },
   },
@@ -344,7 +346,6 @@ export default {
       this.isSelectedCate = false;
       this.endDateError = "";
       this.myEventTitleError = "";
-      this.isEmpty = true;
     },
     closeDialog() {
       this.dialogDisplayed = false;
@@ -354,34 +355,26 @@ export default {
       this.endDate = "";
       this.description = "";
       this.isShowMore = false;
-      this.isEmpty = true;
+      this.closeCategoryList();
+      this.closCityList();
     },
     showCategoryList() {
-      this.categoryListDisplayed = true;
-      axios.get("api/categories").then((res) => {
-        this.categories = res.data.data;
-      });
+      this.isClosingCateList = false;
+      this.categories = JSON.parse(localStorage.getItem("getCategories"));
     },
     showCityList() {
-      this.cityListDisplayed = true;
+      this.isClosingCityList = false;
+      this.countriesCities = this.countriesCitiesInitial;
     },
     closeCategoryList() {
-      this.categoryListDisplayed = false;
+      this.isClosingCateList = true;
       this.cateKeySearch = "";
-      if (this.category !== "") {
-        this.isSelectedCate = true;
-      } else {
-        this.isSelectedCate = false;
-      }
+      this.categories = [];
     },
     closCityList() {
-      this.cityListDisplayed = false;
+      this.isClosingCityList = true;
       this.cityKeySearch = "";
-      if (this.city !== "") {
-        this.isSelectedCity = true;
-      } else {
-        this.isSelectedCity = false;
-      }
+      this.countriesCities = [];
     },
     showMoreChoice() {
       this.isShowMore = true;
@@ -401,8 +394,6 @@ export default {
         id: id,
         name: name,
       };
-      this.cateKeySearch = "";
-      this.isSelectedCate = true;
       this.closeCategoryList();
     },
     //===========================get image
@@ -415,8 +406,10 @@ export default {
       if (key === "") {
         this.myEvents = JSON.parse(localStorage.getItem("getMyEvents"));
       } else {
-        let listEvents = JSON.parse(localStorage.getItem('getMyEvents'));
-        this.myEvents = listEvents.filter(event => event.title.toLowerCase().includes(key.toLowerCase()));
+        let listEvents = JSON.parse(localStorage.getItem("getMyEvents"));
+        this.myEvents = listEvents.filter((event) =>
+          event.title.toLowerCase().includes(key.toLowerCase())
+        );
       }
     },
     /// =======================crud=====================
@@ -426,14 +419,16 @@ export default {
           this.addNewEvent();
         } else if (this.dialogMode === "edit") {
           this.updateMyEventCard(this.myEvent);
+        } else if (this.dialogMode === "delete") {
+          this.deleteMyEventCard(this.eventToEditDelete.id);
         }
         this.closeDialog();
       }
     },
     addNewEvent() {
-      this.isEmpty = false;
       let myNewEvent = new FormData();
       let user_id = localStorage.getItem("userID");
+
       myNewEvent.append("category_id", this.category.id);
       myNewEvent.append("user_id", user_id);
       myNewEvent.append("title", this.myEventTitle);
@@ -456,31 +451,21 @@ export default {
         localStorage.setItem("getMyEvents", JSON.stringify(storedMyEvents));
       });
     },
-
+    showFormConfirmDelete(id) {
+      this.dialogMode = "delete";
+      this.dialogDisplayed = true;
+      this.eventToEditDelete = {
+        id: id,
+      };
+    },
     deleteMyEventCard(id) {
       axios.delete("api/myevents/" + id).then(() => {
-        this.myEvents = this.myEvents.filter(event => event.id !== id);
+        this.myEvents = this.myEvents.filter((event) => event.id !== id);
 
         let storedMyEvents = JSON.parse(localStorage.getItem("getMyEvents"));
-        storedMyEvents = storedMyEvents.filter(event => event.id !== id);
+        storedMyEvents = storedMyEvents.filter((event) => event.id !== id);
         localStorage.setItem("getMyEvents", JSON.stringify(storedMyEvents));
       });
-    },
-    showFormMyEventUpdate(myEvent) {
-      this.myEvent = myEvent;
-      this.dialogMode = "edit";
-      this.dialogDisplayed = true;
-      this.myEventTitle = myEvent.title;
-      this.description = myEvent.description;
-      this.city = myEvent.city;
-      this.category = myEvent.category;
-      this.imageTitle = "";
-      this.isSelectedCate = true;
-      this.isSelectedCity = true;
-      this.imageTitle = null;
-      this.imageForUpdate = myEvent.image;
-      this.endDateError = "";
-      this.myEventTitleError = "";
     },
 
     getMyEventData() {
@@ -489,9 +474,6 @@ export default {
         this.myEvents = this.myEvents.filter(
           (event) => event.user_id == localStorage.getItem("userID")
         );
-        if(this.myEvents == '') {
-          this.isEmpty = false;
-        }
         localStorage.setItem("getMyEvents", JSON.stringify(this.myEvents));
       });
     },
@@ -504,6 +486,8 @@ export default {
     // GET CATEGORY DATA FROM BACKEND
     axios.get("api/categories").then((res) => {
       this.categories = res.data.data;
+      localStorage.setItem("getCategories", JSON.stringify(this.categories));
+      this.categories = [];
     });
 
     // GET COUNTRIES AND ITS CITIES FROM BACKEND WITH GOOD FORMAT
@@ -512,20 +496,22 @@ export default {
       countriesWithItsCities = res.data;
       for (let country in countriesWithItsCities) {
         for (let city of countriesWithItsCities[country]) {
-          this.countriesCities.push({
+          this.countriesCitiesInitial.push({
             country: country,
             city: city,
           });
         }
       }
-      this.countriesCitiesInitial = this.countriesCities;
     });
   },
 };
 </script>
 
 <style scoped>
-.emptyMyevent {
+[v-cloak] {
+  display: none;
+}
+.emptyCard {
   text-align: center;
   opacity: 0.2;
   margin-top: 10%;
@@ -552,6 +538,7 @@ export default {
   padding: 20px;
   overflow-y: scroll;
   scroll-behavior: smooth;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
 .title input,
@@ -636,6 +623,10 @@ textarea:focus {
   margin: 5px 0;
   font-size: 15px;
   text-align: left;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+body{
+  font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
 /* categorylist style */
@@ -684,7 +675,7 @@ textarea:focus {
 .category-list,
 .city-list {
   background: rgb(255, 255, 255);
-  height: 150px;
+  max-height: 150px;
   padding: 3px;
   overflow-y: scroll;
 }
@@ -758,5 +749,21 @@ div {
 .city-main-container label {
   display: flex;
   text-align: left;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 15px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 15px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(182, 182, 182);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(153, 153, 153);
 }
 </style>
