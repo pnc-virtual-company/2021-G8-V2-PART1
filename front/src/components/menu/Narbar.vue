@@ -1,5 +1,5 @@
 <template>
-  <nav class="container" v-if="!$route.meta.hideNavbar">
+  <nav class="container">
     <div v-if="userData !== null" class="navbar">
       <div class="username">
         <p id="username">{{ userData.firstname }}</p>
