@@ -444,6 +444,7 @@ export default {
 
       axios.post("api/myevents", myNewEvent).then((res) => {
         this.dialogDisplayed = false;
+        this.file = null
         this.myEvents.unshift(res.data.myEvent);
 
         let storedMyEvents = JSON.parse(localStorage.getItem("getMyEvents"));
